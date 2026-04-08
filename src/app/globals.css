@@ -1,0 +1,37 @@
+@import "tailwindcss";
+
+:root {
+  /* ── Option A: Midnight & Champagne ── */
+  --ink:         #0D1117;
+  --ink-card:    #141B24;
+  --cream:       #F0DCA8;
+  --parchment:   #E8D49A;
+  --dark-brown:  #2C1A0E;
+  --mid-brown:   #5C3D2E;
+  --gold:        #BFA05A;
+  --gold-light:  #D4B86A;
+  --gold-faint:  rgba(191,160,90,0.18);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--ink);
+  color: var(--dark-brown);
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--gold); border-radius: 3px; }
+
+::selection {
+  background: var(--gold-faint);
+  color: var(--dark-brown);
+}
