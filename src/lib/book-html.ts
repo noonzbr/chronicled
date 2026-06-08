@@ -284,7 +284,7 @@ export function generateBookHtml(book: BookRecord, bookSlug: string, portrait?: 
       </p>
       <div class="book-rule" style="margin:28px 0;"></div>
       <p style="font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;color:var(--gold);">First Edition</p>
-      <p style="font-family:'EB Garamond',serif;font-size:12px;color:var(--mid-brown);font-style:italic;margin-top:6px;">getchronicled.com</p>
+      <p style="font-family:'EB Garamond',serif;font-size:12px;color:var(--mid-brown);font-style:italic;margin-top:6px;">getchronicled.art</p>
     </div>
   </div>
 
@@ -347,7 +347,7 @@ export function generateBookHtml(book: BookRecord, bookSlug: string, portrait?: 
       Choose your story. Answer our questions. Receive a book that will outlast everything except the life it was written about.
     </p>
     <div class="back-rule"></div>
-    <p class="back-url">getchronicled.com</p>
+    <p class="back-url">getchronicled.art</p>
   </div>
 
 </div>

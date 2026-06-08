@@ -17,7 +17,7 @@ type BookEmailData = {
 };
 
 export async function sendOrderEmail(data: BookEmailData) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.com";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.art";
   const downloadUrl = `${appUrl}/download?token=${data.downloadToken}`;
 
   const tierMessages = {
@@ -149,7 +149,7 @@ export async function sendOrderEmail(data: BookEmailData) {
           <tr>
             <td align="center" style="padding-top:8px;">
               <p style="font-family:Georgia,serif;font-size:11px;color:rgba(191,160,90,0.3);margin:0 0 6px;letter-spacing:1px;">
-                getchronicled.com
+                getchronicled.art
               </p>
               <p style="font-family:Georgia,serif;font-style:italic;font-size:11px;color:rgba(240,220,168,0.2);margin:0;">
                 This email was sent because you purchased a Chronicled chronicle.
@@ -167,7 +167,7 @@ export async function sendOrderEmail(data: BookEmailData) {
 
   const resend = getResend();
   const { data: result, error } = await resend.emails.send({
-    from: "Chronicled <books@getchronicled.com>",
+    from: "Chronicled <books@getchronicled.art>",
     to: data.toEmail,
     subject: `${msg.subject} — ${data.bookTitle}`,
     html,

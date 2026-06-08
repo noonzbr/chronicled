@@ -964,7 +964,7 @@ export default function HomePage() {
             textTransform: "uppercase",
           }}
         >
-          © 2026 Chronicled · getchronicled.com
+          © 2026 Chronicled · getchronicled.art
         </p>
       </footer>
     </main>

@@ -92,7 +92,7 @@ function notFoundPage(): string {
   <div>
     <h1>Chronicle Not Found</h1>
     <p>This download link has expired or is invalid.<br/>
-    Please <a href="https://getchronicled.com">return to Chronicled</a> or contact support.</p>
+    Please <a href="https://getchronicled.art">return to Chronicled</a> or contact support.</p>
   </div>
 </body>
 </html>`;

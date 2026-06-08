@@ -3,7 +3,7 @@ import { createServerClient } from "@supabase/ssr";
 
 // Lulu sends status updates to this endpoint.
 // Configure in Lulu Dashboard → Webhooks → Add endpoint:
-// https://getchronicled.com/api/lulu/webhook
+// https://getchronicled.art/api/lulu/webhook
 
 export async function POST(req: NextRequest) {
   const body = await req.json();

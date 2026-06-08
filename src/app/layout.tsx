@@ -32,7 +32,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Chronicled",
     description: "Your life. A legendary narrative.",
-    url: "https://getchronicled.com",
+    url: "https://getchronicled.art",
     siteName: "Chronicled",
     type: "website",
   },

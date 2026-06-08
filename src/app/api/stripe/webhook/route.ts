@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
     // ── For digital orders: generate PDF and mark complete ───────────────────
     if (tier === "digital" && order) {
       try {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.com";
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.art";
         const pdfRes = await fetch(
           `${appUrl}/api/pdf?token=${downloadToken}&upload=true`,
           { method: "GET" }
@@ -119,7 +119,7 @@ export async function POST(req: NextRequest) {
     // ── For physical orders: submit to Lulu Direct ────────────────────────────
     if (tier !== "digital" && order && isLuluConfigured()) {
       try {
-        const appUrl     = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.com";
+        const appUrl     = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.art";
         const country    = shipping?.country || "US";
 
         // Generate and upload PDF first
@@ -131,7 +131,7 @@ export async function POST(req: NextRequest) {
 
         // Build Lulu print job
         const luluJob = await createLuluPrintJob({
-          contact_email:    customerEmail || "books@getchronicled.com",
+          contact_email:    customerEmail || "books@getchronicled.art",
           external_id:      order.id,
           shipping_address: buildLuluAddress(order),
           shipping_option:  luluShippingOption(country),
