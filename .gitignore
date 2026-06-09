@@ -43,4 +43,5 @@ next-env.d.ts
 # media assets
 *.mp4
 tiktok_outro_ad_*.png
+public/videos/*.webm
 
