@@ -293,6 +293,49 @@ export default function HomePage() {
               How It Works
             </Link>
           </motion.div>
+
+          {/* ── Introductory Offer Banner ── */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.0 }}
+            style={{
+              marginTop: "36px",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "12px",
+              border: "1px solid rgba(191,160,90,0.45)",
+              backgroundColor: "rgba(191,160,90,0.07)",
+              padding: "12px 28px",
+            }}
+          >
+            <span style={{
+              fontFamily: "var(--font-cinzel)",
+              fontSize: "9px",
+              letterSpacing: "3px",
+              color: "var(--gold)",
+              textTransform: "uppercase",
+            }}>
+              ⏳ Limited Time Introductory Offer
+            </span>
+            <div style={{ width: "1px", height: "16px", backgroundColor: "rgba(191,160,90,0.3)" }} />
+            <span style={{
+              fontFamily: "var(--font-cinzel-deco)",
+              fontSize: "16px",
+              color: "rgba(191,160,90,0.4)",
+              textDecoration: "line-through",
+            }}>
+              $24.99
+            </span>
+            <span style={{
+              fontFamily: "var(--font-cinzel-deco)",
+              fontSize: "22px",
+              color: "var(--gold-light)",
+            }}>
+              $14.99
+            </span>
+          </motion.div>
+
         </div>
       </section>
 
