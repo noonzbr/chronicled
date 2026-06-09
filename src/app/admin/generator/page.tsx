@@ -10,7 +10,9 @@ function GeneratorContent() {
 
   // Read query parameters
   const hookText = searchParams.get("hook") || "What is your earliest memory?";
-  const bodyText = searchParams.get("body") || "We forget the details, but the feeling remains. Write it down before it fades.";
+  const body1Text = searchParams.get("body1") || "We forget the details, but the feeling remains.";
+  const body2Text = searchParams.get("body2") || "We think we'll remember forever, but memories slowly drift away.";
+  const body3Text = searchParams.get("body3") || "Write them down today, before the voices fade.";
   const takeawayText = searchParams.get("takeaway") || "Your story is worth keeping.";
 
   // Config States
@@ -162,16 +164,19 @@ function GeneratorContent() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = textColor;
 
-    // Timeline Configuration (Total 9 seconds)
-    // 0s-3s: Hook
-    // 3s-6s: Body
-    // 6s-9s: Takeaway + CTA
+    // Timeline Configuration (Total 34 seconds)
     const hookStart = 0;
-    const hookEnd = 3000;
-    const bodyStart = 3000;
-    const bodyEnd = 6000;
-    const takeawayStart = 6000;
-    const takeawayEnd = 9000;
+    const hookEnd = 4000;
+    const body1Start = 4000;
+    const body1End = 10000;
+    const body2Start = 10000;
+    const body2End = 16000;
+    const body3Start = 16000;
+    const body3End = 22000;
+    const takeawayStart = 22000;
+    const takeawayEnd = 28000;
+    const outroStart = 28000;
+    const outroEnd = 34000;
 
     let textOpacity = 0;
     let textToDraw = "";
@@ -188,34 +193,55 @@ function GeneratorContent() {
       } else {
         textOpacity = 1;
       }
-    } else if (elapsedMs >= bodyStart && elapsedMs < bodyEnd) {
-      textToDraw = bodyText;
+    } else if (elapsedMs >= body1Start && elapsedMs < body1End) {
+      textToDraw = body1Text;
       isTitle = false;
-      if (elapsedMs - bodyStart < 500) {
-        textOpacity = (elapsedMs - bodyStart) / 500;
-      } else if (bodyEnd - elapsedMs < 500) {
-        textOpacity = (bodyEnd - elapsedMs) / 500;
+      if (elapsedMs - body1Start < 500) {
+        textOpacity = (elapsedMs - body1Start) / 500;
+      } else if (body1End - elapsedMs < 500) {
+        textOpacity = (body1End - elapsedMs) / 500;
+      } else {
+        textOpacity = 1;
+      }
+    } else if (elapsedMs >= body2Start && elapsedMs < body2End) {
+      textToDraw = body2Text;
+      isTitle = false;
+      if (elapsedMs - body2Start < 500) {
+        textOpacity = (elapsedMs - body2Start) / 500;
+      } else if (body2End - elapsedMs < 500) {
+        textOpacity = (body2End - elapsedMs) / 500;
+      } else {
+        textOpacity = 1;
+      }
+    } else if (elapsedMs >= body3Start && elapsedMs < body3End) {
+      textToDraw = body3Text;
+      isTitle = false;
+      if (elapsedMs - body3Start < 500) {
+        textOpacity = (elapsedMs - body3Start) / 500;
+      } else if (body3End - elapsedMs < 500) {
+        textOpacity = (body3End - elapsedMs) / 500;
       } else {
         textOpacity = 1;
       }
     } else if (elapsedMs >= takeawayStart && elapsedMs < takeawayEnd) {
-      // If we have the custom generated outro image loaded, display it full-screen
-      if (outroImgRef.current) {
-        ctx.save();
-        const imgOpacity = Math.min(1, (elapsedMs - takeawayStart) / 500);
-        ctx.globalAlpha = imgOpacity;
-        ctx.drawImage(outroImgRef.current, 0, 0, width, height);
-        ctx.restore();
-        return; // Skip drawing text overlays, as the outro card already has them
-      }
-
-      // Fallback to text overlay
       textToDraw = selectedTakeawayFormat(takeawayText);
       isTitle = false;
       if (elapsedMs - takeawayStart < 500) {
         textOpacity = (elapsedMs - takeawayStart) / 500;
+      } else if (takeawayEnd - elapsedMs < 500) {
+        textOpacity = (takeawayEnd - elapsedMs) / 500;
       } else {
         textOpacity = 1;
+      }
+    } else if (elapsedMs >= outroStart && elapsedMs < outroEnd) {
+      // If we have the custom generated outro image loaded, display it full-screen
+      if (outroImgRef.current) {
+        ctx.save();
+        const imgOpacity = Math.min(1, (elapsedMs - outroStart) / 500);
+        ctx.globalAlpha = imgOpacity;
+        ctx.drawImage(outroImgRef.current, 0, 0, width, height);
+        ctx.restore();
+        return; // Skip drawing text overlays, as the outro card already has them
       }
     }
 
@@ -231,11 +257,11 @@ function GeneratorContent() {
       ctx.restore();
     }
 
-    // Always draw brand CTA at the very bottom during the Takeaway segment
-    if (elapsedMs >= takeawayStart) {
+    // Always draw brand CTA at the very bottom during the Outro segment (only for fallback)
+    if (elapsedMs >= outroStart) {
       ctx.save();
-      // Match fade-in of the takeaway
-      const ctaOpacity = Math.min(1, (elapsedMs - takeawayStart) / 500);
+      // Match fade-in of the outro
+      const ctaOpacity = Math.min(1, (elapsedMs - outroStart) / 500);
       ctx.globalAlpha = ctaOpacity * 0.9;
       
       // Divider
@@ -285,7 +311,7 @@ function GeneratorContent() {
 
     const tick = () => {
       const timeMs = Date.now() - startTime;
-      const elapsedMs = timeMs % 9000; // Loop every 9 seconds in preview
+      const elapsedMs = timeMs % 34000; // Loop every 34 seconds in preview
 
       drawBackground(ctx, canvas.width, canvas.height, timeMs);
       drawTextOverlay(ctx, canvas.width, canvas.height, elapsedMs);
@@ -359,28 +385,28 @@ function GeneratorContent() {
     // Begin Recording
     mediaRecorder.start();
 
-    // Loop logic to draw frames at exact 30fps intervals (33.3ms) for 9 seconds
-    const totalDuration = 9000;
-    const fps = 30;
-    const frameInterval = 1000 / fps;
-    let currentElapsed = 0;
-    
-    const renderInterval = setInterval(() => {
-      currentElapsed += frameInterval;
-
-      // Update progress state
-      const percentage = Math.min(100, Math.floor((currentElapsed / totalDuration) * 100));
-      setRenderProgress(percentage);
-
-      // Render the frame onto offscreen canvas
-      drawBackground(ctx, recordCanvas.width, recordCanvas.height, currentElapsed);
-      drawTextOverlay(ctx, recordCanvas.width, recordCanvas.height, currentElapsed);
-
-      if (currentElapsed >= totalDuration) {
-        clearInterval(renderInterval);
-        mediaRecorder.stop();
-      }
-    }, frameInterval);
+    // Loop logic to draw frames at exact 30fps intervals (33.3ms) for 34 seconds
+      const totalDuration = 34000;
+      const fps = 30;
+      const frameInterval = 1000 / fps;
+      let currentElapsed = 0;
+      
+      const renderInterval = setInterval(() => {
+        currentElapsed += frameInterval;
+  
+        // Update progress state
+        const percentage = Math.min(100, Math.floor((currentElapsed / totalDuration) * 100));
+        setRenderProgress(percentage);
+  
+        // Render the frame onto offscreen canvas
+        drawBackground(ctx, recordCanvas.width, recordCanvas.height, currentElapsed);
+        drawTextOverlay(ctx, recordCanvas.width, recordCanvas.height, currentElapsed);
+  
+        if (currentElapsed >= totalDuration) {
+          clearInterval(renderInterval);
+          mediaRecorder.stop();
+        }
+      }, frameInterval);
   };
 
   return (
@@ -437,7 +463,7 @@ function GeneratorContent() {
           {/* Simulated Mobile Device Preview */}
           <div style={{ flex: "0 0 340px", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <h3 style={{ color: "var(--parchment)", fontFamily: "var(--font-cinzel), serif", fontSize: "1rem", marginBottom: "15px" }}>
-              TikTok Screen Preview (9s Loop)
+              TikTok Screen Preview (34s Loop)
             </h3>
             
             <div
@@ -504,9 +530,12 @@ function GeneratorContent() {
                 Active Script Details
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "0.95rem" }}>
-                <p><strong>0s-3s (Hook):</strong> <span style={{ color: "var(--gold-light)", fontStyle: "italic" }}>"{hookText}"</span></p>
-                <p><strong>3s-6s (Body):</strong> <span style={{ color: "var(--cream)" }}>{bodyText}</span></p>
-                <p><strong>6s-9s (Takeaway):</strong> <span style={{ color: "var(--parchment)", fontStyle: "italic" }}>{takeawayText}</span></p>
+                <p><strong>0s-4s (Hook):</strong> <span style={{ color: "var(--gold-light)", fontStyle: "italic" }}>"{hookText}"</span></p>
+                <p><strong>4s-10s (Story Beat 1):</strong> <span style={{ color: "var(--cream)" }}>{body1Text}</span></p>
+                <p><strong>10s-16s (Story Beat 2):</strong> <span style={{ color: "var(--cream)" }}>{body2Text}</span></p>
+                <p><strong>16s-22s (Story Beat 3):</strong> <span style={{ color: "var(--cream)" }}>{body3Text}</span></p>
+                <p><strong>22s-28s (Takeaway):</strong> <span style={{ color: "var(--parchment)", fontStyle: "italic" }}>{takeawayText}</span></p>
+                <p><strong>28s-34s (Outro Card):</strong> <span style={{ color: "var(--gold-light)" }}>[Full Screen Outro Card]</span></p>
               </div>
             </div>
 

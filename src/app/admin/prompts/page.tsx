@@ -6,7 +6,9 @@ import { motion, AnimatePresence } from "framer-motion";
 interface Prompt {
   id: number;
   hook: string;
-  body: string;
+  body1: string;
+  body2: string;
+  body3: string;
   takeaway: string;
 }
 
@@ -71,10 +73,11 @@ export default function AdminPromptsPage() {
 
   const handleCopy = (prompt: Prompt, type: "tiktok" | "x") => {
     let text = "";
+    const combinedBody = `${prompt.body1}\n\n${prompt.body2}\n\n${prompt.body3}`;
     if (type === "tiktok") {
-      text = `${prompt.hook}\n\n${prompt.body}\n\n${prompt.takeaway}`;
+      text = `${prompt.hook}\n\n${combinedBody}\n\n${prompt.takeaway}`;
     } else {
-      text = `"${prompt.hook}"\n\n${prompt.body}\n\n${prompt.takeaway}`;
+      text = `"${prompt.hook}"\n\n${combinedBody}\n\n${prompt.takeaway}`;
     }
     
     navigator.clipboard.writeText(text);
@@ -337,18 +340,12 @@ export default function AdminPromptsPage() {
                         "{prompt.hook}"
                       </p>
 
-                      {/* Body */}
-                      <p
-                        style={{
-                          color: "var(--cream)",
-                          lineHeight: "1.6",
-                          fontSize: "1.1rem",
-                          marginBottom: "15px",
-                          opacity: 0.9,
-                        }}
-                      >
-                        {prompt.body}
-                      </p>
+                      {/* Body - 3-Part Micro-Story */}
+                      <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "15px", opacity: 0.9 }}>
+                        <p style={{ color: "var(--cream)", lineHeight: "1.6", fontSize: "1.1rem", margin: 0 }}>{prompt.body1}</p>
+                        <p style={{ color: "var(--cream)", lineHeight: "1.6", fontSize: "1.1rem", margin: 0 }}>{prompt.body2}</p>
+                        <p style={{ color: "var(--cream)", lineHeight: "1.6", fontSize: "1.1rem", margin: 0 }}>{prompt.body3}</p>
+                      </div>
 
                       {/* Takeaway */}
                       <p
@@ -371,7 +368,9 @@ export default function AdminPromptsPage() {
                           onClick={() => {
                             const params = new URLSearchParams({
                               hook: prompt.hook,
-                              body: prompt.body,
+                              body1: prompt.body1,
+                              body2: prompt.body2,
+                              body3: prompt.body3,
                               takeaway: prompt.takeaway,
                             });
                             window.location.href = `/admin/generator?${params.toString()}`;
