@@ -152,6 +152,26 @@ export default function HomePage() {
         </div>
       </nav>
 
+      {/* ── Announcement Banner ── */}
+      <div style={{
+        backgroundColor: "rgba(191,160,90,0.12)",
+        borderTop: "1px solid rgba(191,160,90,0.3)",
+        borderBottom: "1px solid rgba(191,160,90,0.3)",
+        padding: "10px 20px",
+        textAlign: "center",
+      }}>
+        <p style={{
+          fontFamily: "var(--font-cinzel)",
+          fontSize: "10px",
+          letterSpacing: "3px",
+          color: "var(--gold-light)",
+          textTransform: "uppercase",
+          margin: 0,
+        }}>
+          ✦ &nbsp; Founding Member Rate — $14.99 &nbsp;·&nbsp; First 100 Chronicles Only &nbsp;·&nbsp; Price Rises Soon &nbsp; ✦
+        </p>
+      </div>
+
       {/* ── HERO ── */}
       <section
         style={{
