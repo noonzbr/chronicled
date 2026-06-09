@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Cinzel, Cinzel_Decorative } from "next/font/google";
 import "./globals.css";
+import SocialProof from "@/components/SocialProof";
 
 const ebGaramond = EB_Garamond({
   variable: "--font-garamond",
@@ -55,7 +56,28 @@ export default function RootLayout({
           minHeight: "100vh",
         }}
       >
+        {/* Intro Launch Banner */}
+        <div style={{
+          backgroundColor: "var(--gold)",
+          padding: "10px 20px",
+          textAlign: "center",
+          position: "sticky",
+          top: 0,
+          zIndex: 1000,
+        }}>
+          <p style={{
+            fontFamily: "var(--font-cinzel)",
+            fontSize: "11px",
+            letterSpacing: "3px",
+            color: "var(--ink)",
+            textTransform: "uppercase",
+            margin: 0,
+          }}>
+            ✦ &nbsp; Founding Member Rate — $14.99 &nbsp;·&nbsp; First 100 Chronicles Only &nbsp;·&nbsp; Price Rises Soon &nbsp; ✦
+          </p>
+        </div>
         {children}
+        <SocialProof />
       </body>
     </html>
   );
