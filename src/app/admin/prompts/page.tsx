@@ -368,6 +368,32 @@ export default function AdminPromptsPage() {
                       {/* Action buttons */}
                       <div style={{ display: "flex", gap: "15px", flexWrap: "wrap" }}>
                         <button
+                          onClick={() => {
+                            const params = new URLSearchParams({
+                              hook: prompt.hook,
+                              body: prompt.body,
+                              takeaway: prompt.takeaway,
+                            });
+                            window.location.href = `/admin/generator?${params.toString()}`;
+                          }}
+                          style={{
+                            backgroundColor: "var(--gold)",
+                            border: "none",
+                            color: "var(--ink)",
+                            fontWeight: "bold",
+                            padding: "8px 16px",
+                            borderRadius: "4px",
+                            fontSize: "0.95rem",
+                            cursor: "pointer",
+                            transition: "all 0.2s",
+                            boxShadow: "0 2px 8px rgba(191, 160, 90, 0.2)",
+                          }}
+                          onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "var(--gold-light)")}
+                          onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "var(--gold)")}
+                        >
+                          🎥 Create Video Ad
+                        </button>
+                        <button
                           onClick={() => handleCopy(prompt, "tiktok")}
                           style={{
                             backgroundColor: "rgba(191, 160, 90, 0.1)",
