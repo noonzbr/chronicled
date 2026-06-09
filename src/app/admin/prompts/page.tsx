@@ -25,13 +25,24 @@ export default function AdminPromptsPage() {
   const categories = ["Childhood", "Travel & Adventure", "Love & Relationships", "Lessons & Wisdom", "Career & Ambition"];
   const tones = ["Honest & Reflective", "Epic & Heroic", "Romantic & Bittersweet", "Witty & Warm"];
 
-  const handleUnlock = (e: React.FormEvent) => {
+  const handleUnlock = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === "chronicled2026") {
-      setIsUnlocked(true);
-      setError("");
-    } else {
-      setError("Incorrect authorization passcode.");
+    setError("");
+    try {
+      const response = await fetch("/api/admin/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      const data = await response.json();
+      if (data.success) {
+        setIsUnlocked(true);
+      } else {
+        setError(data.error || "Incorrect authorization passcode.");
+      }
+    } catch (err) {
+      console.error(err);
+      setError("An error occurred during verification.");
     }
   };
 
@@ -42,7 +53,7 @@ export default function AdminPromptsPage() {
       const response = await fetch("/api/admin/prompts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ category, tone, password: "chronicled2026" }),
+        body: JSON.stringify({ category, tone, password }),
       });
       const data = await response.json();
       if (data.success) {
@@ -135,7 +146,7 @@ export default function AdminPromptsPage() {
               <form onSubmit={handleUnlock}>
                 <input
                   type="password"
-                  placeholder="Enter passcode (chronicled2026)"
+                  placeholder="Enter admin passcode"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   style={{
