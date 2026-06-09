@@ -66,6 +66,8 @@ async function main() {
         `body1=${encodeURIComponent(story.body1)}&` +
         `body2=${encodeURIComponent(story.body2)}&` +
         `body3=${encodeURIComponent(story.body3)}&` +
+        `body4=${encodeURIComponent(story.body4)}&` +
+        `body5=${encodeURIComponent(story.body5)}&` +
         `takeaway=${encodeURIComponent(story.takeaway)}`;
 
       console.log("Navigating to URL...");
