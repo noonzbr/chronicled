@@ -13,7 +13,13 @@ function GeneratorContent() {
   const body1Text = searchParams.get("body1") || "We forget the details, but the feeling remains.";
   const body2Text = searchParams.get("body2") || "We think we'll remember forever, but memories slowly drift away.";
   const body3Text = searchParams.get("body3") || "Write them down today, before the voices fade.";
+  const body4Text = searchParams.get("body4") || "";
+  const body5Text = searchParams.get("body5") || "";
   const takeawayText = searchParams.get("takeaway") || "Your story is worth keeping.";
+
+  // Dynamic duration
+  const hasExtendedBeats = !!(searchParams.get("body4") || searchParams.get("body5"));
+  const totalDuration = hasExtendedBeats ? 60000 : 34000;
 
   // Config States
   const [backgroundType, setBackgroundType] = useState<"gold-dust" | "midnight-ocean" | "crimson-rose">("gold-dust");
@@ -164,19 +170,23 @@ function GeneratorContent() {
     ctx.textBaseline = "middle";
     ctx.fillStyle = textColor;
 
-    // Timeline Configuration (Total 34 seconds)
-    const hookStart = 0;
-    const hookEnd = 4000;
-    const body1Start = 4000;
-    const body1End = 10000;
-    const body2Start = 10000;
-    const body2End = 16000;
-    const body3Start = 16000;
-    const body3End = 22000;
-    const takeawayStart = 22000;
-    const takeawayEnd = 28000;
-    const outroStart = 28000;
-    const outroEnd = 34000;
+    // Timeline Configuration (Supports both 34s and 60s timelines dynamically)
+    let hookStart = 0;
+    let hookEnd = hasExtendedBeats ? 6000 : 4000;
+    let body1Start = hookEnd;
+    let body1End = hasExtendedBeats ? 14000 : 10000;
+    let body2Start = body1End;
+    let body2End = hasExtendedBeats ? 22000 : 16000;
+    let body3Start = body2End;
+    let body3End = hasExtendedBeats ? 30000 : 22000;
+    let body4Start = body3End;
+    let body4End = hasExtendedBeats ? 38000 : 22000;
+    let body5Start = body4End;
+    let body5End = hasExtendedBeats ? 46000 : 22000;
+    let takeawayStart = hasExtendedBeats ? 46000 : 22000;
+    let takeawayEnd = hasExtendedBeats ? 53000 : 28000;
+    let outroStart = takeawayEnd;
+    let outroEnd = hasExtendedBeats ? 60000 : 34000;
 
     let textOpacity = 0;
     let textToDraw = "";
@@ -220,6 +230,26 @@ function GeneratorContent() {
         textOpacity = (elapsedMs - body3Start) / 500;
       } else if (body3End - elapsedMs < 500) {
         textOpacity = (body3End - elapsedMs) / 500;
+      } else {
+        textOpacity = 1;
+      }
+    } else if (hasExtendedBeats && elapsedMs >= body4Start && elapsedMs < body4End) {
+      textToDraw = body4Text;
+      isTitle = false;
+      if (elapsedMs - body4Start < 500) {
+        textOpacity = (elapsedMs - body4Start) / 500;
+      } else if (body4End - elapsedMs < 500) {
+        textOpacity = (body4End - elapsedMs) / 500;
+      } else {
+        textOpacity = 1;
+      }
+    } else if (hasExtendedBeats && elapsedMs >= body5Start && elapsedMs < body5End) {
+      textToDraw = body5Text;
+      isTitle = false;
+      if (elapsedMs - body5Start < 500) {
+        textOpacity = (elapsedMs - body5Start) / 500;
+      } else if (body5End - elapsedMs < 500) {
+        textOpacity = (body5End - elapsedMs) / 500;
       } else {
         textOpacity = 1;
       }
@@ -311,7 +341,7 @@ function GeneratorContent() {
 
     const tick = () => {
       const timeMs = Date.now() - startTime;
-      const elapsedMs = timeMs % 34000; // Loop every 34 seconds in preview
+      const elapsedMs = timeMs % totalDuration; // Loop based on dynamic total duration
 
       drawBackground(ctx, canvas.width, canvas.height, timeMs);
       drawTextOverlay(ctx, canvas.width, canvas.height, elapsedMs);
@@ -326,7 +356,7 @@ function GeneratorContent() {
         cancelAnimationFrame(animationFrameId.current);
       }
     };
-  }, [backgroundType, textColor, fontFamily]);
+  }, [backgroundType, textColor, fontFamily, totalDuration]);
 
   // Video Compile & Recorder
   const handleRender = async () => {
@@ -385,8 +415,7 @@ function GeneratorContent() {
     // Begin Recording
     mediaRecorder.start();
 
-    // Loop logic to draw frames at exact 30fps intervals (33.3ms) for 34 seconds
-      const totalDuration = 34000;
+    // Loop logic to draw frames at exact 30fps intervals (33.3ms) for the dynamic duration
       const fps = 30;
       const frameInterval = 1000 / fps;
       let currentElapsed = 0;
@@ -463,7 +492,7 @@ function GeneratorContent() {
           {/* Simulated Mobile Device Preview */}
           <div style={{ flex: "0 0 340px", display: "flex", flexDirection: "column", alignItems: "center" }}>
             <h3 style={{ color: "var(--parchment)", fontFamily: "var(--font-cinzel), serif", fontSize: "1rem", marginBottom: "15px" }}>
-              TikTok Screen Preview (34s Loop)
+              TikTok Screen Preview ({totalDuration / 1000}s Loop)
             </h3>
             
             <div
@@ -530,12 +559,18 @@ function GeneratorContent() {
                 Active Script Details
               </h3>
               <div style={{ display: "flex", flexDirection: "column", gap: "10px", fontSize: "0.95rem" }}>
-                <p><strong>0s-4s (Hook):</strong> <span style={{ color: "var(--gold-light)", fontStyle: "italic" }}>"{hookText}"</span></p>
-                <p><strong>4s-10s (Story Beat 1):</strong> <span style={{ color: "var(--cream)" }}>{body1Text}</span></p>
-                <p><strong>10s-16s (Story Beat 2):</strong> <span style={{ color: "var(--cream)" }}>{body2Text}</span></p>
-                <p><strong>16s-22s (Story Beat 3):</strong> <span style={{ color: "var(--cream)" }}>{body3Text}</span></p>
-                <p><strong>22s-28s (Takeaway):</strong> <span style={{ color: "var(--parchment)", fontStyle: "italic" }}>{takeawayText}</span></p>
-                <p><strong>28s-34s (Outro Card):</strong> <span style={{ color: "var(--gold-light)" }}>[Full Screen Outro Card]</span></p>
+                <p><strong>0s-{hasExtendedBeats ? "6s" : "4s"} (Hook):</strong> <span style={{ color: "var(--gold-light)", fontStyle: "italic" }}>"{hookText}"</span></p>
+                <p><strong>{hasExtendedBeats ? "6s-14s" : "4s-10s"} (Story Beat 1):</strong> <span style={{ color: "var(--cream)" }}>{body1Text}</span></p>
+                <p><strong>{hasExtendedBeats ? "14s-22s" : "10s-16s"} (Story Beat 2):</strong> <span style={{ color: "var(--cream)" }}>{body2Text}</span></p>
+                <p><strong>{hasExtendedBeats ? "22s-30s" : "16s-22s"} (Story Beat 3):</strong> <span style={{ color: "var(--cream)" }}>{body3Text}</span></p>
+                {hasExtendedBeats && (
+                  <>
+                    <p><strong>30s-38s (Story Beat 4):</strong> <span style={{ color: "var(--cream)" }}>{body4Text}</span></p>
+                    <p><strong>38s-46s (Story Beat 5):</strong> <span style={{ color: "var(--cream)" }}>{body5Text}</span></p>
+                  </>
+                )}
+                <p><strong>{hasExtendedBeats ? "46s-53s" : "22s-28s"} (Takeaway):</strong> <span style={{ color: "var(--parchment)", fontStyle: "italic" }}>{takeawayText}</span></p>
+                <p><strong>{hasExtendedBeats ? "53s-60s" : "28s-34s"} (Outro Card):</strong> <span style={{ color: "var(--gold-light)" }}>[Full Screen Outro Card]</span></p>
               </div>
             </div>
 
