@@ -168,7 +168,7 @@ function GeneratorContent() {
     let isTitle = false;
 
     if (elapsedMs >= hookStart && elapsedMs < hookEnd) {
-      textToDraw = `"${hookText}"`;
+      textToDraw = hookText;
       isTitle = true;
       // Fade in (500ms) / Fade out (500ms)
       if (elapsedMs - hookStart < 500) {
@@ -202,16 +202,10 @@ function GeneratorContent() {
       ctx.save();
       ctx.globalAlpha = textOpacity;
 
-      // Font Setup
-      if (isTitle) {
-        ctx.font = `italic bold 52px ${fontFamily}`;
-        ctx.fillStyle = "#bfa05a"; // Gold for hook
-        wrapText(ctx, textToDraw, width / 2, height / 2, width * 0.85, 75);
-      } else {
-        ctx.font = `44px ${fontFamily}`;
-        ctx.fillStyle = textColor;
-        wrapText(ctx, textToDraw, width / 2, height / 2, width * 0.85, 65);
-      }
+      // Font Setup - Uniform and consistent style across all screens
+      ctx.font = `italic 46px ${fontFamily}`;
+      ctx.fillStyle = textColor;
+      wrapText(ctx, textToDraw, width / 2, height / 2, width * 0.85, 68);
 
       ctx.restore();
     }
