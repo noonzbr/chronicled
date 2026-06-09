@@ -252,7 +252,44 @@ export function generateBookHtml(book: BookRecord, bookSlug: string, portrait?: 
     /* Print */
     .print-btn { position:fixed; bottom:30px; right:30px; background:var(--gold); color:var(--ink); border:none; padding:14px 28px; font-family:'Cinzel',serif; font-size:11px; letter-spacing:3px; cursor:pointer; box-shadow:0 4px 24px rgba(0,0,0,0.5); z-index:100; text-transform:uppercase; }
     .print-btn:hover { background:var(--gold-light); }
-    @media print { body { background:none; } .book-wrapper { max-width:100%; margin:0; box-shadow:none; } .print-btn { display:none; } }
+    @media print {
+      @page { margin:0.6in 0.7in; }
+      body { background:#fff; }
+      .book-wrapper { max-width:100%; margin:0; box-shadow:none; background:#fff; }
+      .print-btn { display:none; }
+
+      /* All pages: white background, normal page sizing */
+      .title-page, .portrait-page, .back-page, .center-page, .page {
+        background:#fff !important; min-height:auto; padding:50px 30px;
+        page-break-after:always; break-after:page;
+      }
+      .page::before, .page::after { display:none; }
+
+      /* Dark-page borders → subtle ink lines */
+      .title-page::before, .portrait-page::before, .back-page::before { border-color:#7A5218 !important; }
+      .title-page::after { border-color:rgba(122,82,24,0.25) !important; }
+
+      /* Flip ALL light text on former-dark pages to dark ink */
+      .book-title, .back-tagline, .portrait-caption { color:#2C1A0E !important; }
+      .brand-top, .title-ornament, .book-subtitle, .gatsby-label,
+      .back-brand, .back-url, .portrait-name { color:#7A5218 !important; }
+      .book-tagline { color:#5C3D2E !important; }
+
+      /* Decorative gold gradients → solid dark gold so they print */
+      .book-rule, .chapter-rule, .end-rule, .back-rule {
+        background:#7A5218 !important;
+      }
+      .portrait-frame { border-color:#7A5218 !important; }
+      .portrait-frame::before { border-color:rgba(122,82,24,0.4) !important; }
+
+      /* Keep chapter body crisp black for readability */
+      .chapter-body p { color:#1a1208 !important; }
+      .chapter-body p:first-child::first-letter { color:#7A5218 !important; }
+
+      /* Avoid awkward breaks */
+      .chapter-header { page-break-after:avoid; break-after:avoid; }
+      .chapter-body p { orphans:3; widows:3; }
+    }
   </style>
 </head>
 <body>
