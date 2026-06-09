@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const PRICES = {
-  digital:   1900,  // $19.00
-  softcover: 3900,  // $39.00
-  hardcover: 5900,  // $59.00
+  digital:   2499,  // $24.99
+  softcover: 5700,  // $57.00
+  hardcover: 8700,  // $87.00
 } as const;
 
 const TIER_NAMES = {
-  digital:   "Chronicled — Digital PDF",
-  softcover: "Chronicled — Softcover Book",
-  hardcover: "Chronicled — Hardcover + Royal Portrait",
+  digital:   "Chronicled — Your Life Story (Digital)",
+  softcover: "Chronicled — Your Life Story (Softcover)",
+  hardcover: "Chronicled — Your Life Story (Hardcover)",
 } as const;
 
 export async function POST(req: NextRequest) {
