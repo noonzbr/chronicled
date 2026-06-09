@@ -227,19 +227,24 @@ function GeneratorContent() {
       ctx.strokeStyle = "rgba(191, 160, 90, 0.25)";
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(width * 0.35, height - 260);
-      ctx.lineTo(width * 0.65, height - 260);
+      ctx.moveTo(width * 0.3, height - 310);
+      ctx.lineTo(width * 0.7, height - 310);
       ctx.stroke();
 
       // Brand Logo / Title
       ctx.fillStyle = "#bfa05a"; // Gold
       ctx.font = "bold tracking-widest 32px Cinzel, serif";
-      ctx.fillText("CHRONICLED", width / 2, height - 210);
+      ctx.fillText("CHRONICLED", width / 2, height - 260);
+
+      // Product Tagline
+      ctx.fillStyle = "rgba(240, 236, 225, 0.8)"; // Semi-transparent cream
+      ctx.font = "italic 24px Georgia, serif";
+      ctx.fillText("Turn your memories into a custom memoir book.", width / 2, height - 200);
 
       // Website URL
-      ctx.fillStyle = "#F0ECE1"; // Cream
-      ctx.font = "italic 28px Georgia, serif";
-      ctx.fillText("getchronicled.art", width / 2, height - 160);
+      ctx.fillStyle = "#bfa05a"; // Gold
+      ctx.font = "bold 30px Georgia, serif";
+      ctx.fillText("getchronicled.art", width / 2, height - 135);
       ctx.restore();
     }
   };
