@@ -2,9 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
 const PRICES = {
-  digital:   2499,  // $24.99
-  softcover: 5700,  // $57.00
-  hardcover: 8700,  // $87.00
+  digital:   1499,  // $14.99 intro price
+  softcover: 5700,  // $57.00 (coming soon)
+  hardcover: 8700,  // $87.00 (coming soon)
 } as const;
 
 const TIER_NAMES = {

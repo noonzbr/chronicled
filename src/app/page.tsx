@@ -614,7 +614,7 @@ export default function HomePage() {
               { step: "01", title: "Choose Your Book", desc: "Pick the classic that matches the arc of your life." },
               { step: "02", title: "The Interview", desc: "Our AI biographer asks questions. You answer freely — no forms, no limits." },
               { step: "03", title: "Your Book Is Written", desc: "Claude crafts your answers into a 100–150 page literary chronicle." },
-              { step: "04", title: "Choose Your Edition", desc: "Digital PDF, softcover, or hardcover with your Royal Portrait inside." },
+              { step: "04", title: "Receive Your Chronicle", desc: "Your beautifully designed digital edition arrives in your inbox instantly." },
             ].map((item) => (
               <div key={item.step}>
                 {/* Step number badge */}
@@ -794,37 +794,44 @@ export default function HomePage() {
         >
           {[
             {
-              name: "Digital",
-              price: "$19",
-              desc: "Your complete chronicle as a beautifully styled PDF, delivered to your inbox.",
-              includes: ["100–150 page PDF", "Vintage book design", "Instant delivery"],
-              highlight: false,
+              name: "Digital Edition",
+              price: "$14.99",
+              badge: "Intro Price",
+              desc: "Your complete chronicle as a beautifully styled PDF, delivered to your inbox instantly.",
+              includes: ["100–150 page PDF", "Vintage book design", "Instant delivery", "Yours forever"],
+              highlight: true,
+              available: true,
             },
             {
-              name: "Softcover",
-              price: "$39",
+              name: "Softcover Book",
+              price: "Coming Soon",
+              badge: null,
               desc: "Your chronicle printed and bound, shipped to your door.",
               includes: ["Everything in Digital", "Printed softcover book", "Worldwide shipping"],
               highlight: false,
+              available: false,
             },
             {
-              name: "Hardcover",
-              price: "$59",
+              name: "Hardcover + Portrait",
+              price: "Coming Soon",
+              badge: null,
               desc: "The definitive edition. Includes your AI-generated Royal Portrait.",
               includes: ["Everything in Softcover", "Hardcover binding", "Royal Portrait inside"],
-              highlight: true,
+              highlight: false,
+              available: false,
             },
           ].map((tier) => (
             <div
               key={tier.name}
               style={{
-                border: tier.highlight ? "1px solid var(--gold)" : "1px solid rgba(191,160,90,0.25)",
+                border: tier.highlight ? "1px solid var(--gold)" : "1px solid rgba(191,160,90,0.2)",
                 padding: "40px 28px",
                 backgroundColor: tier.highlight ? "rgba(191,160,90,0.08)" : "rgba(20,27,36,0.8)",
                 position: "relative",
+                opacity: tier.available ? 1 : 0.5,
               }}
             >
-              {tier.highlight && (
+              {tier.badge && (
                 <p
                   style={{
                     fontFamily: "var(--font-cinzel)",
@@ -841,7 +848,12 @@ export default function HomePage() {
                     textTransform: "uppercase",
                   }}
                 >
-                  Most Popular
+                  {tier.badge}
+                </p>
+              )}
+              {!tier.available && (
+                <p style={{ fontFamily: "var(--font-cinzel)", fontSize: "8px", letterSpacing: "3px", color: "var(--gold)", border: "1px solid rgba(191,160,90,0.4)", padding: "4px 12px", position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", textTransform: "uppercase" }}>
+                  Coming Soon
                 </p>
               )}
               <p

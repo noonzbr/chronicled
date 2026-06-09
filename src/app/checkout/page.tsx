@@ -6,9 +6,9 @@ import { motion } from "framer-motion";
 import { getBook } from "@/lib/books";
 
 const TIERS = [
-  { key: "digital",   label: "Digital PDF",            price: "$19", desc: "Beautifully styled PDF delivered to your inbox instantly.",   includes: ["100–150 page PDF", "Vintage book design", "Instant delivery"],                     highlight: false },
-  { key: "softcover", label: "Softcover Book",          price: "$39", desc: "Your chronicle printed and bound, shipped to your door.",     includes: ["Everything in Digital", "Printed softcover book", "Worldwide shipping"],             highlight: false },
-  { key: "hardcover", label: "Hardcover + Portrait",    price: "$59", desc: "The definitive edition with your AI-generated Royal Portrait.", includes: ["Everything in Softcover", "Premium hardcover binding", "Royal Portrait inside"], highlight: true  },
+  { key: "digital", label: "Digital Edition", price: "$14.99", desc: "Beautifully styled PDF delivered to your inbox instantly.", includes: ["100–150 page PDF", "Vintage book design", "Instant delivery", "Yours forever"], highlight: true, available: true },
+  { key: "softcover", label: "Softcover Book", price: "Coming Soon", desc: "Your chronicle printed and bound, shipped to your door.", includes: ["Everything in Digital", "Printed softcover book", "Worldwide shipping"], highlight: false, available: false },
+  { key: "hardcover", label: "Hardcover + Portrait", price: "Coming Soon", desc: "The definitive edition with your AI-generated Royal Portrait.", includes: ["Everything in Softcover", "Premium hardcover binding", "Royal Portrait inside"], highlight: false, available: false },
 ];
 
 function CheckoutContent() {
@@ -18,7 +18,7 @@ function CheckoutContent() {
   const defaultTier = searchParams.get("tier")  || "hardcover";
   const book = getBook(bookSlug);
 
-  const [selectedTier, setSelectedTier] = useState(defaultTier);
+  const [selectedTier, setSelectedTier] = useState("digital");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -26,9 +26,10 @@ function CheckoutContent() {
     setLoading(true);
     setError("");
 
-    // Hardcover — go to portrait page first
-    if (selectedTier === "hardcover") {
-      window.location.href = `/portrait?book=${bookSlug}&session=${sessionId}&tier=hardcover`;
+    // Only digital available right now
+    if (selectedTier !== "digital") {
+      setError("Physical editions are coming soon. Please select the Digital Edition.");
+      setLoading(false);
       return;
     }
 
@@ -90,19 +91,25 @@ function CheckoutContent() {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: i * 0.1, duration: 0.5 }}
-                onClick={() => setSelectedTier(tier.key)}
+                onClick={() => tier.available && setSelectedTier(tier.key)}
                 style={{
-                  border: isSelected ? `1px solid ${bookColor}` : tier.highlight ? "1px solid rgba(191,160,90,0.4)" : "1px solid rgba(191,160,90,0.2)",
+                  border: isSelected ? `1px solid ${bookColor}` : tier.highlight ? "1px solid rgba(191,160,90,0.4)" : "1px solid rgba(191,160,90,0.15)",
                   padding: "32px 28px",
-                  cursor: "pointer",
+                  cursor: tier.available ? "pointer" : "default",
                   backgroundColor: isSelected ? `${bookColor}15` : tier.highlight ? "rgba(191,160,90,0.06)" : "var(--ink-card)",
+                  opacity: tier.available ? 1 : 0.45,
                   transition: "all 0.2s",
                   position: "relative",
                 }}
               >
                 {tier.highlight && (
                   <p style={{ fontFamily: "var(--font-cinzel)", fontSize: "7px", letterSpacing: "3px", color: "var(--ink)", backgroundColor: "var(--gold)", padding: "3px 10px", position: "absolute", top: "-11px", left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", textTransform: "uppercase" }}>
-                    Most Popular
+                    Intro Price
+                  </p>
+                )}
+                {!tier.available && (
+                  <p style={{ fontFamily: "var(--font-cinzel)", fontSize: "7px", letterSpacing: "3px", color: "var(--gold)", backgroundColor: "rgba(191,160,90,0.1)", border: "1px solid rgba(191,160,90,0.3)", padding: "3px 10px", position: "absolute", top: "-11px", left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", textTransform: "uppercase" }}>
+                    Coming Soon
                   </p>
                 )}
                 {isSelected && (

@@ -270,20 +270,22 @@ function PreviewContent() {
 
         <div style={{ display: "flex", gap: "20px", justifyContent: "center", flexWrap: "wrap" }}>
           {[
-            { tier: "digital",    label: "Digital PDF",  price: "$19", desc: "Instant download",        highlight: false },
-            { tier: "softcover",  label: "Softcover",    price: "$39", desc: "Printed & shipped",       highlight: false },
-            { tier: "hardcover",  label: "Hardcover",    price: "$59", desc: "Royal Portrait included", highlight: true  },
+            { tier: "digital", label: "Digital Edition", price: "$14.99", desc: "Instant download", highlight: true, available: true },
+            { tier: "softcover", label: "Softcover", price: "Coming Soon", desc: "Printed & shipped", highlight: false, available: false },
+            { tier: "hardcover", label: "Hardcover", price: "Coming Soon", desc: "Royal Portrait included", highlight: false, available: false },
           ].map((t) => (
             <Link
               key={t.tier}
-              href={`/checkout?book=${bookSlug}&session=${sessionId}&tier=${t.tier}`}
+              href={t.available ? `/checkout?book=${bookSlug}&session=${sessionId}&tier=${t.tier}` : "#"}
               style={{
                 display: "block",
-                border: t.highlight ? "1px solid var(--gold-light)" : "1px solid rgba(191,160,90,0.3)",
+                border: t.highlight ? "1px solid var(--gold-light)" : "1px solid rgba(191,160,90,0.2)",
                 padding: "28px 36px",
                 textDecoration: "none",
                 backgroundColor: t.highlight ? "rgba(191,160,90,0.12)" : "transparent",
                 minWidth: "200px",
+                opacity: t.available ? 1 : 0.45,
+                cursor: t.available ? "pointer" : "default",
                 transition: "all 0.2s",
               }}
             >
