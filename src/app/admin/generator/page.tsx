@@ -26,6 +26,16 @@ function GeneratorContent() {
   // Canvas Refs
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const animationFrameId = useRef<number | null>(null);
+  const outroImgRef = useRef<HTMLImageElement | null>(null);
+
+  // Preload the beautiful generated outro card image
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/outro.png";
+    img.onload = () => {
+      outroImgRef.current = img;
+    };
+  }, []);
 
   // Particle System State for Gold Dust
   const particles = useRef<Array<{
@@ -189,6 +199,17 @@ function GeneratorContent() {
         textOpacity = 1;
       }
     } else if (elapsedMs >= takeawayStart && elapsedMs < takeawayEnd) {
+      // If we have the custom generated outro image loaded, display it full-screen
+      if (outroImgRef.current) {
+        ctx.save();
+        const imgOpacity = Math.min(1, (elapsedMs - takeawayStart) / 500);
+        ctx.globalAlpha = imgOpacity;
+        ctx.drawImage(outroImgRef.current, 0, 0, width, height);
+        ctx.restore();
+        return; // Skip drawing text overlays, as the outro card already has them
+      }
+
+      // Fallback to text overlay
       textToDraw = selectedTakeawayFormat(takeawayText);
       isTitle = false;
       if (elapsedMs - takeawayStart < 500) {
