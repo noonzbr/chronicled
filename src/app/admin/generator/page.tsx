@@ -36,12 +36,21 @@ function GeneratorContent() {
   const animationFrameId = useRef<number | null>(null);
   const outroImgRef = useRef<HTMLImageElement | null>(null);
 
-  // Preload the beautiful generated outro card image
+  // Preload the beautiful generated outro card image and load Google Fonts
   useEffect(() => {
     const img = new Image();
     img.src = "/outro.png";
     img.onload = () => {
       outroImgRef.current = img;
+    };
+
+    const link = document.createElement("link");
+    link.href = "https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap";
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
     };
   }, []);
 
@@ -105,9 +114,124 @@ function GeneratorContent() {
       startY += lineHeight;
     }
   };
+  
+  // Interactive word-by-word renderer with karaoke fade and scandal highlight
+  const drawInteractiveText = (
+    ctx: CanvasRenderingContext2D,
+    text: string,
+    x: number,
+    y: number,
+    maxWidth: number,
+    lineHeight: number,
+    elapsedMs: number,
+    slideStart: number,
+    slideEnd: number,
+    fontStyle: string
+  ) => {
+    ctx.save();
+    ctx.font = fontStyle;
+
+    const words = text.split(" ");
+    let line = "";
+    const lines: string[][] = [];
+    let currentLine: string[] = [];
+
+    // Wrap words into lines
+    for (let n = 0; n < words.length; n++) {
+      const testLine = line + words[n] + " ";
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && n > 0) {
+        lines.push(currentLine);
+        currentLine = [words[n]];
+        line = words[n] + " ";
+      } else {
+        currentLine.push(words[n]);
+        line = testLine;
+      }
+    }
+    lines.push(currentLine);
+
+    const totalHeight = lines.length * lineHeight;
+    let startY = y - totalHeight / 2 + lineHeight / 2;
+
+    // Word timing settings
+    const totalWords = words.length;
+    const activeStart = slideStart + 500; // start after slide fade-in
+    const activeEnd = slideEnd - 500; // end before slide fade-out
+    const activeDuration = activeEnd - activeStart;
+    
+    // Highlight list (Spicy Bridgerton & Memoir words)
+    const scandalWords = [
+      'duke', 'duchess', 'secret', 'secrets', 'ruined', 'ruin', 'scandal', 'scandalous', 
+      'forbidden', 'bloodline', 'affair', 'marriage', 'waltz', 'duel', 'journal', 'journals', 
+      'locked', 'confession', 'betrayal', 'heiress', 'impostor', 'blackmail', 'poison', 
+      'betrayed', 'scratched', 'slashed', 'sin', 'sins', 'transpired'
+    ];
+
+    let globalWordIndex = 0;
+
+    for (let i = 0; i < lines.length; i++) {
+      const lineWords = lines[i];
+      
+      // Calculate centered starting x
+      let lineWidth = 0;
+      for (const w of lineWords) {
+        lineWidth += ctx.measureText(w + " ").width;
+      }
+      let startX = x - lineWidth / 2;
+
+      for (const word of lineWords) {
+        const cleanWord = word.toLowerCase().replace(/[^a-z]/g, "");
+        const isScandal = scandalWords.includes(cleanWord);
+
+        // Word fade-in delay (karaoke style)
+        const wordTime = activeDuration / (totalWords + 1);
+        const wordAppearTime = activeStart + (globalWordIndex * wordTime);
+        
+        let wordOpacity = 0;
+        if (elapsedMs < activeStart) {
+          wordOpacity = 0;
+        } else if (elapsedMs >= activeEnd) {
+          wordOpacity = 1;
+        } else if (elapsedMs >= wordAppearTime) {
+          wordOpacity = Math.min(1, (elapsedMs - wordAppearTime) / 300); // fade in word over 300ms
+        }
+
+        ctx.save();
+        ctx.globalAlpha = ctx.globalAlpha * wordOpacity;
+
+        if (isScandal) {
+          ctx.shadowColor = "rgba(212, 175, 55, 0.4)";
+          ctx.shadowBlur = 10;
+          ctx.fillStyle = "#d4af37"; // Vibrant Gold
+        } else {
+          ctx.fillStyle = textColor;
+        }
+
+        ctx.fillText(word, startX + ctx.measureText(word).width / 2, startY);
+        ctx.restore();
+
+        startX += ctx.measureText(word + " ").width;
+        globalWordIndex++;
+      }
+      startY += lineHeight;
+    }
+    
+    ctx.restore();
+  };
 
   // Draw Background function (Width 1080, Height 1920)
   const drawBackground = (ctx: CanvasRenderingContext2D, width: number, height: number, timeMs: number) => {
+    ctx.save();
+    
+    // Ken Burns slow zoom effect (from 1.0 to 1.12)
+    const cycleMs = timeMs % totalDuration;
+    const scale = 1.0 + (cycleMs / totalDuration) * 0.12;
+    
+    ctx.translate(width / 2, height / 2);
+    ctx.scale(scale, scale);
+    ctx.translate(-width / 2, -height / 2);
+
     if (backgroundType === "gold-dust") {
       // Deep Ink dark background
       ctx.fillStyle = "#0a0a0c";
@@ -162,6 +286,7 @@ function GeneratorContent() {
       ctx.ellipse(width / 2, height / 3 + shift, 500, 500, 0, 0, Math.PI * 2);
       ctx.fill();
     }
+    ctx.restore();
   };
 
   // Draw overlay text with timing
@@ -191,10 +316,16 @@ function GeneratorContent() {
     let textOpacity = 0;
     let textToDraw = "";
     let isTitle = false;
+    let slideStart = 0;
+    let slideEnd = 0;
+    let isCursive = false;
 
     if (elapsedMs >= hookStart && elapsedMs < hookEnd) {
       textToDraw = hookText;
       isTitle = true;
+      slideStart = hookStart;
+      slideEnd = hookEnd;
+      isCursive = false;
       // Fade in (500ms) / Fade out (500ms)
       if (elapsedMs - hookStart < 500) {
         textOpacity = (elapsedMs - hookStart) / 500;
@@ -206,6 +337,9 @@ function GeneratorContent() {
     } else if (elapsedMs >= body1Start && elapsedMs < body1End) {
       textToDraw = body1Text;
       isTitle = false;
+      slideStart = body1Start;
+      slideEnd = body1End;
+      isCursive = true;
       if (elapsedMs - body1Start < 500) {
         textOpacity = (elapsedMs - body1Start) / 500;
       } else if (body1End - elapsedMs < 500) {
@@ -216,6 +350,9 @@ function GeneratorContent() {
     } else if (elapsedMs >= body2Start && elapsedMs < body2End) {
       textToDraw = body2Text;
       isTitle = false;
+      slideStart = body2Start;
+      slideEnd = body2End;
+      isCursive = true;
       if (elapsedMs - body2Start < 500) {
         textOpacity = (elapsedMs - body2Start) / 500;
       } else if (body2End - elapsedMs < 500) {
@@ -226,6 +363,9 @@ function GeneratorContent() {
     } else if (elapsedMs >= body3Start && elapsedMs < body3End) {
       textToDraw = body3Text;
       isTitle = false;
+      slideStart = body3Start;
+      slideEnd = body3End;
+      isCursive = true;
       if (elapsedMs - body3Start < 500) {
         textOpacity = (elapsedMs - body3Start) / 500;
       } else if (body3End - elapsedMs < 500) {
@@ -236,6 +376,9 @@ function GeneratorContent() {
     } else if (hasExtendedBeats && elapsedMs >= body4Start && elapsedMs < body4End) {
       textToDraw = body4Text;
       isTitle = false;
+      slideStart = body4Start;
+      slideEnd = body4End;
+      isCursive = true;
       if (elapsedMs - body4Start < 500) {
         textOpacity = (elapsedMs - body4Start) / 500;
       } else if (body4End - elapsedMs < 500) {
@@ -246,6 +389,9 @@ function GeneratorContent() {
     } else if (hasExtendedBeats && elapsedMs >= body5Start && elapsedMs < body5End) {
       textToDraw = body5Text;
       isTitle = false;
+      slideStart = body5Start;
+      slideEnd = body5End;
+      isCursive = true;
       if (elapsedMs - body5Start < 500) {
         textOpacity = (elapsedMs - body5Start) / 500;
       } else if (body5End - elapsedMs < 500) {
@@ -256,6 +402,9 @@ function GeneratorContent() {
     } else if (elapsedMs >= takeawayStart && elapsedMs < takeawayEnd) {
       textToDraw = selectedTakeawayFormat(takeawayText);
       isTitle = false;
+      slideStart = takeawayStart;
+      slideEnd = takeawayEnd;
+      isCursive = false;
       if (elapsedMs - takeawayStart < 500) {
         textOpacity = (elapsedMs - takeawayStart) / 500;
       } else if (takeawayEnd - elapsedMs < 500) {
@@ -279,10 +428,26 @@ function GeneratorContent() {
       ctx.save();
       ctx.globalAlpha = textOpacity;
 
-      // Font Setup - Uniform and consistent style across all screens
-      ctx.font = `italic 46px ${fontFamily}`;
-      ctx.fillStyle = textColor;
-      wrapText(ctx, textToDraw, width / 2, height / 2, width * 0.85, 68);
+      // Font Setup - Cursive handwriting for diary beats, serif for hook/takeaway
+      let currentFont = `italic 46px ${fontFamily}`;
+      let lineH = 68;
+      if (isCursive) {
+        currentFont = `normal 62px "Pinyon Script", cursive`;
+        lineH = 72;
+      }
+
+      drawInteractiveText(
+        ctx,
+        textToDraw,
+        width / 2,
+        height / 2,
+        width * 0.85,
+        lineH,
+        elapsedMs,
+        slideStart,
+        slideEnd,
+        currentFont
+      );
 
       ctx.restore();
     }
