@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Cinzel, Cinzel_Decorative } from "next/font/google";
 import "./globals.css";
-import SocialProof from "@/components/SocialProof";
+// import SocialProof from "@/components/SocialProof"; // re-enable on relaunch
 
 const ebGaramond = EB_Garamond({
   variable: "--font-garamond",
@@ -57,7 +57,7 @@ export default function RootLayout({
         }}
       >
         {children}
-        <SocialProof />
+        {/* <SocialProof /> — disabled during maintenance/holding mode; re-enable on relaunch */}
       </body>
     </html>
   );

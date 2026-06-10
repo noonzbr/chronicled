@@ -45,7 +45,7 @@ function GeneratorContent() {
     };
 
     const link = document.createElement("link");
-    link.href = "https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap";
+    link.href = "https://fonts.googleapis.com/css2?family=Caveat:wght@600&display=swap";
     link.rel = "stylesheet";
     document.head.appendChild(link);
 
@@ -115,7 +115,7 @@ function GeneratorContent() {
     }
   };
   
-  // Interactive word-by-word renderer with karaoke fade and scandal highlight
+  // Interactive character-by-character typewriter renderer with layout stabilization and scandal highlight
   const drawInteractiveText = (
     ctx: CanvasRenderingContext2D,
     text: string,
@@ -136,7 +136,7 @@ function GeneratorContent() {
     const lines: string[][] = [];
     let currentLine: string[] = [];
 
-    // Wrap words into lines
+    // Wrap words into lines based on full text (stable layout)
     for (let n = 0; n < words.length; n++) {
       const testLine = line + words[n] + " ";
       const metrics = ctx.measureText(testLine);
@@ -154,13 +154,13 @@ function GeneratorContent() {
     const totalHeight = lines.length * lineHeight;
     let startY = y - totalHeight / 2 + lineHeight / 2;
 
-    // Word timing settings
-    const totalWords = words.length;
-    const activeStart = slideStart + 500; // start after slide fade-in
-    const activeEnd = slideEnd - 500; // end before slide fade-out
-    const activeDuration = activeEnd - activeStart;
-    
-    // Highlight list (Spicy Bridgerton & Memoir words)
+    // Typewriter timing (normal pace: 35ms per character)
+    const activeStart = slideStart + 500;
+    const charDelay = 35; 
+    const elapsedInSlide = elapsedMs - activeStart;
+    const totalCharsRevealed = elapsedMs < activeStart ? 0 : Math.floor(elapsedInSlide / charDelay);
+
+    let globalCharIndex = 0;
     const scandalWords = [
       'duke', 'duchess', 'secret', 'secrets', 'ruined', 'ruin', 'scandal', 'scandalous', 
       'forbidden', 'bloodline', 'affair', 'marriage', 'waltz', 'duel', 'journal', 'journals', 
@@ -168,12 +168,10 @@ function GeneratorContent() {
       'betrayed', 'scratched', 'slashed', 'sin', 'sins', 'transpired'
     ];
 
-    let globalWordIndex = 0;
-
     for (let i = 0; i < lines.length; i++) {
       const lineWords = lines[i];
-      
-      // Calculate centered starting x
+
+      // Calculate centered starting X for this line (based on FULL line width)
       let lineWidth = 0;
       for (const w of lineWords) {
         lineWidth += ctx.measureText(w + " ").width;
@@ -184,39 +182,45 @@ function GeneratorContent() {
         const cleanWord = word.toLowerCase().replace(/[^a-z]/g, "");
         const isScandal = scandalWords.includes(cleanWord);
 
-        // Word fade-in delay (karaoke style)
-        const wordTime = activeDuration / (totalWords + 1);
-        const wordAppearTime = activeStart + (globalWordIndex * wordTime);
-        
-        let wordOpacity = 0;
-        if (elapsedMs < activeStart) {
-          wordOpacity = 0;
-        } else if (elapsedMs >= activeEnd) {
-          wordOpacity = 1;
-        } else if (elapsedMs >= wordAppearTime) {
-          wordOpacity = Math.min(1, (elapsedMs - wordAppearTime) / 300); // fade in word over 300ms
+        // Determine how many characters of this word to show
+        let wordToShow = "";
+        for (let c = 0; c < word.length; c++) {
+          if (globalCharIndex < totalCharsRevealed) {
+            wordToShow += word[c];
+            globalCharIndex++;
+          } else {
+            break;
+          }
         }
 
-        ctx.save();
-        ctx.globalAlpha = ctx.globalAlpha * wordOpacity;
+        // Draw the partial word
+        if (wordToShow.length > 0) {
+          ctx.save();
+          if (isScandal) {
+            ctx.shadowColor = "rgba(212, 175, 55, 0.4)";
+            ctx.shadowBlur = 10;
+            ctx.fillStyle = "#d4af37"; // Gold highlight
+          } else {
+            ctx.fillStyle = textColor;
+          }
 
-        if (isScandal) {
-          ctx.shadowColor = "rgba(212, 175, 55, 0.4)";
-          ctx.shadowBlur = 10;
-          ctx.fillStyle = "#d4af37"; // Vibrant Gold
-        } else {
-          ctx.fillStyle = textColor;
+          // Use left alignment for typewriter typing stability
+          ctx.textAlign = "left";
+          ctx.fillText(wordToShow, startX, startY);
+          ctx.restore();
         }
 
-        ctx.fillText(word, startX + ctx.measureText(word).width / 2, startY);
-        ctx.restore();
+        // Advance global character count for the trailing space
+        if (globalCharIndex < totalCharsRevealed) {
+          globalCharIndex++; 
+        }
 
+        // Move startX by the FULL word width plus space to keep layout completely stable!
         startX += ctx.measureText(word + " ").width;
-        globalWordIndex++;
       }
       startY += lineHeight;
     }
-    
+
     ctx.restore();
   };
 
@@ -428,13 +432,9 @@ function GeneratorContent() {
       ctx.save();
       ctx.globalAlpha = textOpacity;
 
-      // Font Setup - Cursive handwriting for diary beats, serif for hook/takeaway
+      // Font Setup - Uniform elegant serif font throughout all slides
       let currentFont = `italic 46px ${fontFamily}`;
       let lineH = 68;
-      if (isCursive) {
-        currentFont = `normal 62px "Pinyon Script", cursive`;
-        lineH = 72;
-      }
 
       drawInteractiveText(
         ctx,
