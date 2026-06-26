@@ -6,42 +6,44 @@ import { generateBookHtml } from "@/lib/book-html";
 // Uses @sparticuz/chromium-min + puppeteer-core for Vercel compatibility
 
 async function getBrowser() {
-  // In production (Vercel), use the serverless chromium build
-  if (process.env.NODE_ENV === "production" || process.env.AWS_LAMBDA_FUNCTION_NAME) {
-    const chromium   = (await import("@sparticuz/chromium-min")).default;
-    const puppeteer  = (await import("puppeteer-core")).default;
-    const execPath   = await chromium.executablePath(
-      "https://github.com/Sparticuz/chromium/releases/download/v130.0.0/chromium-v130.0.0-pack.tar"
-    );
+  const puppeteer = (await import("puppeteer-core")).default;
+  const launchArgs = [
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-dev-shm-usage",
+    "--disable-gpu",
+  ];
+
+  // Production (Railway/Docker): use the system Chromium installed in the image.
+  // PUPPETEER_EXECUTABLE_PATH is set in the Dockerfile to /usr/bin/chromium.
+  const envPath = process.env.PUPPETEER_EXECUTABLE_PATH;
+  if (envPath) {
     return puppeteer.launch({
-      args:           chromium.args,
-      executablePath: execPath,
-      headless:       true,
+      executablePath: envPath,
+      headless: true,
+      args: launchArgs,
     });
   }
 
-  // In development, use locally installed Chrome
-  const puppeteer = (await import("puppeteer-core")).default;
+  // Local development: find an installed Chrome/Chromium.
   const paths = [
     "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
     "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe",
     "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
     "/usr/bin/google-chrome",
+    "/usr/bin/chromium",
     "/usr/bin/chromium-browser",
   ];
-
-  // Find first available Chrome path
   const { existsSync } = await import("fs");
   const executablePath = paths.find((p) => existsSync(p));
-
   if (!executablePath) {
-    throw new Error("Chrome not found. Install Google Chrome to generate PDFs locally.");
+    throw new Error("Chrome not found. Set PUPPETEER_EXECUTABLE_PATH or install Google Chrome.");
   }
 
   return puppeteer.launch({
     executablePath,
     headless: true,
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    args: launchArgs,
   });
 }
 

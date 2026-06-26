@@ -77,11 +77,47 @@ export async function POST(req: NextRequest) {
 
     const bookTitle = bookData?.title || "Your Chronicle";
 
-    // ── Send confirmation email ───────────────────────────────────────────────
     const customerEmail = session.customer_details?.email || session.customer_email;
     const customerName  = session.customer_details?.name  || "Valued Customer";
 
-    if (customerEmail && order) {
+    // ── Digital: generate PDF first, then email it as an attachment ───────────
+    if (tier === "digital" && order) {
+      let pdfUrl: string | null = null;
+      try {
+        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.art";
+        const pdfRes = await fetch(`${appUrl}/api/pdf?token=${downloadToken}&upload=true`);
+        if (pdfRes.ok) {
+          const pdfData = await pdfRes.json();
+          pdfUrl = pdfData.pdfUrl || null;
+          await supabase.from("orders").update({ status: "complete" }).eq("id", order.id);
+          console.log(`PDF generated for order ${order.id}: ${pdfUrl}`);
+        } else {
+          console.error(`PDF generation failed: HTTP ${pdfRes.status}`);
+        }
+      } catch (pdfErr) {
+        console.error("PDF generation error (non-fatal):", pdfErr);
+      }
+
+      if (customerEmail) {
+        try {
+          await sendOrderEmail({
+            toEmail:       customerEmail,
+            toName:        customerName,
+            bookTitle,
+            bookArchetype: bookSlug || "the-great-gatsby",
+            downloadToken,
+            tier:          "digital",
+            pdfUrl,
+          });
+          console.log(`Email sent to ${customerEmail} (PDF attached: ${!!pdfUrl})`);
+        } catch (emailErr) {
+          console.error("Email delivery error (non-fatal):", emailErr);
+        }
+      }
+    }
+
+    // ── Physical: send confirmation email (download link); Lulu handled below ─
+    if (tier !== "digital" && order && customerEmail) {
       try {
         await sendOrderEmail({
           toEmail:       customerEmail,
@@ -89,30 +125,11 @@ export async function POST(req: NextRequest) {
           bookTitle,
           bookArchetype: bookSlug || "the-great-gatsby",
           downloadToken,
-          tier:          tier as "digital" | "softcover" | "hardcover",
+          tier:          tier as "softcover" | "hardcover",
         });
         console.log(`Email sent to ${customerEmail}`);
       } catch (emailErr) {
         console.error("Email delivery error (non-fatal):", emailErr);
-      }
-    }
-
-    // ── For digital orders: generate PDF and mark complete ───────────────────
-    if (tier === "digital" && order) {
-      try {
-        const appUrl = process.env.NEXT_PUBLIC_APP_URL || "https://getchronicled.art";
-        const pdfRes = await fetch(
-          `${appUrl}/api/pdf?token=${downloadToken}&upload=true`,
-          { method: "GET" }
-        );
-        if (pdfRes.ok) {
-          await supabase.from("orders")
-            .update({ status: "complete" })
-            .eq("id", order.id);
-          console.log(`PDF generated for order ${order.id}`);
-        }
-      } catch (pdfErr) {
-        console.error("PDF generation error (non-fatal):", pdfErr);
       }
     }
 

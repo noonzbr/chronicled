@@ -14,6 +14,7 @@ type BookEmailData = {
   bookArchetype: string;
   downloadToken: string;
   tier: "digital" | "softcover" | "hardcover";
+  pdfUrl?: string | null;
 };
 
 export async function sendOrderEmail(data: BookEmailData) {
@@ -165,12 +166,20 @@ export async function sendOrderEmail(data: BookEmailData) {
 </html>
   `.trim();
 
+  // Attach the PDF for digital orders when we have a generated file URL.
+  const safeName = (data.bookTitle || "Your Chronicle").replace(/[^\w\s-]/g, "").trim() || "Your Chronicle";
+  const attachments =
+    data.tier === "digital" && data.pdfUrl
+      ? [{ filename: `${safeName}.pdf`, path: data.pdfUrl }]
+      : undefined;
+
   const resend = getResend();
   const { data: result, error } = await resend.emails.send({
-    from: "Chronicled <books@getchronicled.art>",
+    from: "Chronicled <hello@getchronicled.art>",
     to: data.toEmail,
     subject: `${msg.subject} — ${data.bookTitle}`,
     html,
+    ...(attachments ? { attachments } : {}),
   });
 
   if (error) {
