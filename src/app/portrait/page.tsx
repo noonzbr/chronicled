@@ -121,7 +121,7 @@ function PortraitContent() {
           </h1>
           <div style={{ height: "1px", background: "linear-gradient(to right, transparent, var(--gold), transparent)", maxWidth: "200px", margin: "0 auto 20px" }} />
           <p style={{ fontFamily: "var(--font-garamond)", fontStyle: "italic", fontSize: "16px", color: "var(--parchment)", opacity: 0.7, lineHeight: 1.8, maxWidth: "520px", margin: "0 auto" }}>
-            Upload a clear photo of yourself. Our AI will render you as a character from your chronicle —
+            Upload a clear photo of yourself. You'll be rendered as a character from your chronicle —
             in the exact artistic style of the era.
           </p>
         </motion.div>

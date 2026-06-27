@@ -1,7 +1,259 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
+
+// ── CONTACT SECTION COMPONENT ──
+function ContactSection() {
+  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setStatus("sending");
+    setErrorMsg("");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to send");
+      setStatus("success");
+      setForm({ name: "", email: "", subject: "", message: "" });
+    } catch (err: any) {
+      setStatus("error");
+      setErrorMsg(err.message);
+    }
+  };
+
+  const inputStyle: React.CSSProperties = {
+    width: "100%",
+    background: "rgba(20,14,6,0.8)",
+    border: "1px solid rgba(191,160,90,0.25)",
+    borderRadius: "6px",
+    padding: "14px 18px",
+    color: "#e8d5a3",
+    fontSize: "15px",
+    fontFamily: "var(--font-inter)",
+    outline: "none",
+    transition: "border-color 0.2s",
+    boxSizing: "border-box",
+  };
+
+  return (
+    <section
+      id="contact"
+      style={{
+        padding: "100px 24px",
+        maxWidth: "680px",
+        margin: "0 auto",
+      }}
+    >
+      {/* Header */}
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
+        style={{ textAlign: "center", marginBottom: "52px" }}
+      >
+        <p style={{
+          fontFamily: "var(--font-inter)",
+          fontSize: "11px",
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          color: "#b8961e",
+          marginBottom: "16px",
+        }}>Get In Touch</p>
+        <h2 style={{
+          fontFamily: "var(--font-cinzel-deco)",
+          fontSize: "clamp(26px, 4vw, 38px)",
+          color: "#e8d5a3",
+          margin: "0 0 16px",
+          lineHeight: 1.3,
+        }}>Questions &amp; Inquiries</h2>
+        <p style={{
+          fontFamily: "var(--font-garamond)",
+          fontStyle: "italic",
+          fontSize: "17px",
+          color: "#b8961e",
+          opacity: 0.85,
+          margin: 0,
+        }}>We read every message. A member of our team will reply within 24 hours.</p>
+      </motion.div>
+
+      {/* Form or Success */}
+      {status === "success" ? (
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          style={{
+            background: "rgba(20,14,6,0.9)",
+            border: "1px solid rgba(191,160,90,0.3)",
+            borderRadius: "12px",
+            padding: "56px 40px",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: "40px", marginBottom: "20px" }}>✉️</div>
+          <h3 style={{
+            fontFamily: "var(--font-cinzel-deco)",
+            color: "#d4a843",
+            fontSize: "22px",
+            marginBottom: "12px",
+          }}>Message Received</h3>
+          <p style={{
+            fontFamily: "var(--font-garamond)",
+            fontStyle: "italic",
+            color: "#e8d5a3",
+            fontSize: "16px",
+            opacity: 0.8,
+            margin: "0 0 28px",
+          }}>Thank you for reaching out. We will be in touch shortly.</p>
+          <button
+            onClick={() => setStatus("idle")}
+            style={{
+              background: "transparent",
+              border: "1px solid rgba(191,160,90,0.4)",
+              color: "#b8961e",
+              padding: "10px 24px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontFamily: "var(--font-inter)",
+              fontSize: "13px",
+              letterSpacing: "0.06em",
+            }}
+          >Send Another Message</button>
+        </motion.div>
+      ) : (
+        <motion.form
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.15 }}
+          onSubmit={handleSubmit}
+          style={{
+            background: "rgba(16,11,4,0.85)",
+            border: "1px solid rgba(191,160,90,0.2)",
+            borderRadius: "12px",
+            padding: "clamp(28px, 5vw, 52px)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px",
+          }}
+        >
+          {/* Row: Name + Email */}
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "16px" }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontFamily: "var(--font-inter)", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#8a7040" }}>Name *</label>
+              <input
+                id="contact-name"
+                name="name"
+                type="text"
+                required
+                placeholder="Your name"
+                value={form.name}
+                onChange={handleChange}
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = "rgba(191,160,90,0.6)")}
+                onBlur={e => (e.target.style.borderColor = "rgba(191,160,90,0.25)")}
+              />
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              <label style={{ fontFamily: "var(--font-inter)", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#8a7040" }}>Email *</label>
+              <input
+                id="contact-email"
+                name="email"
+                type="email"
+                required
+                placeholder="you@example.com"
+                value={form.email}
+                onChange={handleChange}
+                style={inputStyle}
+                onFocus={e => (e.target.style.borderColor = "rgba(191,160,90,0.6)")}
+                onBlur={e => (e.target.style.borderColor = "rgba(191,160,90,0.25)")}
+              />
+            </div>
+          </div>
+
+          {/* Subject */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <label style={{ fontFamily: "var(--font-inter)", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#8a7040" }}>Subject</label>
+            <input
+              id="contact-subject"
+              name="subject"
+              type="text"
+              placeholder="Order question, custom request, partnership..."
+              value={form.subject}
+              onChange={handleChange}
+              style={inputStyle}
+              onFocus={e => (e.target.style.borderColor = "rgba(191,160,90,0.6)")}
+              onBlur={e => (e.target.style.borderColor = "rgba(191,160,90,0.25)")}
+            />
+          </div>
+
+          {/* Message */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+            <label style={{ fontFamily: "var(--font-inter)", fontSize: "11px", letterSpacing: "0.1em", textTransform: "uppercase", color: "#8a7040" }}>Message *</label>
+            <textarea
+              id="contact-message"
+              name="message"
+              required
+              rows={6}
+              placeholder="Tell us about your project, question, or idea..."
+              value={form.message}
+              onChange={handleChange}
+              style={{ ...inputStyle, resize: "vertical", minHeight: "140px" }}
+              onFocus={e => (e.target.style.borderColor = "rgba(191,160,90,0.6)")}
+              onBlur={e => (e.target.style.borderColor = "rgba(191,160,90,0.25)")}
+            />
+          </div>
+
+          {/* Error */}
+          {status === "error" && (
+            <p style={{ fontFamily: "var(--font-inter)", fontSize: "13px", color: "#e05c5c", margin: 0 }}>
+              {errorMsg || "Something went wrong. Please try again."}
+            </p>
+          )}
+
+          {/* Submit */}
+          <motion.button
+            id="contact-submit"
+            type="submit"
+            disabled={status === "sending"}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            style={{
+              background: status === "sending" ? "rgba(180,140,50,0.3)" : "linear-gradient(135deg, #b8961e 0%, #d4a843 50%, #b8961e 100%)",
+              color: status === "sending" ? "rgba(20,14,6,0.6)" : "#14090a",
+              border: "none",
+              borderRadius: "8px",
+              padding: "16px 32px",
+              fontFamily: "var(--font-inter)",
+              fontWeight: 700,
+              fontSize: "13px",
+              letterSpacing: "0.12em",
+              textTransform: "uppercase",
+              cursor: status === "sending" ? "not-allowed" : "pointer",
+              transition: "all 0.2s",
+              marginTop: "4px",
+            }}
+          >
+            {status === "sending" ? "Sending..." : "Send Message"}
+          </motion.button>
+        </motion.form>
+      )}
+    </section>
+  );
+}
 
 const books = [
   {
@@ -70,6 +322,39 @@ const books = [
     color: "#7A4A2A",
     image: "https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&h=220&fit=crop&auto=format&q=80",
   },
+  {
+    slug: "jane-eyre",
+    title: "Jane Eyre",
+    theme: "A Life on Her Own Terms",
+    tone: "Fierce · Intimate · Triumphant",
+    description:
+      "For the woman who refused to settle. Your story told with moral courage, quiet strength, and the dignity of someone who always knew her own worth.",
+    roman: "VII",
+    color: "#6B4A5A",
+    image: "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?w=600&h=220&fit=crop&auto=format&q=80",
+  },
+  {
+    slug: "little-women",
+    title: "Little Women",
+    theme: "Family, Dreams & the People Who Made You",
+    tone: "Warm · Nostalgic · Life-Affirming",
+    description:
+      "For the family story — the sisters, the sacrifices, the love that shaped everything. Your story told with warmth, humor, and the full beauty of a life extraordinarily lived.",
+    roman: "VIII",
+    color: "#A07840",
+    image: "https://images.unsplash.com/photo-1476820865390-c52aeebb9891?w=600&h=220&fit=crop&auto=format&q=80",
+  },
+  {
+    slug: "wuthering-heights",
+    title: "Wuthering Heights",
+    theme: "The Love That Never Let Go",
+    tone: "Wild · Haunting · Unforgettable",
+    description:
+      "For the love that defied everything — time, circumstance, reason itself. Your story told with the raw intensity of a feeling that simply could not be contained.",
+    roman: "IX",
+    color: "#3A4550",
+    image: "https://images.unsplash.com/photo-1504701954957-2010ec3bcec1?w=600&h=220&fit=crop&auto=format&q=80",
+  },
 ];
 
 const fadeUp: Variants = {
@@ -82,14 +367,20 @@ const fadeUp: Variants = {
 };
 
 export default function HomePage() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem("chronicled_user_id"));
+  }, []);
+
   return (
     <main style={{ backgroundColor: "var(--ink)", minHeight: "100vh" }}>
 
       {/* ── NAV ── */}
       <nav
         style={{
-          borderBottom: "1px solid rgba(191,160,90,0.2)",
-          padding: "20px 40px",
+          borderBottom: "1px solid rgba(191,160,90,0.15)",
+          padding: "24px 40px",
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
@@ -100,9 +391,9 @@ export default function HomePage() {
         <span
           style={{
             fontFamily: "var(--font-cinzel-deco)",
-            fontSize: "20px",
+            fontSize: "22px",
             color: "var(--gold-light)",
-            letterSpacing: "1px",
+            letterSpacing: "1.5px",
           }}
         >
           Chronicled
@@ -111,40 +402,81 @@ export default function HomePage() {
           <Link
             href="/how-it-works"
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "3px",
-              color: "var(--gold)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "13px",
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              color: "var(--parchment)",
               textDecoration: "none",
               textTransform: "uppercase",
+              transition: "color 0.2s ease",
             }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold-light)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--parchment)")}
           >
             How It Works
           </Link>
-          <Link
-            href="/auth/login"
-            style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "3px",
-              color: "var(--gold)",
-              textDecoration: "none",
-              textTransform: "uppercase",
-            }}
-          >
-            Sign In
-          </Link>
+          {isLoggedIn ? (
+            <Link
+              href="/dashboard"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "13px",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                color: "var(--parchment)",
+                textDecoration: "none",
+                textTransform: "uppercase",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold-light)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--parchment)")}
+            >
+              My Library
+            </Link>
+          ) : (
+            <Link
+              href="/auth/login"
+              style={{
+                fontFamily: "var(--font-inter)",
+                fontSize: "13px",
+                fontWeight: 500,
+                letterSpacing: "0.08em",
+                color: "var(--parchment)",
+                textDecoration: "none",
+                textTransform: "uppercase",
+                transition: "color 0.2s ease",
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold-light)")}
+              onMouseLeave={(e) => (e.currentTarget.style.color = "var(--parchment)")}
+            >
+              Sign In
+            </Link>
+          )}
           <Link
             href="/begin"
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "3px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
               color: "var(--ink)",
-              backgroundColor: "var(--gold)",
-              padding: "10px 22px",
+              backgroundColor: "var(--gold-light)",
+              padding: "12px 24px",
               textDecoration: "none",
               textTransform: "uppercase",
+              transition: "all 0.2s ease",
+              boxShadow: "0 4px 12px rgba(191,160,90,0.15)",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--cream)";
+              e.currentTarget.style.transform = "translateY(-1px)";
+              e.currentTarget.style.boxShadow = "0 6px 16px rgba(191,160,90,0.25)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.backgroundColor = "var(--gold-light)";
+              e.currentTarget.style.transform = "translateY(0)";
+              e.currentTarget.style.boxShadow = "0 4px 12px rgba(191,160,90,0.15)";
             }}
           >
             Begin Your Story
@@ -154,16 +486,17 @@ export default function HomePage() {
 
       {/* ── Announcement Banner ── */}
       <div style={{
-        backgroundColor: "rgba(191,160,90,0.12)",
-        borderTop: "1px solid rgba(191,160,90,0.3)",
-        borderBottom: "1px solid rgba(191,160,90,0.3)",
-        padding: "10px 20px",
+        backgroundColor: "rgba(191,160,90,0.06)",
+        borderTop: "1px solid rgba(191,160,90,0.2)",
+        borderBottom: "1px solid rgba(191,160,90,0.2)",
+        padding: "12px 20px",
         textAlign: "center",
       }}>
         <p style={{
-          fontFamily: "var(--font-cinzel)",
-          fontSize: "10px",
-          letterSpacing: "3px",
+          fontFamily: "var(--font-inter)",
+          fontSize: "11px",
+          fontWeight: 600,
+          letterSpacing: "0.08em",
           color: "var(--gold-light)",
           textTransform: "uppercase",
           margin: 0,
@@ -177,7 +510,7 @@ export default function HomePage() {
         style={{
           position: "relative",
           textAlign: "center",
-          padding: "110px 40px 90px",
+          padding: "120px 40px 100px",
           overflow: "hidden",
         }}
       >
@@ -206,15 +539,16 @@ export default function HomePage() {
         />
 
         {/* Hero content */}
-        <div style={{ position: "relative", zIndex: 2, maxWidth: "720px", margin: "0 auto" }}>
+        <div style={{ position: "relative", zIndex: 2, maxWidth: "760px", margin: "0 auto" }}>
           <motion.p
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8 }}
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "6px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.15em",
               color: "var(--gold)",
               textTransform: "uppercase",
               marginBottom: "28px",
@@ -249,7 +583,7 @@ export default function HomePage() {
             style={{
               height: "1px",
               background: "linear-gradient(to right, transparent, var(--gold), transparent)",
-              margin: "0 auto 32px",
+              margin: "0 auto 36px",
               maxWidth: "240px",
             }}
           />
@@ -260,12 +594,10 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.5 }}
             style={{
               fontFamily: "var(--font-garamond)",
-              fontStyle: "italic",
-              fontSize: "20px",
-              color: "var(--parchment)",
+              fontSize: "22px",
+              color: "var(--cream)",
               lineHeight: 1.8,
               marginBottom: "48px",
-              opacity: 0.85,
             }}
           >
             Choose a classic book. Answer our questions.
@@ -278,20 +610,33 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.7 }}
-            style={{ display: "flex", gap: "16px", justifyContent: "center", flexWrap: "wrap" }}
+            style={{ display: "flex", gap: "18px", justifyContent: "center", flexWrap: "wrap" }}
           >
             <Link
               href="/begin"
               style={{
-                fontFamily: "var(--font-cinzel)",
-                fontSize: "11px",
-                letterSpacing: "3px",
+                fontFamily: "var(--font-inter)",
+                fontSize: "13px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
                 color: "var(--ink)",
                 backgroundColor: "var(--gold-light)",
-                padding: "16px 36px",
+                padding: "18px 40px",
                 textDecoration: "none",
                 textTransform: "uppercase",
                 display: "inline-block",
+                transition: "all 0.25s ease",
+                boxShadow: "0 4px 14px rgba(191,160,90,0.2)",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--cream)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+                e.currentTarget.style.boxShadow = "0 8px 24px rgba(191,160,90,0.3)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--gold-light)";
+                e.currentTarget.style.transform = "translateY(0)";
+                e.currentTarget.style.boxShadow = "0 4px 14px rgba(191,160,90,0.2)";
               }}
             >
               Begin Your Story
@@ -299,15 +644,29 @@ export default function HomePage() {
             <Link
               href="#how-it-works"
               style={{
-                fontFamily: "var(--font-cinzel)",
-                fontSize: "11px",
-                letterSpacing: "3px",
+                fontFamily: "var(--font-inter)",
+                fontSize: "13px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
                 color: "var(--gold)",
-                border: "1px solid rgba(191,160,90,0.4)",
-                padding: "16px 36px",
+                border: "1px solid rgba(191,160,90,0.45)",
+                padding: "18px 40px",
                 textDecoration: "none",
                 textTransform: "uppercase",
                 display: "inline-block",
+                transition: "all 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = "var(--gold-light)";
+                e.currentTarget.style.color = "var(--gold-light)";
+                e.currentTarget.style.backgroundColor = "rgba(191,160,90,0.04)";
+                e.currentTarget.style.transform = "translateY(-2px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = "rgba(191,160,90,0.45)";
+                e.currentTarget.style.color = "var(--gold)";
+                e.currentTarget.style.backgroundColor = "transparent";
+                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               How It Works
@@ -320,37 +679,40 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.0 }}
             style={{
-              marginTop: "36px",
+              marginTop: "44px",
               display: "inline-flex",
               alignItems: "center",
-              gap: "12px",
-              border: "1px solid rgba(191,160,90,0.45)",
-              backgroundColor: "rgba(191,160,90,0.07)",
-              padding: "12px 28px",
+              gap: "16px",
+              border: "1px solid rgba(191,160,90,0.3)",
+              backgroundColor: "rgba(191,160,90,0.04)",
+              padding: "14px 28px",
+              borderRadius: "0",
             }}
           >
             <span style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "9px",
-              letterSpacing: "3px",
-              color: "var(--gold)",
+              fontFamily: "var(--font-inter)",
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.08em",
+              color: "var(--gold-light)",
               textTransform: "uppercase",
             }}>
-              ⏳ Limited Time Introductory Offer
+              ⏳ Limited Time Offer
             </span>
-            <div style={{ width: "1px", height: "16px", backgroundColor: "rgba(191,160,90,0.3)" }} />
+            <div style={{ width: "1px", height: "16px", backgroundColor: "rgba(191,160,90,0.25)" }} />
             <span style={{
-              fontFamily: "var(--font-cinzel-deco)",
+              fontFamily: "var(--font-cinzel)",
               fontSize: "16px",
               color: "rgba(191,160,90,0.4)",
               textDecoration: "line-through",
+              letterSpacing: "1px",
             }}>
               $24.99
             </span>
             <span style={{
               fontFamily: "var(--font-cinzel-deco)",
-              fontSize: "22px",
-              color: "var(--gold-light)",
+              fontSize: "24px",
+              color: "var(--cream)",
             }}>
               $14.99
             </span>
@@ -371,9 +733,10 @@ export default function HomePage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           style={{
-            fontFamily: "var(--font-cinzel)",
-            fontSize: "10px",
-            letterSpacing: "6px",
+            fontFamily: "var(--font-inter)",
+            fontSize: "12px",
+            fontWeight: 600,
+            letterSpacing: "0.15em",
             color: "var(--gold)",
             textTransform: "uppercase",
             textAlign: "center",
@@ -403,19 +766,19 @@ export default function HomePage() {
                 <div
                   style={{
                     backgroundColor: "var(--ink-card)",
-                    border: "1px solid rgba(191,160,90,0.2)",
+                    border: "1px solid rgba(191,160,90,0.15)",
                     cursor: "pointer",
-                    transition: "all 0.3s ease",
+                    transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                     position: "relative",
                     overflow: "hidden",
                   }}
                   onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(191,160,90,0.55)";
-                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-3px)";
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 12px 40px rgba(0,0,0,0.5)`;
+                    (e.currentTarget as HTMLDivElement).style.borderColor = "var(--gold-light)";
+                    (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
+                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 12px 40px rgba(0,0,0,0.6), 0 0 15px rgba(191,160,90,0.06)`;
                   }}
                   onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(191,160,90,0.2)";
+                    (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(191,160,90,0.15)";
                     (e.currentTarget as HTMLDivElement).style.transform = "translateY(0)";
                     (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
                   }}
@@ -447,7 +810,7 @@ export default function HomePage() {
                         position: "absolute",
                         inset: 0,
                         backgroundColor: book.color,
-                        opacity: 0.62,
+                        opacity: 0.55,
                       }}
                     />
                     {/* Dark gradient at bottom to blend into card */}
@@ -455,7 +818,7 @@ export default function HomePage() {
                       style={{
                         position: "absolute",
                         inset: 0,
-                        background: "linear-gradient(to bottom, rgba(13,17,23,0.1) 0%, rgba(13,17,23,0.7) 100%)",
+                        background: "linear-gradient(to bottom, rgba(13,17,23,0.1) 0%, rgba(13,17,23,0.75) 100%)",
                       }}
                     />
                     {/* Roman numeral watermark */}
@@ -463,7 +826,8 @@ export default function HomePage() {
                       style={{
                         fontFamily: "var(--font-cinzel-deco)",
                         fontSize: "72px",
-                        color: "rgba(255,255,255,0.12)",
+                        color: "var(--gold-light)",
+                        opacity: 0.05,
                         position: "absolute",
                         bottom: "-8px",
                         right: "16px",
@@ -476,10 +840,11 @@ export default function HomePage() {
                     {/* Theme label over image */}
                     <p
                       style={{
-                        fontFamily: "var(--font-cinzel)",
-                        fontSize: "8px",
-                        letterSpacing: "4px",
-                        color: "rgba(255,255,255,0.75)",
+                        fontFamily: "var(--font-inter)",
+                        fontSize: "10px",
+                        fontWeight: 600,
+                        letterSpacing: "0.08em",
+                        color: "rgba(255,255,255,0.85)",
                         textTransform: "uppercase",
                         position: "absolute",
                         top: "18px",
@@ -492,7 +857,7 @@ export default function HomePage() {
                     <h3
                       style={{
                         fontFamily: "var(--font-cinzel-deco)",
-                        fontSize: "17px",
+                        fontSize: "20px",
                         color: "#ffffff",
                         fontWeight: 400,
                         lineHeight: 1.25,
@@ -500,7 +865,7 @@ export default function HomePage() {
                         bottom: "18px",
                         left: "20px",
                         right: "60px",
-                        textShadow: "0 1px 8px rgba(0,0,0,0.6)",
+                        textShadow: "0 2px 10px rgba(0,0,0,0.8)",
                       }}
                     >
                       {book.title}
@@ -514,8 +879,8 @@ export default function HomePage() {
                       style={{
                         fontFamily: "var(--font-garamond)",
                         fontStyle: "italic",
-                        fontSize: "13px",
-                        color: "var(--gold)",
+                        fontSize: "15px",
+                        color: "var(--gold-light)",
                         marginBottom: "14px",
                       }}
                     >
@@ -526,7 +891,7 @@ export default function HomePage() {
                     <div
                       style={{
                         height: "1px",
-                        background: `linear-gradient(to right, ${book.color}88, transparent)`,
+                        background: `linear-gradient(to right, ${book.color}66, transparent)`,
                         marginBottom: "14px",
                       }}
                     />
@@ -535,11 +900,10 @@ export default function HomePage() {
                     <p
                       style={{
                         fontFamily: "var(--font-garamond)",
-                        fontSize: "14.5px",
+                        fontSize: "16px",
                         color: "var(--parchment)",
-                        lineHeight: 1.7,
-                        opacity: 0.8,
-                        marginBottom: "20px",
+                        lineHeight: 1.75,
+                        marginBottom: "24px",
                       }}
                     >
                       {book.description}
@@ -548,11 +912,13 @@ export default function HomePage() {
                     {/* CTA */}
                     <p
                       style={{
-                        fontFamily: "var(--font-cinzel)",
-                        fontSize: "9px",
-                        letterSpacing: "3px",
+                        fontFamily: "var(--font-inter)",
+                        fontSize: "11px",
+                        fontWeight: 600,
+                        letterSpacing: "0.06em",
                         color: "var(--gold)",
                         textTransform: "uppercase",
+                        margin: 0,
                       }}
                     >
                       Choose This Story →
@@ -619,10 +985,10 @@ export default function HomePage() {
               style={{
                 fontFamily: "var(--font-garamond)",
                 fontStyle: "italic",
-                fontSize: "18px",
+                fontSize: "22px",
                 color: "var(--cream)",
-                lineHeight: 1.75,
-                marginBottom: "12px",
+                lineHeight: 1.8,
+                marginBottom: "16px",
               }}
             >
               "The interview takes about 20 minutes.<br />
@@ -630,12 +996,12 @@ export default function HomePage() {
             </p>
             <p
               style={{
-                fontFamily: "var(--font-cinzel)",
-                fontSize: "8px",
-                letterSpacing: "3px",
+                fontFamily: "var(--font-inter)",
+                fontSize: "11px",
+                fontWeight: 600,
+                letterSpacing: "0.12em",
                 color: "var(--gold)",
                 textTransform: "uppercase",
-                opacity: 0.7,
               }}
             >
               — Chronicled
@@ -646,7 +1012,7 @@ export default function HomePage() {
         {/* RIGHT — Steps */}
         <div
           style={{
-            backgroundColor: "rgba(20,27,36,0.95)",
+            backgroundColor: "rgba(20, 27, 36, 0.95)",
             padding: "60px 52px",
             display: "flex",
             flexDirection: "column",
@@ -655,9 +1021,10 @@ export default function HomePage() {
         >
           <p
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "6px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.15em",
               color: "var(--gold)",
               textTransform: "uppercase",
               marginBottom: "44px",
@@ -675,7 +1042,7 @@ export default function HomePage() {
           >
             {[
               { step: "01", title: "Choose Your Book", desc: "Pick the classic that matches the arc of your life." },
-              { step: "02", title: "The Interview", desc: "Our AI biographer asks questions. You answer freely — no forms, no limits." },
+              { step: "02", title: "The Interview", desc: "Our literary biographer asks questions. You answer freely — no forms, no limits." },
               { step: "03", title: "Your Book Is Written", desc: "Claude crafts your answers into a 100–150 page literary chronicle." },
               { step: "04", title: "Receive Your Chronicle", desc: "Your beautifully designed digital edition arrives in your inbox instantly." },
             ].map((item) => (
@@ -694,10 +1061,10 @@ export default function HomePage() {
                 >
                   <span
                     style={{
-                      fontFamily: "var(--font-cinzel)",
-                      fontSize: "11px",
-                      letterSpacing: "1px",
-                      color: "var(--gold)",
+                      fontFamily: "var(--font-inter)",
+                      fontSize: "12px",
+                      fontWeight: 600,
+                      color: "var(--gold-light)",
                     }}
                   >
                     {item.step}
@@ -705,9 +1072,10 @@ export default function HomePage() {
                 </div>
                 <p
                   style={{
-                    fontFamily: "var(--font-cinzel)",
-                    fontSize: "10px",
-                    letterSpacing: "2px",
+                    fontFamily: "var(--font-inter)",
+                    fontSize: "13px",
+                    fontWeight: 600,
+                    letterSpacing: "0.06em",
                     color: "var(--cream)",
                     marginBottom: "10px",
                     textTransform: "uppercase",
@@ -719,11 +1087,9 @@ export default function HomePage() {
                 <p
                   style={{
                     fontFamily: "var(--font-garamond)",
-                    fontStyle: "italic",
-                    fontSize: "14.5px",
+                    fontSize: "15.5px",
                     color: "var(--parchment)",
-                    lineHeight: 1.75,
-                    opacity: 0.75,
+                    lineHeight: 1.7,
                   }}
                 >
                   {item.desc}
@@ -737,15 +1103,25 @@ export default function HomePage() {
             <Link
               href="/begin"
               style={{
-                fontFamily: "var(--font-cinzel)",
-                fontSize: "10px",
-                letterSpacing: "3px",
+                fontFamily: "var(--font-inter)",
+                fontSize: "12px",
+                fontWeight: 600,
+                letterSpacing: "0.08em",
                 color: "var(--ink)",
                 backgroundColor: "var(--gold-light)",
                 padding: "14px 32px",
                 textDecoration: "none",
                 textTransform: "uppercase",
                 display: "inline-block",
+                transition: "all 0.25s ease",
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--cream)";
+                e.currentTarget.style.transform = "translateY(-1px)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = "var(--gold-light)";
+                e.currentTarget.style.transform = "translateY(0)";
               }}
             >
               Begin Your Story →
@@ -786,13 +1162,13 @@ export default function HomePage() {
         <div style={{ position: "relative", zIndex: 1, maxWidth: "640px", margin: "0 auto" }}>
           <p
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "10px",
-              letterSpacing: "6px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "12px",
+              fontWeight: 600,
+              letterSpacing: "0.15em",
               color: "var(--gold)",
               textTransform: "uppercase",
               marginBottom: "32px",
-              opacity: 0.7,
             }}
           >
             ✦ &nbsp; A Chronicle &nbsp; ✦
@@ -801,7 +1177,7 @@ export default function HomePage() {
             style={{
               fontFamily: "var(--font-garamond)",
               fontStyle: "italic",
-              fontSize: "clamp(20px, 3vw, 26px)",
+              fontSize: "clamp(22px, 3vw, 28px)",
               color: "var(--cream)",
               lineHeight: 1.75,
               marginBottom: "28px",
@@ -820,11 +1196,11 @@ export default function HomePage() {
           />
           <p
             style={{
-              fontFamily: "var(--font-cinzel)",
-              fontSize: "9px",
-              letterSpacing: "3px",
+              fontFamily: "var(--font-inter)",
+              fontSize: "11px",
+              fontWeight: 600,
+              letterSpacing: "0.1em",
               color: "var(--gold)",
-              opacity: 0.6,
               textTransform: "uppercase",
             }}
           >
@@ -837,9 +1213,10 @@ export default function HomePage() {
       <section style={{ padding: "80px 40px", textAlign: "center", maxWidth: "900px", margin: "0 auto" }}>
         <p
           style={{
-            fontFamily: "var(--font-cinzel)",
-            fontSize: "10px",
-            letterSpacing: "6px",
+            fontFamily: "var(--font-inter)",
+            fontSize: "12px",
+            fontWeight: 600,
+            letterSpacing: "0.15em",
             color: "var(--gold)",
             textTransform: "uppercase",
             marginBottom: "48px",
@@ -878,7 +1255,7 @@ export default function HomePage() {
               name: "Hardcover + Portrait",
               price: "Coming Soon",
               badge: null,
-              desc: "The definitive edition. Includes your AI-generated Royal Portrait.",
+              desc: "The definitive edition. Includes your bespoke Royal Portrait.",
               includes: ["Everything in Softcover", "Hardcover binding", "Royal Portrait inside"],
               highlight: false,
               available: false,
@@ -887,130 +1264,172 @@ export default function HomePage() {
             <div
               key={tier.name}
               style={{
-                border: tier.highlight ? "1px solid var(--gold)" : "1px solid rgba(191,160,90,0.2)",
-                padding: "40px 28px",
-                backgroundColor: tier.highlight ? "rgba(191,160,90,0.08)" : "rgba(20,27,36,0.8)",
+                border: tier.highlight ? "1px solid var(--gold-light)" : "1px solid rgba(191,160,90,0.15)",
+                padding: "44px 28px",
+                backgroundColor: tier.highlight ? "rgba(191,160,90,0.06)" : "var(--ink-card)",
                 position: "relative",
-                opacity: tier.available ? 1 : 0.5,
+                opacity: tier.available ? 1 : 0.45,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-between",
+                minHeight: "440px",
               }}
             >
-              {tier.badge && (
-                <p
-                  style={{
-                    fontFamily: "var(--font-cinzel)",
-                    fontSize: "8px",
-                    letterSpacing: "3px",
-                    color: "var(--ink)",
-                    backgroundColor: "var(--gold)",
+              <div>
+                {tier.badge && (
+                  <p
+                    style={{
+                      fontFamily: "var(--font-inter)",
+                      fontSize: "9px",
+                      fontWeight: 600,
+                      letterSpacing: "0.08em",
+                      color: "var(--ink)",
+                      backgroundColor: "var(--gold)",
+                      padding: "4px 12px",
+                      position: "absolute",
+                      top: "-12px",
+                      left: "50%",
+                      transform: "translateX(-50%)",
+                      whiteSpace: "nowrap",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    {tier.badge}
+                  </p>
+                )}
+                {!tier.available && (
+                  <p style={{
+                    fontFamily: "var(--font-inter)",
+                    fontSize: "9px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    color: "var(--gold)",
+                    border: "1px solid rgba(191,160,90,0.3)",
+                    backgroundColor: "rgba(191,160,90,0.05)",
                     padding: "4px 12px",
                     position: "absolute",
                     top: "-12px",
                     left: "50%",
                     transform: "translateX(-50%)",
                     whiteSpace: "nowrap",
+                    textTransform: "uppercase"
+                  }}>
+                    Coming Soon
+                  </p>
+                )}
+                <p
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    letterSpacing: "0.08em",
+                    color: "var(--gold-light)",
                     textTransform: "uppercase",
+                    marginBottom: "12px",
+                    marginTop: "8px",
                   }}
                 >
-                  {tier.badge}
+                  {tier.name}
                 </p>
-              )}
-              {!tier.available && (
-                <p style={{ fontFamily: "var(--font-cinzel)", fontSize: "8px", letterSpacing: "3px", color: "var(--gold)", border: "1px solid rgba(191,160,90,0.4)", padding: "4px 12px", position: "absolute", top: "-12px", left: "50%", transform: "translateX(-50%)", whiteSpace: "nowrap", textTransform: "uppercase" }}>
-                  Coming Soon
+                <p
+                  style={{
+                    fontFamily: "var(--font-cinzel-deco)",
+                    fontSize: "38px",
+                    color: "var(--cream)",
+                    marginBottom: "16px",
+                  }}
+                >
+                  {tier.price}
                 </p>
-              )}
-              <p
-                style={{
-                  fontFamily: "var(--font-cinzel)",
-                  fontSize: "10px",
-                  letterSpacing: "4px",
-                  color: "var(--gold)",
-                  textTransform: "uppercase",
-                  marginBottom: "12px",
-                }}
-              >
-                {tier.name}
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-cinzel-deco)",
-                  fontSize: "38px",
-                  color: "var(--cream)",
-                  marginBottom: "16px",
-                }}
-              >
-                {tier.price}
-              </p>
-              <p
-                style={{
-                  fontFamily: "var(--font-garamond)",
-                  fontStyle: "italic",
-                  fontSize: "14px",
-                  color: "var(--parchment)",
-                  lineHeight: 1.7,
-                  marginBottom: "24px",
-                  opacity: 0.8,
-                }}
-              >
-                {tier.desc}
-              </p>
-              <div
-                style={{
-                  height: "1px",
-                  background: "linear-gradient(to right, transparent, rgba(191,160,90,0.4), transparent)",
-                  marginBottom: "20px",
-                }}
-              />
-              <ul style={{ listStyle: "none", padding: 0, marginBottom: "28px" }}>
-                {tier.includes.map((item) => (
-                  <li
-                    key={item}
-                    style={{
-                      fontFamily: "var(--font-garamond)",
-                      fontSize: "14px",
-                      color: "var(--parchment)",
-                      marginBottom: "8px",
-                      opacity: 0.75,
-                    }}
-                  >
-                    ✦ &nbsp;{item}
-                  </li>
-                ))}
-              </ul>
-              <Link
-                href="/begin"
-                style={{
-                  fontFamily: "var(--font-cinzel)",
-                  fontSize: "9px",
-                  letterSpacing: "3px",
-                  color: tier.highlight ? "var(--ink)" : "var(--gold)",
-                  backgroundColor: tier.highlight ? "var(--gold-light)" : "transparent",
-                  border: tier.highlight ? "none" : "1px solid rgba(191,160,90,0.4)",
-                  padding: "12px 24px",
-                  textDecoration: "none",
-                  textTransform: "uppercase",
-                  display: "inline-block",
-                }}
-              >
-                Begin Your Story
-              </Link>
+                <p
+                  style={{
+                    fontFamily: "var(--font-garamond)",
+                    fontSize: "15px",
+                    color: "var(--parchment)",
+                    lineHeight: 1.7,
+                    marginBottom: "24px",
+                  }}
+                >
+                  {tier.desc}
+                </p>
+                <div
+                  style={{
+                    height: "1px",
+                    background: "linear-gradient(to right, transparent, rgba(191,160,90,0.25), transparent)",
+                    marginBottom: "20px",
+                  }}
+                />
+                <ul style={{ listStyle: "none", padding: 0, marginBottom: "28px", textAlign: "left" }}>
+                  {tier.includes.map((item) => (
+                    <li
+                      key={item}
+                      style={{
+                        fontFamily: "var(--font-garamond)",
+                        fontSize: "15px",
+                        color: "var(--parchment)",
+                        marginBottom: "10px",
+                      }}
+                    >
+                      <span style={{ color: "var(--gold-light)" }}>✦</span> &nbsp;{item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div>
+                <Link
+                  href={tier.available ? "/begin" : "#"}
+                  style={{
+                    fontFamily: "var(--font-inter)",
+                    fontSize: "12px",
+                    fontWeight: 600,
+                    letterSpacing: "0.06em",
+                    color: tier.highlight ? "var(--ink)" : "var(--gold)",
+                    backgroundColor: tier.highlight ? "var(--gold-light)" : "transparent",
+                    border: tier.highlight ? "none" : "1px solid rgba(191,160,90,0.4)",
+                    padding: "14px 24px",
+                    textDecoration: "none",
+                    textTransform: "uppercase",
+                    display: "block",
+                    transition: "all 0.2s ease",
+                    cursor: tier.available ? "pointer" : "default",
+                  }}
+                  onMouseEnter={(e) => {
+                    if (tier.available) {
+                      e.currentTarget.style.backgroundColor = tier.highlight ? "var(--cream)" : "rgba(191,160,90,0.06)";
+                      if (!tier.highlight) e.currentTarget.style.borderColor = "var(--gold-light)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (tier.available) {
+                      e.currentTarget.style.backgroundColor = tier.highlight ? "var(--gold-light)" : "transparent";
+                      if (!tier.highlight) e.currentTarget.style.borderColor = "rgba(191,160,90,0.4)";
+                    }
+                  }}
+                >
+                  Begin Your Story
+                </Link>
+              </div>
             </div>
           ))}
         </div>
       </section>
 
+      {/* ── CONTACT ── */}
+      <ContactSection />
+
       {/* ── FOOTER ── */}
       <footer
         style={{
           borderTop: "1px solid rgba(191,160,90,0.15)",
-          padding: "40px",
+          padding: "50px 40px",
           textAlign: "center",
         }}
       >
         <p
           style={{
             fontFamily: "var(--font-cinzel-deco)",
-            fontSize: "16px",
+            fontSize: "18px",
             color: "var(--gold-light)",
             marginBottom: "8px",
           }}
@@ -1021,21 +1440,21 @@ export default function HomePage() {
           style={{
             fontFamily: "var(--font-garamond)",
             fontStyle: "italic",
-            fontSize: "13px",
+            fontSize: "14px",
             color: "var(--gold)",
-            opacity: 0.6,
-            marginBottom: "20px",
+            opacity: 0.8,
+            marginBottom: "24px",
           }}
         >
           Your life. A legendary narrative.
         </p>
         <p
           style={{
-            fontFamily: "var(--font-cinzel)",
-            fontSize: "9px",
-            letterSpacing: "3px",
+            fontFamily: "var(--font-inter)",
+            fontSize: "11px",
+            letterSpacing: "0.05em",
             color: "var(--gold)",
-            opacity: 0.4,
+            opacity: 0.5,
             textTransform: "uppercase",
           }}
         >
