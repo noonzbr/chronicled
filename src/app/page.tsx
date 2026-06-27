@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { motion, type Variants } from "framer-motion";
 
-// ── CONTACT SECTION COMPONENT ──
+// -- CONTACT SECTION COMPONENT --
 function ContactSection() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
@@ -376,7 +376,7 @@ export default function HomePage() {
   return (
     <main style={{ backgroundColor: "var(--ink)", minHeight: "100vh" }}>
 
-      {/* ── NAV ── */}
+      {/* NAV */}
       <nav
         style={{
           borderBottom: "1px solid rgba(191,160,90,0.15)",
@@ -484,7 +484,7 @@ export default function HomePage() {
         </div>
       </nav>
 
-      {/* ── Announcement Banner ── */}
+      {/* Announcement Banner */}
       <div style={{
         backgroundColor: "rgba(191,160,90,0.06)",
         borderTop: "1px solid rgba(191,160,90,0.2)",
@@ -505,7 +505,7 @@ export default function HomePage() {
         </p>
       </div>
 
-      {/* ── HERO ── */}
+      {/* HERO */}
       <section
         style={{
           position: "relative",
@@ -673,7 +673,7 @@ export default function HomePage() {
             </Link>
           </motion.div>
 
-          {/* ── Introductory Offer Banner ── */}
+          {/* Introductory Offer Banner */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
@@ -721,12 +721,12 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── ORNAMENT ── */}
+      {/* ORNAMENT */}
       <div style={{ textAlign: "center", color: "var(--gold)", fontSize: "18px", letterSpacing: "12px", marginBottom: "60px", opacity: 0.6 }}>
         ✦ &nbsp; ✦ &nbsp; ✦
       </div>
 
-      {/* ── BOOK GRID ── */}
+      {/* BOOK GRID */}
       <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 40px 80px" }}>
         <motion.p
           initial={{ opacity: 0 }}
@@ -783,7 +783,7 @@ export default function HomePage() {
                     (e.currentTarget as HTMLDivElement).style.boxShadow = "none";
                   }}
                 >
-                  {/* ── IMAGE HEADER ── */}
+                  {/* IMAGE HEADER */}
                   <div
                     style={{
                       position: "relative",
@@ -872,7 +872,7 @@ export default function HomePage() {
                     </h3>
                   </div>
 
-                  {/* ── CARD BODY ── */}
+                  {/* CARD BODY */}
                   <div style={{ padding: "24px 28px 28px" }}>
                     {/* Tone */}
                     <p
@@ -931,7 +931,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── HOW IT WORKS ── */}
+      {/* HOW IT WORKS */}
       <section
         id="how-it-works"
         style={{
@@ -1043,7 +1043,7 @@ export default function HomePage() {
             {[
               { step: "01", title: "Choose Your Book", desc: "Pick the classic that matches the arc of your life." },
               { step: "02", title: "The Interview", desc: "Our literary biographer asks questions. You answer freely — no forms, no limits." },
-              { step: "03", title: "Your Book Is Written", desc: "Claude crafts your answers into a 100–150 page literary chronicle." },
+              { step: "03", title: "Your Book Is Written", desc: "Our system crafts your answers into a 100–150 page literary chronicle." },
               { step: "04", title: "Receive Your Chronicle", desc: "Your beautifully designed digital edition arrives in your inbox instantly." },
             ].map((item) => (
               <div key={item.step}>
@@ -1130,7 +1130,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── TESTIMONIAL STRIP ── */}
+      {/* TESTIMONIAL STRIP */}
       <section
         style={{
           position: "relative",
@@ -1209,7 +1209,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── PRICING ── */}
+      {/* PRICING */}
       <section style={{ padding: "80px 40px", textAlign: "center", maxWidth: "900px", margin: "0 auto" }}>
         <p
           style={{
@@ -1415,10 +1415,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── CONTACT ── */}
+      {/* CONTACT */}
       <ContactSection />
 
-      {/* ── FOOTER ── */}
+      {/* FOOTER */}
       <footer
         style={{
           borderTop: "1px solid rgba(191,160,90,0.15)",
