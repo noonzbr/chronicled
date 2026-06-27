@@ -400,6 +400,23 @@ export default function HomePage() {
         </span>
         <div style={{ display: "flex", gap: "32px", alignItems: "center" }}>
           <Link
+            href="#gift-ideas"
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontSize: "13px",
+              fontWeight: 500,
+              letterSpacing: "0.08em",
+              color: "var(--parchment)",
+              textDecoration: "none",
+              textTransform: "uppercase",
+              transition: "color 0.2s ease",
+            }}
+            onMouseEnter={(e) => (e.currentTarget.style.color = "var(--gold-light)")}
+            onMouseLeave={(e) => (e.currentTarget.style.color = "var(--parchment)")}
+          >
+            Gift Ideas
+          </Link>
+          <Link
             href="/how-it-works"
             style={{
               fontFamily: "var(--font-inter)",
@@ -486,17 +503,17 @@ export default function HomePage() {
 
       {/* ── Announcement Banner ── */}
       <div style={{
-        backgroundColor: "rgba(191,160,90,0.06)",
-        borderTop: "1px solid rgba(191,160,90,0.2)",
-        borderBottom: "1px solid rgba(191,160,90,0.2)",
-        padding: "12px 20px",
+        backgroundColor: "rgba(191,160,90,0.08)",
+        borderTop: "1px solid rgba(191,160,90,0.25)",
+        borderBottom: "1px solid rgba(191,160,90,0.25)",
+        padding: "13px 20px",
         textAlign: "center",
       }}>
         <p style={{
           fontFamily: "var(--font-inter)",
           fontSize: "11px",
           fontWeight: 600,
-          letterSpacing: "0.08em",
+          letterSpacing: "0.09em",
           color: "var(--gold-light)",
           textTransform: "uppercase",
           margin: 0,
@@ -554,7 +571,7 @@ export default function HomePage() {
               marginBottom: "28px",
             }}
           >
-            A Literary Chronicle
+            The Most Meaningful Gift You Can Give
           </motion.p>
 
           <motion.h1
@@ -563,16 +580,16 @@ export default function HomePage() {
             transition={{ duration: 0.9, delay: 0.1 }}
             style={{
               fontFamily: "var(--font-cinzel-deco)",
-              fontSize: "clamp(42px, 7vw, 72px)",
+              fontSize: "clamp(38px, 6.5vw, 68px)",
               color: "var(--cream)",
               lineHeight: 1.15,
               marginBottom: "28px",
               fontWeight: 400,
             }}
           >
-            Your Life.
+            Their Life Story,
             <br />
-            <span style={{ color: "var(--gold-light)" }}>A Legendary Narrative.</span>
+            <span style={{ color: "var(--gold-light)" }}>Written Like a Classic Novel.</span>
           </motion.h1>
 
           {/* Gold rule */}
@@ -594,16 +611,30 @@ export default function HomePage() {
             transition={{ duration: 0.8, delay: 0.5 }}
             style={{
               fontFamily: "var(--font-garamond)",
-              fontSize: "22px",
+              fontSize: "21px",
               color: "var(--cream)",
-              lineHeight: 1.8,
-              marginBottom: "48px",
+              lineHeight: 1.85,
+              marginBottom: "16px",
             }}
           >
-            Choose a classic book. Answer our questions.
-            <br />
-            Receive a beautifully crafted chronicle of your life —<br />
-            part memoir, part masterpiece.
+            We take someone's real memories and rewrite them as a beautifully
+            crafted digital book — styled like <em>Romeo &amp; Juliet</em>,
+            <em> The Great Gatsby</em>, or <em>Pride &amp; Prejudice</em>.
+          </motion.p>
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.6 }}
+            style={{
+              fontFamily: "var(--font-inter)",
+              fontSize: "13px",
+              letterSpacing: "0.05em",
+              color: "rgba(232,213,163,0.65)",
+              marginBottom: "44px",
+              textTransform: "uppercase",
+            }}
+          >
+            Perfect for Birthdays &nbsp;·&nbsp; Anniversaries &nbsp;·&nbsp; Memorials &nbsp;·&nbsp; Legacies
           </motion.p>
 
           <motion.div
@@ -639,7 +670,7 @@ export default function HomePage() {
                 e.currentTarget.style.boxShadow = "0 4px 14px rgba(191,160,90,0.2)";
               }}
             >
-              Begin Your Story
+              Start Your Story
             </Link>
             <Link
               href="#how-it-works"
@@ -725,6 +756,90 @@ export default function HomePage() {
       <div style={{ textAlign: "center", color: "var(--gold)", fontSize: "18px", letterSpacing: "12px", marginBottom: "60px", opacity: 0.6 }}>
         ✦ &nbsp; ✦ &nbsp; ✦
       </div>
+
+      {/* ── WHAT IS CHRONICLED — PRODUCT CLARITY ── */}
+      <section style={{ maxWidth: "900px", margin: "0 auto 80px", padding: "0 24px", textAlign: "center" }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+          <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#b8961e", marginBottom: "16px" }}>What Is Chronicled?</p>
+          <h2 style={{ fontFamily: "var(--font-cinzel-deco)", fontSize: "clamp(22px, 3.5vw, 36px)", color: "#e8d5a3", margin: "0 0 24px", lineHeight: 1.3 }}>A Digital Memoir Book, Written Like a Literary Masterpiece</h2>
+          <p style={{ fontFamily: "var(--font-garamond)", fontStyle: "italic", fontSize: "19px", color: "#c8a84b", lineHeight: 1.8, margin: "0 0 32px" }}>
+            You share the memories. We write the book. They keep it forever.
+          </p>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "20px", textAlign: "left" }}>
+            {[
+              { icon: "📖", title: "A Complete Digital Book", desc: "50–150+ pages of beautifully written narrative prose — not bullet points, not a timeline. A real book." },
+              { icon: "🎭", title: "Styled Like a Classic Novel", desc: "Choose from Romeo & Juliet, The Great Gatsby, Pride & Prejudice, and more. Their story, in that voice." },
+              { icon: "⚡", title: "Delivered in Days", desc: "No shipping, no waiting weeks. Your digital book is delivered as a beautiful PDF + shareable flipbook link." },
+              { icon: "🌍", title: "Share With Everyone", desc: "Send it to family across the world in one click. Print it locally for ~$40 whenever you want a physical copy." },
+            ].map((item) => (
+              <div key={item.title} style={{ background: "rgba(16,11,4,0.7)", border: "1px solid rgba(191,160,90,0.15)", borderRadius: "8px", padding: "24px" }}>
+                <div style={{ fontSize: "28px", marginBottom: "12px" }}>{item.icon}</div>
+                <h3 style={{ fontFamily: "var(--font-cinzel)", fontSize: "13px", letterSpacing: "0.06em", color: "#d4a843", margin: "0 0 10px", textTransform: "uppercase" }}>{item.title}</h3>
+                <p style={{ fontFamily: "var(--font-garamond)", fontSize: "16px", color: "#c8b07a", lineHeight: 1.7, margin: 0 }}>{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </motion.div>
+      </section>
+
+      {/* ── OCCASION GIFT GRID ── */}
+      <section id="gift-ideas" style={{ borderTop: "1px solid rgba(191,160,90,0.12)", borderBottom: "1px solid rgba(191,160,90,0.12)", padding: "80px 24px", background: "rgba(191,160,90,0.03)" }}>
+        <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }} style={{ textAlign: "center", marginBottom: "52px" }}>
+            <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#b8961e", marginBottom: "14px" }}>The Perfect Gift For Every Occasion</p>
+            <h2 style={{ fontFamily: "var(--font-cinzel-deco)", fontSize: "clamp(22px, 3.5vw, 34px)", color: "#e8d5a3", margin: 0, lineHeight: 1.3 }}>There's a story worth telling for every milestone.</h2>
+          </motion.div>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "16px" }}>
+            {[
+              { emoji: "🎂", occasion: "Milestone Birthdays", who: "50th · 60th · 70th · 80th · 90th", hook: "What would it mean to give Dad a book written entirely about his life — in the voice of Hemingway?", cta: "Gift a Birthday Book" },
+              { emoji: "💍", occasion: "Anniversaries", who: "25th · 40th · 50th · Golden", hook: "Their love story, written like a Brontë novel. A gift they'll read every anniversary.", cta: "Gift an Anniversary Book" },
+              { emoji: "🕯️", occasion: "Memorial & Legacy", who: "Tribute · Remembrance · Celebration of Life", hook: "Preserve what they said, felt, and lived — before the memories fade. A tribute that lasts.", cta: "Create a Legacy Book" },
+              { emoji: "👨‍👩‍👧", occasion: "Mother's & Father's Day", who: "For Moms · Dads · Grandparents", hook: "Skip the flowers. Give them a book written in their voice, about their entire life.", cta: "Gift to a Parent" },
+              { emoji: "🎓", occasion: "Graduations & Retirements", who: "End of a chapter. Beginning of a legend.", hook: "A graduating senior's journey. A 40-year career, turned into a literary epic. They earned this story.", cta: "Celebrate a Chapter" },
+              { emoji: "🎄", occasion: "Holiday Gifting", who: "Christmas · Hanukkah · New Year", hook: "The gift everyone else forgot to give. The one that makes the whole room go quiet.", cta: "Order by Dec 15th" },
+            ].map((item, i) => (
+              <motion.div key={item.occasion} initial={{ opacity: 0, y: 16 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5, delay: i * 0.07 }}>
+                <Link href="/begin" style={{ textDecoration: "none", display: "block" }}>
+                  <div style={{ background: "rgba(13,9,3,0.85)", border: "1px solid rgba(191,160,90,0.15)", borderRadius: "10px", padding: "28px", height: "100%", transition: "all 0.25s", cursor: "pointer" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(191,160,90,0.5)"; (e.currentTarget as HTMLElement).style.transform = "translateY(-3px)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLElement).style.borderColor = "rgba(191,160,90,0.15)"; (e.currentTarget as HTMLElement).style.transform = "translateY(0)"; }}>
+                    <div style={{ fontSize: "32px", marginBottom: "12px" }}>{item.emoji}</div>
+                    <h3 style={{ fontFamily: "var(--font-cinzel)", fontSize: "14px", letterSpacing: "0.06em", color: "#d4a843", margin: "0 0 6px", textTransform: "uppercase" }}>{item.occasion}</h3>
+                    <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", color: "rgba(200,176,122,0.5)", letterSpacing: "0.05em", margin: "0 0 14px" }}>{item.who}</p>
+                    <p style={{ fontFamily: "var(--font-garamond)", fontStyle: "italic", fontSize: "16px", color: "#c8b07a", lineHeight: 1.7, margin: "0 0 18px" }}>{item.hook}</p>
+                    <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.08em", color: "#b8961e", textTransform: "uppercase", margin: 0 }}>{item.cta} →</p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SAMPLE PROSE ── */}
+      <section style={{ maxWidth: "800px", margin: "0 auto", padding: "100px 24px" }}>
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7 }}>
+          <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#b8961e", marginBottom: "16px", textAlign: "center" }}>What Does It Look Like?</p>
+          <h2 style={{ fontFamily: "var(--font-cinzel-deco)", fontSize: "clamp(20px, 3vw, 30px)", color: "#e8d5a3", textAlign: "center", marginBottom: "40px", lineHeight: 1.3 }}>A real memory. Transformed into literature.</h2>
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0", border: "1px solid rgba(191,160,90,0.2)", borderRadius: "10px", overflow: "hidden" }}>
+            <div style={{ background: "rgba(30,20,8,0.9)", padding: "36px 32px", borderRight: "1px solid rgba(191,160,90,0.15)" }}>
+              <p style={{ fontFamily: "var(--font-inter)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(191,160,90,0.5)", marginBottom: "20px" }}>The Memory You Share</p>
+              <p style={{ fontFamily: "var(--font-garamond)", fontSize: "16px", color: "rgba(232,213,163,0.65)", lineHeight: 1.8, fontStyle: "italic", margin: 0 }}>
+                "My grandmother used to make coffee every morning at 5am before anyone else was up. She'd sit at the kitchen table by the window and just watch the birds. She never talked about it but I think that was her happiest moment of the day."
+              </p>
+            </div>
+            <div style={{ background: "rgba(10,7,2,0.95)", padding: "36px 32px" }}>
+              <p style={{ fontFamily: "var(--font-inter)", fontSize: "10px", fontWeight: 600, letterSpacing: "0.12em", textTransform: "uppercase", color: "rgba(191,160,90,0.5)", marginBottom: "20px" }}>Your Chronicled Book</p>
+              <div style={{ height: "1px", background: "linear-gradient(to right, #b8961e, transparent)", marginBottom: "20px", maxWidth: "48px" }} />
+              <p style={{ fontFamily: "var(--font-garamond)", fontSize: "17px", color: "#e8d5a3", lineHeight: 1.9, margin: 0 }}>
+                <em>Before the world stirred, before birdsong or the creak of the old oak floor, Eleanor was already awake. The coffee — dark, unadorned, prepared with a precision that bordered on ceremony — had been her private ritual for forty years. She would carry it to the window table and there she would remain, solitary and sovereign, watching the garden come alive in increments she alone had the patience to observe.</em>
+              </p>
+              <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", color: "rgba(191,160,90,0.4)", letterSpacing: "0.08em", marginTop: "20px", textTransform: "uppercase" }}>— Chapter 3: The Hours Before Dawn</p>
+            </div>
+          </div>
+          <p style={{ fontFamily: "var(--font-garamond)", fontStyle: "italic", fontSize: "16px", color: "rgba(200,176,122,0.6)", textAlign: "center", marginTop: "24px" }}>Every memory you share becomes prose like this. 50–150+ pages. Beautifully formatted. Yours forever.</p>
+        </motion.div>
+      </section>
 
       {/* ── BOOK GRID ── */}
       <section style={{ maxWidth: "1100px", margin: "0 auto", padding: "0 40px 80px" }}>
@@ -1413,6 +1528,34 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ── CLOSING CTA ── */}
+      <section style={{ textAlign: "center", padding: "100px 24px", background: "linear-gradient(to bottom, transparent, rgba(191,160,90,0.04), transparent)" }}>
+        <motion.div initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.8 }}>
+          <p style={{ fontFamily: "var(--font-inter)", fontSize: "11px", fontWeight: 600, letterSpacing: "0.18em", textTransform: "uppercase", color: "#b8961e", marginBottom: "20px" }}>Don't Let the Story Fade</p>
+          <h2 style={{ fontFamily: "var(--font-cinzel-deco)", fontSize: "clamp(26px, 4.5vw, 52px)", color: "#e8d5a3", margin: "0 0 20px", lineHeight: 1.25 }}>
+            Every day without a book<br />
+            <span style={{ color: "var(--gold-light)" }}>is a chapter lost.</span>
+          </h2>
+          <p style={{ fontFamily: "var(--font-garamond)", fontStyle: "italic", fontSize: "19px", color: "rgba(200,176,122,0.75)", margin: "0 0 16px" }}>
+            Founding Member pricing — $14.99 — for the first 100 chronicles.
+          </p>
+          <p style={{ fontFamily: "var(--font-garamond)", fontSize: "16px", color: "rgba(200,176,122,0.5)", margin: "0 0 44px" }}>
+            Digital delivery in days. Share with everyone. Print-ready forever.
+          </p>
+          <Link
+            href="/begin"
+            style={{ fontFamily: "var(--font-inter)", fontSize: "14px", fontWeight: 700, letterSpacing: "0.1em", color: "var(--ink)", backgroundColor: "var(--gold-light)", padding: "20px 52px", textDecoration: "none", textTransform: "uppercase", display: "inline-block", transition: "all 0.25s", boxShadow: "0 6px 24px rgba(191,160,90,0.25)" }}
+            onMouseEnter={e => { e.currentTarget.style.backgroundColor = "var(--cream)"; e.currentTarget.style.transform = "translateY(-2px)"; e.currentTarget.style.boxShadow = "0 10px 32px rgba(191,160,90,0.35)"; }}
+            onMouseLeave={e => { e.currentTarget.style.backgroundColor = "var(--gold-light)"; e.currentTarget.style.transform = "translateY(0)"; e.currentTarget.style.boxShadow = "0 6px 24px rgba(191,160,90,0.25)"; }}
+          >
+            Start Your Story
+          </Link>
+          <p style={{ fontFamily: "var(--font-inter)", fontSize: "12px", color: "rgba(191,160,90,0.35)", marginTop: "20px", letterSpacing: "0.05em" }}>
+            Questions first? Use the contact form below — we respond within the hour.
+          </p>
+        </motion.div>
       </section>
 
       {/* ── CONTACT ── */}
