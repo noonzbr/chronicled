@@ -142,7 +142,7 @@ const CLASSICS = [
 ] as const;
 
 type ClassicId = (typeof CLASSICS)[number]["id"];
-type Step = "select" | "customize" | "email" | "generating" | "result";
+
 
 function drawShareCard(
   name: string,
@@ -259,16 +259,85 @@ function drawShareCard(
   }, "image/png");
 }
 
+const QUIZ_QUESTIONS = [
+  {
+    id: 1,
+    question: "When entering a room, how do you make your presence known?",
+    options: [
+      { text: "With a sharp, witty remark that commands attention.", value: "pride" },
+      { text: "By seeking out the host to compliment the decor and get a drink.", value: "gatsby" },
+      { text: "Quietly, choosing a corner to observe the dynamics before speaking.", value: "jane" },
+      { text: "Warmly greeting everyone with open arms and a laughter that fills the air.", value: "women" },
+    ]
+  },
+  {
+    id: 2,
+    question: "What is your fatal flaw in relationships?",
+    options: [
+      { text: "I love too intensely, disregarding all warnings of doom.", value: "romeo" },
+      { text: "I hold onto old grudges and wait for the perfect moment of vindication.", value: "monte" },
+      { text: "I refuse to settle, which makes me seem aloof and unyielding.", value: "jane" },
+      { text: "I let my passion run so wild it consumes everything around me.", value: "heights" },
+    ]
+  },
+  {
+    id: 3,
+    question: "Your ideal weekend plan looks like...",
+    options: [
+      { text: "A lavish party with sparkling conversations and endless champagne.", value: "gatsby" },
+      { text: "A grand, solo journey to explore uncharted landscapes.", value: "odyssey" },
+      { text: "Gathering close friends or family by the fireplace to share stories.", value: "women" },
+      { text: "Re-reading old letters and reflecting on how much I have changed.", value: "carol" },
+    ]
+  },
+  {
+    id: 4,
+    question: "How do you handle a direct slight from a colleague or friend?",
+    options: [
+      { text: "Compose a reply that is polite on the surface but devastatingly sharp.", value: "pride" },
+      { text: "Plot a meticulous, long-term plan to outperform and outclass them.", value: "monte" },
+      { text: "Walk away entirely. My dignity is not up for negotiation.", value: "jane" },
+      { text: "Confront them with dramatic, poetic passion.", value: "romeo" },
+    ]
+  },
+  {
+    id: 5,
+    question: "What does success look like to you?",
+    options: [
+      { text: "A life of endless adventure and stories worth telling.", value: "odyssey" },
+      { text: "Achieving redemption and finding peace with my past.", value: "carol" },
+      { text: "Building an empire to win back the only heart that matters.", value: "gatsby" },
+      { text: "A warm home full of people I love, doing creative work.", value: "women" },
+    ]
+  }
+];
+
+const WAITING_QUOTES = [
+  "“It is a truth universally acknowledged, that a single person in possession of a smartphone must be in want of validation...”",
+  "“Whatever our souls are made of, his and mine are the same...”",
+  "“Sing in me, Muse, and through me tell the story...”",
+  "“I am no bird; and no net ensnares me...”",
+  "“In my younger and more vulnerable years my father gave me some advice...”",
+  "“For never was a story of more woe than this of Juliet and her Romeo...”",
+  "“There is nothing in the world so irresistibly contagious as laughter and good humor...”"
+];
+
+type Step = "select" | "quiz" | "customize" | "generating" | "result";
+
 export default function ClassicMePage() {
   const [step, setStep] = useState<Step>("select");
+  const [quizIndex, setQuizIndex] = useState(0);
+  const [quizAnswers, setQuizAnswers] = useState<string[]>([]);
   const [selectedId, setSelectedId] = useState<ClassicId | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [emailSaved, setEmailSaved] = useState(false);
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [roastText, setRoastText] = useState("");
   const [shareMsg, setShareMsg] = useState("");
   const [portraitGenUrl, setPortraitGenUrl] = useState<string | null>(null);
   const [portraitLoading, setPortraitLoading] = useState(false);
+  const [quoteIndex, setQuoteIndex] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const selected = CLASSICS.find((c) => c.id === selectedId) ?? null;
@@ -284,6 +353,34 @@ export default function ClassicMePage() {
   function selectBook(id: ClassicId) {
     setSelectedId(id);
     setStep("customize");
+  }
+
+  function startQuiz() {
+    setQuizIndex(0);
+    setQuizAnswers([]);
+    setStep("quiz");
+  }
+
+  function handleQuizAnswer(val: string) {
+    const nextAnswers = [...quizAnswers, val];
+    setQuizAnswers(nextAnswers);
+    if (quizIndex < QUIZ_QUESTIONS.length - 1) {
+      setQuizIndex(quizIndex + 1);
+    } else {
+      // Calculate matches
+      const counts: Record<string, number> = {};
+      let maxCount = 0;
+      let matchedId: ClassicId = "pride";
+      for (const ans of nextAnswers) {
+        counts[ans] = (counts[ans] || 0) + 1;
+        if (counts[ans] > maxCount) {
+          maxCount = counts[ans];
+          matchedId = ans as ClassicId;
+        }
+      }
+      setSelectedId(matchedId);
+      setStep("customize");
+    }
   }
 
   function resizeForUpload(dataUrl: string, maxDim = 1024): Promise<string> {
@@ -306,20 +403,21 @@ export default function ClassicMePage() {
 
   async function handleGenerate() {
     if (!selected || !name.trim()) return;
-    if (email.trim()) {
-      fetch("/api/classicme/email", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: name.trim(), email: email.trim(), book: selected.title }),
-      }).catch(() => {});
-    }
+
+    setStep("generating");
+    
+    // Rotate through loading quotes for wait experience
+    const interval = setInterval(() => {
+      setQuoteIndex((prev) => (prev + 1) % WAITING_QUOTES.length);
+    }, 4500);
 
     // Fire portrait generation in parallel — completes after text is shown
+    let portraitPromise = Promise.resolve({ portraitUrl: null });
     if (photoUrl) {
       setPortraitLoading(true);
       setPortraitGenUrl(null);
       const slug = selected.slug;
-      resizeForUpload(photoUrl)
+      portraitPromise = resizeForUpload(photoUrl)
         .then((resized) =>
           fetch("/api/classicme/portrait", {
             method: "POST",
@@ -328,14 +426,9 @@ export default function ClassicMePage() {
           })
         )
         .then((r) => r.json())
-        .then((data) => {
-          if (data.portraitUrl) setPortraitGenUrl(data.portraitUrl);
-          setPortraitLoading(false);
-        })
-        .catch(() => setPortraitLoading(false));
+        .catch(() => ({ portraitUrl: null }));
     }
 
-    setStep("generating");
     try {
       const res = await fetch("/api/classicme", {
         method: "POST",
@@ -347,22 +440,40 @@ export default function ClassicMePage() {
     } catch {
       setRoastText(selected.fallback(name.trim()));
     }
+
+    portraitPromise.then((data) => {
+      if (data.portraitUrl) setPortraitGenUrl(data.portraitUrl);
+      setPortraitLoading(false);
+    });
+
+    clearInterval(interval);
     setStep("result");
     import("canvas-confetti").then((m) =>
       m.default({ particleCount: 150, spread: 70, origin: { y: 0.55 }, colors: ["#D4B86A", "#f59e0b", "#fff", "#BFA05A"] })
     );
   }
 
+  function handleSaveEmail() {
+    if (!email.trim() || !selected) return;
+    fetch("/api/classicme/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: name.trim(), email: email.trim(), book: selected.title }),
+    })
+      .then(() => setEmailSaved(true))
+      .catch(() => {});
+  }
+
   function handleReset() {
-    setStep("select"); setSelectedId(null); setName(""); setEmail(""); setPhotoUrl(null);
+    setStep("select"); setSelectedId(null); setName(""); setEmail(""); setEmailSaved(false); setPhotoUrl(null);
     setRoastText(""); setShareMsg(""); setPortraitGenUrl(null); setPortraitLoading(false);
   }
 
   function handleShare() {
     if (!selected) return;
-    const text = `I just got written into ${selected.title} 📖\n\n"${roastText.slice(0, 200).trim()}..."\n\nTry it free → getchronicled.art/classicme`;
+    const text = `I put you in ${selected.title}! Here is how the narrator would have described you: "${roastText.slice(0, 180).trim()}..." Find your classic match at getchronicled.art/classicme 📖✨`;
     if (navigator.share) { navigator.share({ text }).catch(() => {}); }
-    else { navigator.clipboard.writeText(text).then(() => { setShareMsg("Copied!"); setTimeout(() => setShareMsg(""), 2200); }); }
+    else { navigator.clipboard.writeText(text).then(() => { setShareMsg("Link Copied!"); setTimeout(() => setShareMsg(""), 2200); }); }
   }
 
   const ctaHref = selected?.slug ? `/begin?book=${selected.slug}` : "/begin";
@@ -375,26 +486,28 @@ export default function ClassicMePage() {
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
         *{box-sizing:border-box;margin:0;padding:0;}
-        .cm{font-family:'EB Garamond',Georgia,serif;background:#0D1117;min-height:100vh;color:#F0DCA8;}
+        .cm{font-family:'EB Garamond',Georgia,serif;background:#0A0D14;min-height:100vh;color:#F0DCA8;}
         .cm-display{font-family:'Cinzel Decorative',serif;}
         .cm-caps{font-family:'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;}
         .cm-rule{height:1px;background:linear-gradient(to right,transparent,#BFA05A,transparent);}
         .cm-book-card{
-          background:#141B24;
-          border:1px solid rgba(191,160,90,.18);
+          background:#101520;
+          border:1px solid rgba(191,160,90,.12);
           cursor:pointer;
           text-align:left;
-          transition:border-color .2s,transform .2s,box-shadow .2s;
+          transition:all .3s cubic-bezier(0.16, 1, 0.3, 1);
           position:relative;
           overflow:hidden;
           padding:0;
           width:100%;
           display:block;
+          border-radius:6px;
         }
         .cm-book-card:hover{
-          border-color:rgba(212,184,106,.5);
-          transform:translateY(-3px);
-          box-shadow:0 12px 40px rgba(0,0,0,.55);
+          border-color:rgba(212,184,106,.45);
+          transform:translateY(-6px);
+          box-shadow:0 15px 45px rgba(0,0,0,.65);
+          background:#141C2A;
         }
         .cm-book-card:hover .cm-card-cta{color:#F0DCA8;}
         .cm-card-roman{
@@ -406,7 +519,7 @@ export default function ClassicMePage() {
           font-weight:700;
           font-size:130px;
           line-height:1;
-          opacity:0.07;
+          opacity:0.04;
           pointer-events:none;
           user-select:none;
           letter-spacing:-4px;
@@ -457,24 +570,46 @@ export default function ClassicMePage() {
         .cm-books-grid{
           display:grid;
           grid-template-columns:repeat(3,1fr);
-          gap:20px;
+          gap:24px;
         }
         @media(max-width:800px){.cm-books-grid{grid-template-columns:repeat(2,1fr);}}
         @media(max-width:520px){.cm-books-grid{grid-template-columns:1fr;}}
-        .cm-btn-gold{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:16px 44px;transition:opacity .15s;display:inline-block;text-decoration:none;text-align:center;}
-        .cm-btn-gold:hover:not(:disabled){opacity:.88;}
+        .cm-btn-gold{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:16px 44px;transition:all 0.25s;display:inline-block;text-decoration:none;text-align:center;border-radius:4px;box-shadow:0 4px 15px rgba(212,184,106,0.2);}
+        .cm-btn-gold:hover:not(:disabled){opacity:.95;transform:translateY(-1px);box-shadow:0 6px 20px rgba(212,184,106,0.35);}
         .cm-btn-gold:disabled{opacity:.32;cursor:not-allowed;}
-        .cm-btn-ghost{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;background:transparent;color:#D4B86A;border:1px solid rgba(212,184,106,.45);cursor:pointer;padding:14px 28px;transition:border-color .15s,background .15s;display:inline-block;text-decoration:none;}
-        .cm-btn-ghost:hover{border-color:#D4B86A;background:rgba(212,184,106,.07);}
-        .cm-input{width:100%;background:#0D1117;border:1px solid rgba(191,160,90,.3);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:22px;padding:15px 20px;outline:none;transition:border-color .15s;}
+        .cm-btn-ghost{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;background:transparent;color:#D4B86A;border:1px solid rgba(212,184,106,.45);cursor:pointer;padding:14px 28px;transition:all 0.2s;display:inline-block;text-decoration:none;border-radius:4px;}
+        .cm-btn-ghost:hover{border-color:#D4B86A;background:rgba(212,184,106,.07);transform:translateY(-1px);}
+        .cm-btn-quiz{width:100%;text-align:left;background:#101520;border:1px solid rgba(191,160,90,.2);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:18px;padding:16px 22px;margin-bottom:12px;cursor:pointer;transition:all 0.2s;border-radius:6px;}
+        .cm-btn-quiz:hover{border-color:#D4B86A;background:#141C2A;padding-left:28px;}
+        .cm-input{width:100%;background:#0D1117;border:1px solid rgba(191,160,90,.3);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:22px;padding:15px 20px;outline:none;transition:border-color .15s;border-radius:4px;}
         .cm-input::placeholder{color:rgba(240,220,168,.38);}
         .cm-input:focus{border-color:#D4B86A;}
-        .cm-passage{font-family:'EB Garamond',serif;font-size:20px;line-height:2;color:#F0DCA8;white-space:pre-line;}
+        .cm-passage{font-family:'EB Garamond',serif;font-size:21px;line-height:2.1;color:#F0DCA8;white-space:pre-line;}
         @keyframes cm-spin{to{transform:rotate(360deg);}}
         .cm-spin{animation:cm-spin 1.5s linear infinite;display:inline-block;}
-        @keyframes cm-fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
-        .cm-fade{animation:cm-fade .4s ease both;}
-        .cm-photo{width:100px;height:100px;border:2px dashed rgba(191,160,90,.4);background:#141B24;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;}
+        @keyframes cm-fade{from{opacity:0;transform:translateY(15px);}to{opacity:1;transform:translateY(0);}}
+        .cm-fade{animation:cm-fade .5s cubic-bezier(0.16, 1, 0.3, 1) both;}
+        
+        /* Premium Ken Burns & Reveal Effects */
+        @keyframes kenburns {
+          0% { transform: scale(1.02) translate(0, 0); }
+          50% { transform: scale(1.08) translate(-1%, -1%); }
+          100% { transform: scale(1.02) translate(0, 0); }
+        }
+        .portrait-container {
+          overflow: hidden;
+          position: relative;
+        }
+        .portrait-zoom {
+          animation: kenburns 25s ease-in-out infinite;
+        }
+        .painterly-overlay {
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(circle, transparent 20%, rgba(13,17,23,0.3) 100%), linear-gradient(45deg, rgba(212,184,106,0.1) 0%, transparent 60%);
+          pointer-events: none;
+        }
+        .cm-photo{width:100px;height:100px;border:2px dashed rgba(191,160,90,.4);background:#101520;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;border-radius:8px;}
         .cm-photo:hover{border-color:#D4B86A;}
         .cm-portrait-img{filter:sepia(0.35) contrast(1.08) brightness(0.97) saturate(0.82);}
       `}</style>
@@ -499,7 +634,7 @@ export default function ClassicMePage() {
             <span style={{color:"#D4B86A"}}>Me</span>
           </h1>
           <p style={{fontStyle:"italic",fontSize:"clamp(18px,2.5vw,23px)",color:"rgba(240,220,168,.78)",marginTop:22,maxWidth:480,marginLeft:"auto",marginRight:"auto",lineHeight:1.7}}>
-            Upload your photo. Pick your novel.<br/>Get written into a literary legend.
+            Upload your photo. Get matched to your classic.<br/>Get written into literary legend.
           </p>
           <div className="cm-rule" style={{maxWidth:200,margin:"36px auto 0"}} />
         </header>
@@ -507,8 +642,19 @@ export default function ClassicMePage() {
         {/* ── SELECT ── */}
         {step === "select" && (
           <div className="cm-fade" style={{maxWidth:1120,margin:"0 auto",padding:"0 24px 96px"}}>
+            
+            {/* Playful Interactive Option */}
+            <div style={{textAlign:"center",marginBottom:64}}>
+              <button className="cm-btn-gold" style={{fontSize:15,padding:"18px 52px"}} onClick={startQuiz}>
+                ✨ Take the Literary Matchmaker Quiz →
+              </button>
+              <p style={{fontStyle:"italic",color:"rgba(191,160,90,.6)",marginTop:14,fontSize:16}}>
+                Let the canon decide which classic novel matches your spirit
+              </p>
+            </div>
+
             <p className="cm-caps" style={{fontSize:11,color:"rgba(191,160,90,.6)",textAlign:"center",marginBottom:40,letterSpacing:".25em"}}>
-              Choose your classic — click to begin
+              Or select your novel directly
             </p>
             <div className="cm-books-grid">
               {CLASSICS.map((c) => (
@@ -533,14 +679,38 @@ export default function ClassicMePage() {
           </div>
         )}
 
+        {/* ── QUIZ ── */}
+        {step === "quiz" && (
+          <div className="cm-fade" style={{maxWidth:600,margin:"0 auto",padding:"0 24px 96px"}}>
+            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:24}}>
+              Question {quizIndex + 1} of {QUIZ_QUESTIONS.length}
+            </p>
+            <div style={{background:"#101520",border:"1px solid rgba(191,160,90,.2)",padding:"40px",borderRadius:8}}>
+              <h2 style={{fontFamily:"'Cinzel',serif",fontSize:22,color:"#F0DCA8",marginBottom:32,lineHeight:1.4,textAlign:"center"}}>
+                {QUIZ_QUESTIONS[quizIndex].question}
+              </h2>
+              <div>
+                {QUIZ_QUESTIONS[quizIndex].options.map((opt, i) => (
+                  <button key={i} className="cm-btn-quiz" onClick={() => handleQuizAnswer(opt.value)}>
+                    {opt.text}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div style={{textAlign:"center",marginTop:24}}>
+              <button className="cm-btn-ghost" onClick={() => setStep("select")}>✕ Cancel Quiz</button>
+            </div>
+          </div>
+        )}
+
         {/* ── CUSTOMIZE ── */}
         {step === "customize" && selected && (
           <div className="cm-fade" style={{maxWidth:560,margin:"0 auto",padding:"0 24px 96px"}}>
             <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36}}>
-              Step 2 of 3 — Make it yours
+              Step 2 of 2 — Personalize
             </p>
 
-            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",border:`1px solid rgba(191,160,90,.2)`,borderLeft:`4px solid ${selected.color}`,padding:"18px 22px",marginBottom:32}}>
+            <div style={{display:"flex",alignItems:"center",gap:14,background:"#101520",border:`1px solid rgba(191,160,90,.2)`,borderLeft:`4px solid ${selected.color}`,padding:"18px 22px",marginBottom:32,borderRadius:6}}>
               <div>
                 <p className="cm-caps" style={{fontSize:10,color:"#BFA05A",marginBottom:5}}>{selected.roman} · {selected.theme}</p>
                 <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:17,color:"#F0DCA8"}}>{selected.title}</p>
@@ -572,7 +742,7 @@ export default function ClassicMePage() {
                   placeholder="Elizabeth Bennet"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("email")}
+                  onKeyDown={(e) => e.key === "Enter" && name.trim() && handleGenerate()}
                   maxLength={60}
                 />
                 <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",marginTop:10}}>This name appears in your passage.</p>
@@ -582,52 +752,26 @@ export default function ClassicMePage() {
             <div className="cm-rule" style={{marginBottom:28}} />
             <div style={{display:"flex",gap:10,justifyContent:"center"}}>
               <button className="cm-btn-ghost" onClick={() => setStep("select")}>← Back</button>
-              <button className="cm-btn-gold" disabled={!name.trim()} onClick={() => setStep("email")}>Continue →</button>
+              <button className="cm-btn-gold" disabled={!name.trim()} onClick={handleGenerate}>Compose Passage & Portrait →</button>
             </div>
           </div>
         )}
 
-        {/* ── EMAIL ── */}
-        {step === "email" && selected && (
-          <div className="cm-fade" style={{maxWidth:520,margin:"0 auto",padding:"0 24px 96px"}}>
-            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36}}>
-              Step 3 of 3 — One last thing
-            </p>
-            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.25)",padding:"48px 40px",textAlign:"center"}}>
-              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:22,color:"#F0DCA8",lineHeight:1.35,marginBottom:16}}>
-                Your passage is being composed.
-              </p>
-              <div className="cm-rule" style={{marginBottom:24}} />
-              <p style={{fontStyle:"italic",fontSize:18,color:"rgba(240,220,168,.72)",lineHeight:1.75,marginBottom:28}}>
-                Drop your email and we&apos;ll send you the full version — plus an exclusive offer on your real memoir.
-              </p>
-              <input
-                className="cm-input"
-                type="email"
-                placeholder="you@example.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                style={{marginBottom:14,textAlign:"center"}}
-              />
-              <button className="cm-btn-gold" style={{width:"100%",marginBottom:12}} onClick={handleGenerate}>
-                Send Me My Passage →
-              </button>
-              <button className="cm-btn-ghost" style={{width:"100%"}} onClick={() => { setEmail(""); handleGenerate(); }}>
-                Skip — just show me
-              </button>
-            </div>
-            <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"center",marginTop:16}}>No spam. Just your passage and one offer.</p>
-          </div>
-        )}
-
-        {/* ── GENERATING ── */}
+        {/* ── GENERATING / INSCRIBING ── */}
         {step === "generating" && (
-          <div className="cm-fade" style={{textAlign:"center",padding:"88px 24px"}}>
+          <div className="cm-fade" style={{textAlign:"center",padding:"88px 24px",maxWidth:600,margin:"0 auto"}}>
             <div className="cm-spin" style={{fontSize:36,marginBottom:24,color:"#D4B86A"}}>✦</div>
-            <p className="cm-caps" style={{fontSize:13,color:"#BFA05A",marginBottom:12}}>Consulting the canon</p>
-            <p style={{fontStyle:"italic",color:"rgba(240,220,168,.6)",fontSize:18}}>
-              {selected?.author ?? "The ages"} is composing your portrait...
+            <p className="cm-caps" style={{fontSize:13,color:"#BFA05A",marginBottom:24}}>Consulting the canon</p>
+            
+            {/* Dynamic waiting quotes to build anticipation */}
+            <div style={{minHeight:120,display:"flex",alignItems:"center",justifyContent:"center",padding:"0 20px"}}>
+              <p style={{fontStyle:"italic",color:"rgba(240,220,168,.85)",fontSize:22,lineHeight:1.6,transition:"all 0.5s ease"}}>
+                {WAITING_QUOTES[quoteIndex]}
+              </p>
+            </div>
+            
+            <p style={{fontStyle:"italic",color:"rgba(240,220,168,.45)",fontSize:15,marginTop:32}}>
+              {selected?.author ?? "The ages"} is composing your portrait and passage...
             </p>
           </div>
         )}
@@ -640,25 +784,27 @@ export default function ClassicMePage() {
             <div style={{textAlign:"center",marginBottom:40}}>
               <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:24}}>Your ClassicMe Portrait</p>
 
-              {/* Portrait — AI-generated or original photo or initial */}
+              {/* Portrait with Premium Ken Burns & Painterly Overlay */}
               <div style={{display:"inline-block",position:"relative",marginBottom:20}}>
                 {portraitGenUrl ? (
                   /* ── AI portrait ready ── */
                   <>
-                    <div style={{
+                    <div className="portrait-container" style={{
                       width:220,height:320,
                       border:"2px solid #D4B86A",
                       padding:6,
                       background:"#141B24",
                       display:"inline-block",
                       boxShadow:"0 0 60px rgba(212,184,106,.2)",
+                      borderRadius:4,
                     }}>
-                      <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden"}}>
+                      <div className="portrait-zoom" style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden",position:"relative"}}>
                         <img
                           src={portraitGenUrl}
                           alt={`${name} — ${selected.title} portrait`}
                           style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
                         />
+                        <div className="painterly-overlay" />
                       </div>
                     </div>
                     <div style={{
@@ -666,6 +812,7 @@ export default function ClassicMePage() {
                       background:"#D4B86A",color:"#0D1117",
                       fontFamily:"'Cinzel',serif",fontWeight:700,fontSize:13,
                       padding:"3px 14px",letterSpacing:".15em",whiteSpace:"nowrap",
+                      borderRadius:2,
                     }}>
                       {selected.roman} · {selected.theme.toUpperCase()}
                     </div>
@@ -673,25 +820,27 @@ export default function ClassicMePage() {
                 ) : photoUrl ? (
                   /* ── Original photo + painting overlay while AI generates ── */
                   <>
-                    <div style={{
+                    <div className="portrait-container" style={{
                       width:190,height:240,
                       border:"2px solid #D4B86A",
                       padding:6,
                       background:"#141B24",
                       display:"inline-block",
                       boxShadow:"0 0 40px rgba(212,184,106,.15)",
+                      borderRadius:4,
                     }}>
                       <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden",position:"relative"}}>
                         <img
                           src={photoUrl}
                           alt={name}
-                          className="cm-portrait-img"
+                          className="cm-portrait-img portrait-zoom"
                           style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
                         />
+                        <div className="painterly-overlay" />
                         {portraitLoading && (
                           <div style={{
                             position:"absolute",inset:0,
-                            background:"rgba(13,17,23,0.82)",
+                            background:"rgba(13,17,23,0.85)",
                             display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:10,
                           }}>
                             <div className="cm-spin" style={{fontSize:26,color:"#D4B86A"}}>✦</div>
@@ -707,6 +856,7 @@ export default function ClassicMePage() {
                       background:"#D4B86A",color:"#0D1117",
                       fontFamily:"'Cinzel',serif",fontWeight:700,fontSize:13,
                       padding:"3px 14px",letterSpacing:".15em",
+                      borderRadius:2,
                     }}>
                       {selected.roman}
                     </div>
@@ -714,8 +864,9 @@ export default function ClassicMePage() {
                 ) : (
                   /* ── No photo uploaded ── */
                   <div style={{
-                    width:190,height:240,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
+                    width:190,height:240,border:"2px solid #D4B86A",padding:6,background:"#101520",display:"inline-flex",
                     boxShadow:"0 0 40px rgba(212,184,106,.15)",
+                    borderRadius:4,
                   }}>
                     <div style={{flex:1,border:"1px solid rgba(191,160,90,.3)",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8}}>
                       <span style={{fontFamily:"'Cinzel Decorative',serif",fontSize:64,color:"rgba(191,160,90,.25)",lineHeight:1}}>
@@ -732,7 +883,8 @@ export default function ClassicMePage() {
               <div className="cm-rule" style={{maxWidth:240,margin:"22px auto 0"}} />
             </div>
 
-            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.22)",borderLeft:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
+            {/* Passage card */}
+            <div style={{background:"#101520",border:"1px solid rgba(191,160,90,.22)",borderLeft:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28,borderRadius:6}}>
               <div style={{display:"flex",alignItems:"baseline",gap:12,marginBottom:24}}>
                 <span style={{fontFamily:"'Cinzel',serif",fontSize:14,color:"rgba(191,160,90,.55)",fontWeight:700}}>{selected.roman}</span>
                 <span className="cm-caps" style={{fontSize:12,color:"#BFA05A"}}>{selected.title}</span>
@@ -743,7 +895,7 @@ export default function ClassicMePage() {
               {restParas && (
                 <div style={{position:"relative",marginTop:20}}>
                   <p className="cm-passage" style={{filter:"blur(5px)",userSelect:"none",opacity:.65}}>{restParas}</p>
-                  <div style={{position:"absolute",inset:0,background:`linear-gradient(to bottom,transparent 0%,#141B24 52%)`,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:4}}>
+                  <div style={{position:"absolute",inset:0,background:`linear-gradient(to bottom,transparent 0%,#101520 52%)`,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:4}}>
                     <Link href={ctaHref} className="cm-btn-gold">Continue Your Story →</Link>
                   </div>
                 </div>
@@ -753,7 +905,34 @@ export default function ClassicMePage() {
               <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"right"}}>— {selected.author}</p>
             </div>
 
-            <div style={{background:"rgba(212,184,106,.03)",border:"1px solid rgba(191,160,90,.22)",padding:"34px 38px",textAlign:"center",marginBottom:20}}>
+            {/* Post-result email gate & monetization */}
+            <div style={{background:"rgba(212,184,106,.02)",border:"1px solid rgba(191,160,90,.18)",padding:"34px 38px",textAlign:"center",marginBottom:28,borderRadius:6}}>
+              {!emailSaved ? (
+                <>
+                  <p className="cm-caps" style={{fontSize:12,color:"#BFA05A",marginBottom:10}}>Save Your Literary Keepsake</p>
+                  <p style={{fontStyle:"italic",fontSize:16,color:"rgba(240,220,168,.75)",marginBottom:18}}>
+                    Drop your email to get the full written text, the high-res portrait link, and a free trial of Chronicled.
+                  </p>
+                  <div style={{display:"flex",gap:10,maxWidth:420,margin:"0 auto"}}>
+                    <input
+                      className="cm-input"
+                      type="email"
+                      placeholder="you@example.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      style={{fontSize:16,padding:"10px 15px"}}
+                    />
+                    <button className="cm-btn-gold" style={{padding:"10px 24px",fontSize:11,whiteSpace:"nowrap"}} onClick={handleSaveEmail}>
+                      Save Free
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <p style={{fontStyle:"italic",fontSize:16,color:"#D4B86A"}}>✓ Saved! Check your inbox shortly for your full portrait package.</p>
+              )}
+            </div>
+
+            <div style={{background:"rgba(212,184,106,.04)",border:"1px solid rgba(191,160,90,.22)",padding:"34px 38px",textAlign:"center",marginBottom:28,borderRadius:6}}>
               <p className="cm-caps" style={{fontSize:12,color:"#BFA05A",marginBottom:14}}>Want the full story?</p>
               <p style={{fontStyle:"italic",fontSize:20,color:"#F0DCA8",lineHeight:1.65,marginBottom:10}}>
                 Turn your real life into a <span style={{color:"#D4B86A"}}>full literary memoir</span> — 10,000 words, a bespoke portrait, and a hardcover book.
@@ -765,7 +944,7 @@ export default function ClassicMePage() {
             </div>
 
             <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
-              <button className="cm-btn-ghost" onClick={handleShare}>{shareMsg || "Share"}</button>
+              <button className="cm-btn-gold" onClick={handleShare}>{shareMsg || "🎁 Put a Friend in this Novel"}</button>
               <button className="cm-btn-ghost" onClick={() => drawShareCard(name, selected.roman, selected.title, selected.author, roastText, selected.color)}>
                 Download Card
               </button>
@@ -786,3 +965,4 @@ export default function ClassicMePage() {
     </>
   );
 }
+
