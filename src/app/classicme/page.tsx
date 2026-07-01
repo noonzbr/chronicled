@@ -267,6 +267,8 @@ export default function ClassicMePage() {
   const [photoUrl, setPhotoUrl] = useState<string | null>(null);
   const [roastText, setRoastText] = useState("");
   const [shareMsg, setShareMsg] = useState("");
+  const [portraitGenUrl, setPortraitGenUrl] = useState<string | null>(null);
+  const [portraitLoading, setPortraitLoading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const selected = CLASSICS.find((c) => c.id === selectedId) ?? null;
@@ -293,6 +295,24 @@ export default function ClassicMePage() {
         body: JSON.stringify({ name: name.trim(), email: email.trim(), book: selected.title }),
       }).catch(() => {});
     }
+
+    // Fire portrait generation in parallel — completes after text is shown
+    if (photoUrl) {
+      setPortraitLoading(true);
+      setPortraitGenUrl(null);
+      fetch("/api/classicme/portrait", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ imageBase64: photoUrl, bookSlug: selected.slug }),
+      })
+        .then((r) => r.json())
+        .then((data) => {
+          if (data.portraitUrl) setPortraitGenUrl(data.portraitUrl);
+          setPortraitLoading(false);
+        })
+        .catch(() => setPortraitLoading(false));
+    }
+
     setStep("generating");
     try {
       const res = await fetch("/api/classicme", {
@@ -312,7 +332,8 @@ export default function ClassicMePage() {
   }
 
   function handleReset() {
-    setStep("select"); setSelectedId(null); setName(""); setEmail(""); setPhotoUrl(null); setRoastText(""); setShareMsg("");
+    setStep("select"); setSelectedId(null); setName(""); setEmail(""); setPhotoUrl(null);
+    setRoastText(""); setShareMsg(""); setPortraitGenUrl(null); setPortraitLoading(false);
   }
 
   function handleShare() {
@@ -597,12 +618,41 @@ export default function ClassicMePage() {
             <div style={{textAlign:"center",marginBottom:40}}>
               <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:24}}>Your ClassicMe Portrait</p>
 
-              {/* Photo — large framed portrait with vintage filter */}
+              {/* Portrait — AI-generated or original photo or initial */}
               <div style={{display:"inline-block",position:"relative",marginBottom:20}}>
-                {photoUrl ? (
+                {portraitGenUrl ? (
+                  /* ── AI portrait ready ── */
                   <>
                     <div style={{
-                      width:190,height:230,
+                      width:220,height:320,
+                      border:"2px solid #D4B86A",
+                      padding:6,
+                      background:"#141B24",
+                      display:"inline-block",
+                      boxShadow:"0 0 60px rgba(212,184,106,.2)",
+                    }}>
+                      <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden"}}>
+                        <img
+                          src={portraitGenUrl}
+                          alt={`${name} — ${selected.title} portrait`}
+                          style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+                        />
+                      </div>
+                    </div>
+                    <div style={{
+                      position:"absolute",bottom:-14,left:"50%",transform:"translateX(-50%)",
+                      background:"#D4B86A",color:"#0D1117",
+                      fontFamily:"'Cinzel',serif",fontWeight:700,fontSize:13,
+                      padding:"3px 14px",letterSpacing:".15em",whiteSpace:"nowrap",
+                    }}>
+                      {selected.roman} · {selected.theme.toUpperCase()}
+                    </div>
+                  </>
+                ) : photoUrl ? (
+                  /* ── Original photo + painting overlay while AI generates ── */
+                  <>
+                    <div style={{
+                      width:190,height:240,
                       border:"2px solid #D4B86A",
                       padding:6,
                       background:"#141B24",
@@ -616,12 +666,18 @@ export default function ClassicMePage() {
                           className="cm-portrait-img"
                           style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
                         />
-                        {/* Vignette overlay */}
-                        <div style={{
-                          position:"absolute",inset:0,
-                          background:"radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.55) 100%)",
-                          pointerEvents:"none",
-                        }} />
+                        {portraitLoading && (
+                          <div style={{
+                            position:"absolute",inset:0,
+                            background:"rgba(13,17,23,0.82)",
+                            display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:10,
+                          }}>
+                            <div className="cm-spin" style={{fontSize:26,color:"#D4B86A"}}>✦</div>
+                            <p className="cm-caps" style={{fontSize:10,color:"#BFA05A",textAlign:"center",lineHeight:1.5}}>
+                              Painting<br/>your portrait...
+                            </p>
+                          </div>
+                        )}
                       </div>
                     </div>
                     <div style={{
@@ -634,15 +690,16 @@ export default function ClassicMePage() {
                     </div>
                   </>
                 ) : (
+                  /* ── No photo uploaded ── */
                   <div style={{
-                    width:190,height:230,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
+                    width:190,height:240,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
                     boxShadow:"0 0 40px rgba(212,184,106,.15)",
                   }}>
                     <div style={{flex:1,border:"1px solid rgba(191,160,90,.3)",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8}}>
                       <span style={{fontFamily:"'Cinzel Decorative',serif",fontSize:64,color:"rgba(191,160,90,.25)",lineHeight:1}}>
                         {name.charAt(0).toUpperCase()}
                       </span>
-                      <p className="cm-caps" style={{fontSize:10,color:"rgba(191,160,90,.4)"}}>No photo</p>
+                      <p className="cm-caps" style={{fontSize:10,color:"rgba(191,160,90,.4)"}}>Upload a photo<br/>for your portrait</p>
                     </div>
                   </div>
                 )}
