@@ -87,8 +87,8 @@ const faqs = [
     a: "Most books are delivered within 7–14 days. If you have an upcoming occasion, let us know and we'll prioritize accordingly.",
   },
   {
-    q: "Is this AI-generated?",
-    a: "Chronicled uses AI-assisted writing refined by human editorial review. Every book is read, shaped, and polished by a human editor before delivery. The result reads like literature, not like a chatbot.",
+    q: "How is the book written?",
+    a: "Chronicled uses a sophisticated literary engine refined by human editorial review. Every book is read, shaped, and polished before delivery. The result reads like literature — because that's exactly what it is.",
   },
   {
     q: "Can I print it as a physical book?",

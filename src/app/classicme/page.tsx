@@ -5,48 +5,112 @@ import Link from "next/link";
 
 const CLASSICS = [
   {
+    id: "romeo",
+    roman: "I",
+    title: "Romeo & Juliet",
+    author: "William Shakespeare",
+    theme: "Tragic Love",
+    emoji: "🌹",
+    slug: "romeo-and-juliet",
+    color: "#7B2D3E",
+    fallback: (n: string) =>
+      `Two households, both alike in dignity, in fair [city] where we lay our scene — and where ${n} once declared their feelings in a text message that was, in retrospect, perhaps too long for the medium. The stars, as ever, were crossed. The thumbs-up emoji was received at 11:47 PM and never discussed again.\n\nTheir love was a brief and blazing thing, the kind that lives in a single season and is spoken of forever after. Everyone who knew ${n} then will tell you: there was a before and an after. The before was fine. The after was literature.\n\nFor never was a story of more woe — though the group chat has since recovered, and ${n} is doing remarkably well.`,
+  },
+  {
     id: "pride",
+    roman: "II",
     title: "Pride & Prejudice",
     author: "Jane Austen",
-    label: "Regency Sass",
+    theme: "Love That Endured",
     emoji: "💌",
     slug: "pride-and-prejudice",
     color: "#3E6B5C",
-    fallback: (name: string) =>
-      `It is a truth universally acknowledged, that a single person in possession of a smartphone must be in want of validation. And yet ${name} — whose wit was as sharp as their Wi-Fi password — had always maintained a studied indifference to the opinions of others, except on Tuesdays, when their inbox filled with unsolicited advice from people who meant well.\n\nTheir mother, to whom all eligible conversations led, had once declared them "too particular," but ${name} suspected she meant "too expensive to gift-wrap." Mr. Darcy, had he been present at their group chat, would have initially found them tolerable — just barely — and would have spent the remainder of the novel deeply regretting that first impression.\n\nStill, ${name} endured. They always did. And in the end, that was the most Austen thing about them.`,
-  },
-  {
-    id: "moby",
-    title: "Moby Dick",
-    author: "Herman Melville",
-    label: "Nautical Nonsense",
-    emoji: "🐋",
-    slug: null,
-    color: "#2B4A7A",
-    fallback: (name: string) =>
-      `Call me ${name}. Some weeks ago — never mind how long precisely — having little money in my purse and a vague sense that Monday meetings were consuming my soul, I thought I would sail about a little and see the watery part of the world.\n\nBut there were no oceans in my commute. Only the great grey whale of a quarterly review, its jaws agape, swallowing everyone whole. I hunted it with harpoons made of passive-aggressive emails and expense reports filed seventeen days late.\n\nI alone escaped to tell thee — mostly because I had a dentist appointment and the captain did not. The sea is vast. The inbox, vaster.`,
+    fallback: (n: string) =>
+      `It is a truth universally acknowledged, that a single person in possession of a smartphone must be in want of validation. And yet ${n} — whose wit was as sharp as their Wi-Fi password — had always maintained a studied indifference to the opinions of others, except on Tuesdays, when their inbox filled with unsolicited advice from people who meant well.\n\nTheir mother, to whom all eligible conversations led, had once declared them "too particular," but ${n} suspected she meant "too expensive to gift-wrap." Mr. Darcy, had he been present at their group chat, would have initially found them tolerable — just barely — and would have spent the remainder of the novel deeply regretting that first impression.\n\nStill, ${n} endured. They always did. And in the end, that was the most Austen thing about them.`,
   },
   {
     id: "gatsby",
+    roman: "III",
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
-    label: "Jazz Age Roast",
+    theme: "Ambition & Reinvention",
     emoji: "🥂",
     slug: "the-great-gatsby",
     color: "#9A7B2F",
-    fallback: (name: string) =>
-      `In my younger and more vulnerable years, before I had a Venmo account and questionable taste in party venues, my father gave me some advice: "Reserve your judgments." He was wrong, obviously.\n\n${name} had perfect judgment — particularly about wine, people, and the precise moment to leave a party before it peaked. I watched them from across the bay: their dock was green, their voice was full of money, and their group chat never had the dreaded "seen" receipt problem that plagued the rest of us.\n\nThey believed in the green light, the orgastic future — and in same-day delivery, which amounted to the same thing. So we beat on, notifications against the current, borne back ceaselessly into our feeds.`,
+    fallback: (n: string) =>
+      `In my younger and more vulnerable years, before I had a Venmo account and questionable taste in party venues, my father gave me some advice: "Reserve your judgments." He was wrong, obviously.\n\n${n} had perfect judgment — particularly about wine, people, and the precise moment to leave a party before it peaked. I watched them from across the bay: their dock was green, their voice was full of money, and their group chat never had the dreaded "seen" receipt problem that plagued the rest of us.\n\nThey believed in the green light, the orgastic future — and in same-day delivery, which amounted to the same thing. So we beat on, notifications against the current, borne back ceaselessly into our feeds.`,
   },
   {
-    id: "sherlock",
-    title: "Sherlock Holmes",
-    author: "Arthur Conan Doyle",
-    label: "Consulting Cluelessness",
-    emoji: "🔍",
-    slug: null,
-    color: "#5A4030",
-    fallback: (name: string) =>
-      `"You have been in back-to-back Zoom calls, I perceive." Holmes said nothing of the sort to ${name}, but he might have — had he observed the thousand-yard stare of someone who spent the better part of a Tuesday explaining a concept that was clearly in the email.\n\nThe game was afoot. The game was always afoot. The game turned out to be a series of increasingly elaborate spreadsheets, at which point Holmes would have reconsidered his profession entirely and Watson would have switched to decaf.\n\nStill, ${name} persisted. The world is full of obvious things which nobody by any chance ever observes. ${name} had observed all of them. That was both their gift and their eternal burden.`,
+    id: "odyssey",
+    roman: "IV",
+    title: "The Odyssey",
+    author: "Homer",
+    theme: "A Life of Adventure",
+    emoji: "⚓",
+    slug: "the-odyssey",
+    color: "#4A6B8A",
+    fallback: (n: string) =>
+      `Sing in me, Muse, and through me tell the story of ${n} — who wandered far and wide, who knew the minds of many cities and many were the woes they suffered in their heart. The sea, in this case, was a series of connecting flights through Atlanta.\n\nThey were gone longer than expected. They lost luggage in circumstances that remain disputed. They came home different. The suitors had eaten all the good snacks, reorganized the kitchen incorrectly, and started a podcast.\n\nStill, ${n} had seen things — things that cannot be unseen — and would, at dinner parties, refer to them obliquely for years to come. The journey was the point. It was always the point.`,
+  },
+  {
+    id: "carol",
+    roman: "V",
+    title: "A Christmas Carol",
+    author: "Charles Dickens",
+    theme: "Redemption",
+    emoji: "🕯️",
+    slug: "a-christmas-carol",
+    color: "#5C4A7A",
+    fallback: (n: string) =>
+      `${n} was not Scrooge. ${n} was, if anything, the ghost — the one who appears at odd hours with important information no one asked for, offering unsolicited perspective on choices that have already been made, and occasionally rattling chains that turn out to be AirPods.\n\nAnd yet: they changed. Not because three spirits came for them in the night (one was delayed, which ruined the whole dynamic), but because one December, in a manner they have never quite explained, something shifted.\n\nThey became softer. Warmer. The sort of person who says "let's not do gifts this year" and actually means it. God bless them, every one.`,
+  },
+  {
+    id: "monte",
+    roman: "VI",
+    title: "The Count of Monte Cristo",
+    author: "Alexandre Dumas",
+    theme: "Betrayal & Triumph",
+    emoji: "⚔️",
+    slug: "the-count-of-monte-cristo",
+    color: "#7A4A2A",
+    fallback: (n: string) =>
+      `How did ${n} survive? With patience. With planning. With a list — written in the margins of a journal bought at an airport, in a city they were never supposed to be in, during the worst year of their life — a list of everyone who had doubted them, and everything they intended to become.\n\nThey did not get revenge, exactly. They got better. Quietly, thoroughly, in full view of everyone who said they wouldn't. The Count himself would have understood, though he would have also sent a very polite, devastating thank-you note.\n\n${n} merely succeeded. That was enough. It was, in its way, more.`,
+  },
+  {
+    id: "jane",
+    roman: "VII",
+    title: "Jane Eyre",
+    author: "Charlotte Brontë",
+    theme: "A Life on Her Own Terms",
+    emoji: "🕊️",
+    slug: "jane-eyre",
+    color: "#6B4A5A",
+    fallback: (n: string) =>
+      `I am no bird; and no net ensnares me. ${n} understood this before they had language for it — the particular freedom of someone who has chosen themselves in a world full of people asking them to do otherwise, politely, repeatedly, with excellent intentions.\n\nThey were not easy to love, those who needed their ease at someone else's expense. And so ${n} left. Then returned, in their own time, on their own terms — which is, it turns out, the only way to arrive anywhere worth being.\n\nMr. Rochester, for what it's worth, would have texted first. That would have helped considerably.`,
+  },
+  {
+    id: "women",
+    roman: "VIII",
+    title: "Little Women",
+    author: "Louisa May Alcott",
+    theme: "Family, Dreams & the People Who Made You",
+    emoji: "📖",
+    slug: "little-women",
+    color: "#A07840",
+    fallback: (n: string) =>
+      `Christmas won't be Christmas without any presents, grumbled ${n} — though by Christmas they meant any number of things that had nothing to do with presents and everything to do with the feeling of being exactly where you belong, with exactly who you love, doing exactly what matters.\n\nThey grew up, as all Marches do. They wrote things down. They kept the letters. They turned, somewhere along the way, from the person who wanted everything into the person who understood what enough looked like.\n\nIt looked a great deal like this: a particular table, a particular light, people they would run toward in any weather. That was the whole of it, really. And it was more than enough.`,
+  },
+  {
+    id: "heights",
+    roman: "IX",
+    title: "Wuthering Heights",
+    author: "Emily Brontë",
+    theme: "The Love That Never Let Go",
+    emoji: "🌪️",
+    slug: "wuthering-heights",
+    color: "#3A4550",
+    fallback: (n: string) =>
+      `Whatever our souls are made of, ${n}'s and mine are the same — that was how it was described to them once, by someone standing in a car park in the rain, which slightly undercut the effect but did not diminish the sincerity.\n\n${n} was wild once, in the way the moors are wild: not dangerous, exactly, but not entirely safe either. Certain landscapes still hold them. Certain weather still brings it back. They have since become something more settled, more interior — a house with the windows finally latched.\n\nBut on particular days, in particular light, you can still see it: the thing they were before they learned to contain it. That thing was enormous. It still is.`,
   },
 ] as const;
 
@@ -55,9 +119,9 @@ type Step = "select" | "customize" | "email" | "generating" | "result";
 
 function drawShareCard(
   name: string,
+  roman: string,
   bookTitle: string,
   author: string,
-  emoji: string,
   passage: string,
   accentColor: string
 ): void {
@@ -67,102 +131,93 @@ function drawShareCard(
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  // Background
   ctx.fillStyle = "#0D1117";
   ctx.fillRect(0, 0, 1080, 1080);
 
-  // Outer gold border
   ctx.strokeStyle = "#D4B86A";
   ctx.lineWidth = 4;
   ctx.strokeRect(40, 40, 1000, 1000);
-
-  // Inner subtle border
-  ctx.strokeStyle = "rgba(212,184,106,0.25)";
+  ctx.strokeStyle = "rgba(212,184,106,0.2)";
   ctx.lineWidth = 1;
-  ctx.strokeRect(56, 56, 968, 968);
+  ctx.strokeRect(58, 58, 964, 964);
 
-  // Accent colour bar at top
   ctx.fillStyle = accentColor;
   ctx.fillRect(40, 40, 1000, 10);
 
-  // Book emoji
-  ctx.font = "76px serif";
+  ctx.fillStyle = "rgba(191,160,90,0.3)";
+  ctx.font = "700 100px 'Cinzel', Georgia, serif";
   ctx.textAlign = "center";
-  ctx.fillText(emoji, 540, 220);
+  ctx.fillText(roman, 540, 200);
 
-  // Book title
-  ctx.fillStyle = "#D4B86A";
-  ctx.font = "700 30px 'Cinzel', Georgia, serif";
-  ctx.fillText(bookTitle.toUpperCase(), 540, 286);
-
-  // Author
-  ctx.fillStyle = "rgba(191,160,90,0.55)";
-  ctx.font = "italic 20px 'EB Garamond', Georgia, serif";
-  ctx.fillText(`— ${author}`, 540, 320);
-
-  // Gold rule
-  const gr1 = ctx.createLinearGradient(160, 355, 920, 355);
+  const gr1 = ctx.createLinearGradient(160, 230, 920, 230);
   gr1.addColorStop(0, "transparent");
   gr1.addColorStop(0.5, "#BFA05A");
   gr1.addColorStop(1, "transparent");
   ctx.beginPath();
   ctx.strokeStyle = gr1;
   ctx.lineWidth = 1;
-  ctx.moveTo(160, 355);
-  ctx.lineTo(920, 355);
+  ctx.moveTo(160, 230);
+  ctx.lineTo(920, 230);
   ctx.stroke();
 
-  // Name
-  ctx.fillStyle = "#F0DCA8";
-  ctx.font = "600 50px 'Cinzel', Georgia, serif";
-  ctx.fillText(name, 540, 428);
+  ctx.fillStyle = "#D4B86A";
+  ctx.font = "700 28px 'Cinzel', Georgia, serif";
+  ctx.fillText(bookTitle.toUpperCase(), 540, 284);
 
-  // Passage excerpt (word-wrapped)
-  ctx.fillStyle = "rgba(240,220,168,0.78)";
-  ctx.font = "italic 22px 'EB Garamond', Georgia, serif";
-  const excerpt = passage.replace(/\n/g, " ");
-  const words = excerpt.split(" ");
-  let line = "";
-  let y = 496;
-  const maxW = 860;
-  const lh = 36;
-  let lines = 0;
+  ctx.fillStyle = "rgba(191,160,90,0.55)";
+  ctx.font = "italic 20px 'EB Garamond', Georgia, serif";
+  ctx.fillText(`— ${author}`, 540, 318);
 
-  for (let i = 0; i < words.length; i++) {
-    const test = line + words[i] + " ";
-    if (ctx.measureText(test).width > maxW && line !== "") {
-      ctx.fillText(line.trim(), 540, y);
-      line = words[i] + " ";
-      y += lh;
-      lines++;
-      if (lines >= 8) {
-        ctx.fillText("...", 540, y);
-        break;
-      }
-    } else {
-      line = test;
-    }
-    if (i === words.length - 1 && lines < 8) {
-      ctx.fillText(line.trim(), 540, y);
-    }
-  }
-
-  // Bottom rule
-  const gr2 = ctx.createLinearGradient(160, 870, 920, 870);
+  const gr2 = ctx.createLinearGradient(160, 350, 920, 350);
   gr2.addColorStop(0, "transparent");
   gr2.addColorStop(0.5, "#BFA05A");
   gr2.addColorStop(1, "transparent");
   ctx.beginPath();
   ctx.strokeStyle = gr2;
   ctx.lineWidth = 1;
+  ctx.moveTo(160, 350);
+  ctx.lineTo(920, 350);
+  ctx.stroke();
+
+  ctx.fillStyle = "#F0DCA8";
+  ctx.font = "600 48px 'Cinzel', Georgia, serif";
+  ctx.fillText(name, 540, 420);
+
+  ctx.fillStyle = "rgba(240,220,168,0.75)";
+  ctx.font = "italic 22px 'EB Garamond', Georgia, serif";
+  const excerpt = passage.replace(/\n/g, " ");
+  const words = excerpt.split(" ");
+  let line = "";
+  let y = 490;
+  const lh = 36;
+  let lines = 0;
+  for (let i = 0; i < words.length; i++) {
+    const test = line + words[i] + " ";
+    if (ctx.measureText(test).width > 860 && line !== "") {
+      ctx.fillText(line.trim(), 540, y);
+      line = words[i] + " ";
+      y += lh;
+      if (++lines >= 9) { ctx.fillText("...", 540, y); break; }
+    } else {
+      line = test;
+    }
+    if (i === words.length - 1 && lines < 9) ctx.fillText(line.trim(), 540, y);
+  }
+
+  const gr3 = ctx.createLinearGradient(160, 870, 920, 870);
+  gr3.addColorStop(0, "transparent");
+  gr3.addColorStop(0.5, "#BFA05A");
+  gr3.addColorStop(1, "transparent");
+  ctx.beginPath();
+  ctx.strokeStyle = gr3;
+  ctx.lineWidth = 1;
   ctx.moveTo(160, 870);
   ctx.lineTo(920, 870);
   ctx.stroke();
 
-  // Watermark
-  ctx.fillStyle = "rgba(212,184,106,0.45)";
-  ctx.font = "600 16px 'Cinzel', Georgia, serif";
-  ctx.fillText("GETCHRONICLED.ART / CLASSICME", 540, 926);
+  ctx.fillStyle = "rgba(212,184,106,0.4)";
+  ctx.font = "600 15px 'Cinzel', Georgia, serif";
+  ctx.fillText("GETCHRONICLED.ART / CLASSICME", 540, 920);
 
   canvas.toBlob((blob) => {
     if (!blob) return;
@@ -199,22 +254,14 @@ export default function ClassicMePage() {
 
   async function handleGenerate() {
     if (!selected || !name.trim()) return;
-
-    // Fire-and-forget email capture
     if (email.trim()) {
       fetch("/api/classicme/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: name.trim(),
-          email: email.trim(),
-          book: selected.title,
-        }),
+        body: JSON.stringify({ name: name.trim(), email: email.trim(), book: selected.title }),
       }).catch(() => {});
     }
-
     setStep("generating");
-
     try {
       const res = await fetch("/api/classicme", {
         method: "POST",
@@ -226,51 +273,21 @@ export default function ClassicMePage() {
     } catch {
       setRoastText(selected.fallback(name.trim()));
     }
-
     setStep("result");
     import("canvas-confetti").then((m) =>
-      m.default({
-        particleCount: 160,
-        spread: 75,
-        origin: { y: 0.55 },
-        colors: ["#D4B86A", "#f59e0b", "#ffffff", "#BFA05A"],
-      })
+      m.default({ particleCount: 150, spread: 70, origin: { y: 0.55 }, colors: ["#D4B86A", "#f59e0b", "#fff", "#BFA05A"] })
     );
   }
 
   function handleReset() {
-    setStep("select");
-    setSelectedId(null);
-    setName("");
-    setEmail("");
-    setPhotoUrl(null);
-    setRoastText("");
-    setShareMsg("");
+    setStep("select"); setSelectedId(null); setName(""); setEmail(""); setPhotoUrl(null); setRoastText(""); setShareMsg("");
   }
 
   function handleShare() {
     if (!selected) return;
-    const text = `I just got roasted by ${selected.title} 📖\n\n"${roastText.slice(0, 200).trim()}..."\n\nTry it free: getchronicled.art/classicme`;
-    if (navigator.share) {
-      navigator.share({ text }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(text).then(() => {
-        setShareMsg("Copied to clipboard!");
-        setTimeout(() => setShareMsg(""), 2500);
-      });
-    }
-  }
-
-  function handleDownloadCard() {
-    if (!selected) return;
-    drawShareCard(
-      name,
-      selected.title,
-      selected.author,
-      selected.emoji,
-      roastText,
-      selected.color
-    );
+    const text = `I just got roasted by ${selected.title} 📖\n\n"${roastText.slice(0, 200).trim()}..."\n\nTry it free → getchronicled.art/classicme`;
+    if (navigator.share) { navigator.share({ text }).catch(() => {}); }
+    else { navigator.clipboard.writeText(text).then(() => { setShareMsg("Copied!"); setTimeout(() => setShareMsg(""), 2200); }); }
   }
 
   const ctaHref = selected?.slug ? `/begin?book=${selected.slug}` : "/begin";
@@ -281,132 +298,159 @@ export default function ClassicMePage() {
   return (
     <>
       <style>{`
-        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
-        .cm { font-family:'EB Garamond',Georgia,serif; background:#0D1117; min-height:100vh; color:#F0DCA8; }
-        .cm-display { font-family:'Cinzel Decorative',serif; }
-        .cm-caps { font-family:'Cinzel',serif; letter-spacing:.22em; text-transform:uppercase; }
-        .cm-book { cursor:pointer; border:1px solid rgba(191,160,90,.15); background:#141B24; transition:border-color .18s,transform .18s,box-shadow .18s; text-align:left; }
-        .cm-book:hover { border-color:rgba(212,184,106,.5); transform:translateY(-2px); box-shadow:0 8px 28px rgba(0,0,0,.45); }
-        .cm-book.on { border-color:#D4B86A; box-shadow:0 0 0 1px #D4B86A,0 8px 28px rgba(0,0,0,.5); }
-        .cm-gold { font-family:'Cinzel',serif; font-size:11px; letter-spacing:.22em; text-transform:uppercase; font-weight:600; background:#D4B86A; color:#0D1117; border:none; cursor:pointer; padding:15px 36px; transition:opacity .15s; }
-        .cm-gold:hover:not(:disabled) { opacity:.88; }
-        .cm-gold:disabled { opacity:.35; cursor:not-allowed; }
-        .cm-ghost { font-family:'Cinzel',serif; font-size:10px; letter-spacing:.2em; text-transform:uppercase; background:transparent; color:#D4B86A; border:1px solid rgba(212,184,106,.4); cursor:pointer; padding:14px 30px; transition:border-color .15s,background .15s; }
-        .cm-ghost:hover { border-color:#D4B86A; background:rgba(212,184,106,.06); }
-        .cm-input { width:100%; background:#0D1117; border:1px solid rgba(191,160,90,.28); color:#F0DCA8; font-family:'EB Garamond',serif; font-size:20px; padding:14px 18px; outline:none; transition:border-color .15s; box-sizing:border-box; }
-        .cm-input::placeholder { color:rgba(240,220,168,.28); }
-        .cm-input:focus { border-color:#D4B86A; }
-        .cm-rule { height:1px; background:linear-gradient(to right,transparent,#BFA05A,transparent); }
-        .cm-passage { font-family:'EB Garamond',serif; font-size:19px; line-height:1.95; color:#F0DCA8; }
-        @keyframes cm-spin { to { transform:rotate(360deg); } }
-        .cm-spin { animation:cm-spin 1.5s linear infinite; display:inline-block; }
-        @keyframes cm-in { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
-        .cm-in { animation:cm-in .45s ease both; }
-        .cm-photo { width:100px; height:100px; border:2px dashed rgba(191,160,90,.3); background:#141B24; cursor:pointer; display:flex; align-items:center; justify-content:center; overflow:hidden; transition:border-color .15s; flex-shrink:0; }
-        .cm-photo:hover { border-color:#D4B86A; }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cinzel:wght@400;600;700&family=EB+Garamond:ital,wght@0,400;0,500;1,400;1,500&display=swap');
+        *{box-sizing:border-box;margin:0;padding:0;}
+        .cm{font-family:'EB Garamond',Georgia,serif;background:#0D1117;min-height:100vh;color:#F0DCA8;}
+        .cm-display{font-family:'Cinzel Decorative',serif;}
+        .cm-caps{font-family:'Cinzel',serif;letter-spacing:.2em;text-transform:uppercase;}
+        .cm-rule{height:1px;background:linear-gradient(to right,transparent,#BFA05A,transparent);}
+        .cm-card{background:#141B24;border:1px solid rgba(191,160,90,.15);cursor:pointer;text-align:left;transition:border-color .18s,transform .18s,box-shadow .18s;}
+        .cm-card:hover{border-color:rgba(212,184,106,.45);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
+        .cm-card.selected{border-color:#D4B86A;box-shadow:0 0 0 1px #D4B86A,0 8px 32px rgba(0,0,0,.5);}
+        .cm-btn-gold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:15px 40px;transition:opacity .15s;display:inline-block;text-decoration:none;text-align:center;}
+        .cm-btn-gold:hover:not(:disabled){opacity:.88;}
+        .cm-btn-gold:disabled{opacity:.32;cursor:not-allowed;}
+        .cm-btn-ghost{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;background:transparent;color:#D4B86A;border:1px solid rgba(212,184,106,.35);cursor:pointer;padding:13px 28px;transition:border-color .15s,background .15s;display:inline-block;text-decoration:none;}
+        .cm-btn-ghost:hover{border-color:#D4B86A;background:rgba(212,184,106,.06);}
+        .cm-input{width:100%;background:#0D1117;border:1px solid rgba(191,160,90,.25);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:20px;padding:14px 18px;outline:none;transition:border-color .15s;}
+        .cm-input::placeholder{color:rgba(240,220,168,.25);}
+        .cm-input:focus{border-color:#D4B86A;}
+        .cm-passage{font-family:'EB Garamond',serif;font-size:19px;line-height:1.95;color:#F0DCA8;white-space:pre-line;}
+        @keyframes cm-spin{to{transform:rotate(360deg);}}
+        .cm-spin{animation:cm-spin 1.5s linear infinite;display:inline-block;}
+        @keyframes cm-fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+        .cm-fade{animation:cm-fade .4s ease both;}
+        .cm-photo{width:96px;height:96px;border:2px dashed rgba(191,160,90,.28);background:#141B24;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;}
+        .cm-photo:hover{border-color:#D4B86A;}
       `}</style>
 
       <div className="cm">
-        {/* Nav */}
-        <nav style={{ borderBottom:"1px solid rgba(191,160,90,.12)", padding:"18px 32px", display:"flex", alignItems:"center", justifyContent:"space-between" }}>
-          <Link href="/" style={{ textDecoration:"none" }}>
-            <span className="cm-caps" style={{ fontSize:13, color:"#D4B86A", letterSpacing:".3em" }}>Chronicled</span>
+
+        {/* ── NAV ── */}
+        <nav style={{borderBottom:"1px solid rgba(191,160,90,.12)",padding:"20px 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+          <Link href="/" style={{textDecoration:"none"}}>
+            <span className="cm-caps" style={{fontSize:13,color:"#D4B86A",letterSpacing:".35em"}}>Chronicled</span>
           </Link>
-          <span className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.32)" }}>ClassicMe</span>
+          <span className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.3)",letterSpacing:".2em"}}>ClassicMe</span>
         </nav>
 
-        {/* Hero */}
-        <header style={{ textAlign:"center", padding:"68px 24px 44px" }}>
-          <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.45)", marginBottom:16 }}>
+        {/* ── HERO ── */}
+        <header style={{textAlign:"center",padding:"72px 24px 52px"}}>
+          <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.45)",letterSpacing:".4em",marginBottom:18}}>
             The Elf Yourself of Literature
           </p>
-          <h1 className="cm-display" style={{ fontSize:"clamp(44px,9vw,84px)", fontWeight:700, margin:"0 0 6px", lineHeight:1.05 }}>
-            <span style={{ color:"#F0DCA8" }}>Classic</span>
-            <span style={{ color:"#D4B86A" }}>Me</span>
+          <h1 className="cm-display" style={{fontSize:"clamp(48px,10vw,92px)",fontWeight:700,lineHeight:1.02,marginBottom:0}}>
+            <span style={{color:"#F0DCA8"}}>Classic</span>
+            <span style={{color:"#D4B86A"}}>Me</span>
           </h1>
-          <p style={{ fontStyle:"italic", fontSize:"clamp(16px,2.2vw,21px)", color:"rgba(240,220,168,.5)", marginTop:18, maxWidth:500, marginLeft:"auto", marginRight:"auto", lineHeight:1.65 }}>
-            Upload your photo. Pick your novel. Get roasted by a literary legend.
+          <p style={{fontStyle:"italic",fontSize:"clamp(17px,2.5vw,22px)",color:"rgba(240,220,168,.5)",marginTop:22,maxWidth:480,marginLeft:"auto",marginRight:"auto",lineHeight:1.7}}>
+            Upload your photo. Pick your novel.<br/>Get roasted by a literary legend.
           </p>
-          <div className="cm-rule" style={{ maxWidth:180, margin:"32px auto 0" }} />
+          <div className="cm-rule" style={{maxWidth:200,margin:"36px auto 0"}} />
         </header>
 
-        {/* ── STEP: SELECT ── */}
+        {/* ── SELECT ── */}
         {step === "select" && (
-          <div className="cm-in" style={{ maxWidth:880, margin:"0 auto", padding:"0 24px 80px" }}>
-            <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.38)", textAlign:"center", marginBottom:32 }}>Step 1 of 3 — Choose your classic</p>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(196px,1fr))", gap:14 }}>
+          <div className="cm-fade" style={{maxWidth:1040,margin:"0 auto",padding:"0 24px 96px"}}>
+            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36,letterSpacing:".3em"}}>
+              Step 1 of 3 — Choose your classic
+            </p>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:12}}>
               {CLASSICS.map((c) => (
-                <button key={c.id} className={`cm-book${selectedId === c.id ? " on" : ""}`} onClick={() => setSelectedId(c.id)} style={{ padding:"28px 22px" }}>
-                  <div style={{ fontSize:30, marginBottom:12 }}>{c.emoji}</div>
-                  <div style={{ width:26, height:3, background:c.color, marginBottom:14 }} />
-                  <p className="cm-caps" style={{ fontSize:8, color:"#BFA05A", margin:"0 0 6px" }}>{c.label}</p>
-                  <p style={{ fontFamily:"'Cinzel',serif", fontWeight:600, fontSize:14, color:"#F0DCA8", lineHeight:1.3, margin:"0 0 4px" }}>{c.title}</p>
-                  <p style={{ fontStyle:"italic", fontSize:12, color:"rgba(191,160,90,.5)", margin:0 }}>{c.author}</p>
+                <button
+                  key={c.id}
+                  className={`cm-card${selectedId === c.id ? " selected" : ""}`}
+                  onClick={() => setSelectedId(c.id)}
+                  style={{padding:"0",border:"none"}}
+                >
+                  {/* colour bar */}
+                  <div style={{height:4,background:c.color,width:"100%"}} />
+                  <div style={{padding:"22px 20px 24px"}}>
+                    <p className="cm-caps" style={{fontSize:28,color:"rgba(191,160,90,.18)",fontFamily:"'Cinzel',serif",marginBottom:12,lineHeight:1}}>{c.roman}</p>
+                    <p className="cm-caps" style={{fontSize:8,color:"#BFA05A",marginBottom:8,letterSpacing:".22em"}}>{c.theme}</p>
+                    <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:14,color:"#F0DCA8",lineHeight:1.25,marginBottom:5}}>{c.title}</p>
+                    <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.45)"}}>{c.author}</p>
+                  </div>
                 </button>
               ))}
             </div>
-            <div style={{ textAlign:"center", marginTop:40 }}>
-              <button className="cm-gold" disabled={!selectedId} onClick={() => setStep("customize")}>Continue →</button>
+            <div style={{textAlign:"center",marginTop:44}}>
+              <button className="cm-btn-gold" disabled={!selectedId} onClick={() => setStep("customize")}>
+                Continue →
+              </button>
             </div>
           </div>
         )}
 
-        {/* ── STEP: CUSTOMIZE ── */}
+        {/* ── CUSTOMIZE ── */}
         {step === "customize" && selected && (
-          <div className="cm-in" style={{ maxWidth:560, margin:"0 auto", padding:"0 24px 80px" }}>
-            <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.38)", textAlign:"center", marginBottom:32 }}>Step 2 of 3 — Make it yours</p>
+          <div className="cm-fade" style={{maxWidth:560,margin:"0 auto",padding:"0 24px 96px"}}>
+            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36}}>
+              Step 2 of 3 — Make it yours
+            </p>
 
-            <div style={{ display:"flex", alignItems:"center", gap:14, background:"#141B24", border:"1px solid rgba(191,160,90,.15)", padding:"14px 20px", marginBottom:28 }}>
-              <span style={{ fontSize:24 }}>{selected.emoji}</span>
-              <div style={{ flex:1 }}>
-                <p style={{ fontFamily:"'Cinzel',serif", fontWeight:600, fontSize:14, color:"#F0DCA8", margin:0 }}>{selected.title}</p>
-                <p style={{ fontStyle:"italic", fontSize:12, color:"rgba(191,160,90,.5)", margin:"2px 0 0" }}>{selected.label}</p>
+            {/* Selected book pill */}
+            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",borderLeft:`4px solid ${selected.color}`,border:`1px solid rgba(191,160,90,.15)`,borderLeft:`4px solid ${selected.color}`,padding:"16px 20px",marginBottom:32}}>
+              <div>
+                <p className="cm-caps" style={{fontSize:8,color:"#BFA05A",marginBottom:4}}>{selected.roman} · {selected.theme}</p>
+                <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:15,color:"#F0DCA8"}}>{selected.title}</p>
+                <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.45)",marginTop:2}}>{selected.author}</p>
               </div>
-              <button onClick={() => setStep("select")} style={{ background:"none", border:"none", color:"rgba(191,160,90,.4)", cursor:"pointer", fontFamily:"'Cinzel',serif", fontSize:10, letterSpacing:".15em", textTransform:"uppercase" }}>Change</button>
+              <button onClick={() => setStep("select")} style={{marginLeft:"auto",background:"none",border:"none",color:"rgba(191,160,90,.38)",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:9,letterSpacing:".2em",textTransform:"uppercase"}}>
+                Change
+              </button>
             </div>
 
-            <div style={{ display:"flex", gap:18, alignItems:"flex-start", marginBottom:28 }}>
+            <div style={{display:"flex",gap:18,alignItems:"flex-start",marginBottom:28}}>
               <div>
-                <button className="cm-photo" onClick={() => fileRef.current?.click()} title="Upload photo">
+                <button className="cm-photo" onClick={() => fileRef.current?.click()}>
                   {photoUrl
-                    ? <img src={photoUrl} alt="You" style={{ width:"100%", height:"100%", objectFit:"cover" }} />
-                    : <div style={{ textAlign:"center", padding:6 }}>
-                        <div style={{ fontSize:22, marginBottom:4 }}>📸</div>
-                        <p className="cm-caps" style={{ fontSize:7, color:"rgba(191,160,90,.4)", margin:0 }}>Add photo</p>
+                    ? <img src={photoUrl} alt="You" style={{width:"100%",height:"100%",objectFit:"cover"}} />
+                    : <div style={{textAlign:"center"}}>
+                        <div style={{fontSize:20,marginBottom:4}}>📸</div>
+                        <p className="cm-caps" style={{fontSize:7,color:"rgba(191,160,90,.38)"}}>Photo</p>
                       </div>
                   }
                 </button>
-                <input ref={fileRef} type="file" accept="image/*" style={{ display:"none" }} onChange={handlePhoto} />
+                <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handlePhoto} />
               </div>
-              <div style={{ flex:1 }}>
-                <label className="cm-caps" style={{ display:"block", fontSize:9, color:"rgba(191,160,90,.5)", marginBottom:10 }}>Your name</label>
-                <input className="cm-input" type="text" placeholder="Elizabeth Bennet" value={name} onChange={(e) => setName(e.target.value)} onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("email")} maxLength={60} />
-                <p style={{ fontStyle:"italic", fontSize:12, color:"rgba(191,160,90,.3)", marginTop:8 }}>This name appears in your passage.</p>
+              <div style={{flex:1}}>
+                <label className="cm-caps" style={{display:"block",fontSize:9,color:"rgba(191,160,90,.45)",marginBottom:10}}>Your name</label>
+                <input
+                  className="cm-input"
+                  type="text"
+                  placeholder="Elizabeth Bennet"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("email")}
+                  maxLength={60}
+                />
+                <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.28)",marginTop:8}}>This name appears in your passage.</p>
               </div>
             </div>
 
-            <div className="cm-rule" style={{ marginBottom:28 }} />
-            <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-              <button className="cm-ghost" onClick={() => setStep("select")}>← Back</button>
-              <button className="cm-gold" disabled={!name.trim()} onClick={() => setStep("email")}>Roast Me →</button>
+            <div className="cm-rule" style={{marginBottom:28}} />
+            <div style={{display:"flex",gap:10,justifyContent:"center"}}>
+              <button className="cm-btn-ghost" onClick={() => setStep("select")}>← Back</button>
+              <button className="cm-btn-gold" disabled={!name.trim()} onClick={() => setStep("email")}>Roast Me →</button>
             </div>
           </div>
         )}
 
-        {/* ── STEP: EMAIL ── */}
+        {/* ── EMAIL ── */}
         {step === "email" && selected && (
-          <div className="cm-in" style={{ maxWidth:520, margin:"0 auto", padding:"0 24px 80px" }}>
-            <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.38)", textAlign:"center", marginBottom:32 }}>Step 3 of 3 — One last thing</p>
-
-            <div style={{ background:"#141B24", border:"1px solid rgba(191,160,90,.2)", padding:"44px 40px", textAlign:"center" }}>
-              <div style={{ fontSize:36, marginBottom:16 }}>✉️</div>
-              <h2 style={{ fontFamily:"'Cinzel',serif", fontWeight:600, fontSize:20, color:"#F0DCA8", margin:"0 0 12px", lineHeight:1.3 }}>
+          <div className="cm-fade" style={{maxWidth:520,margin:"0 auto",padding:"0 24px 96px"}}>
+            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36}}>
+              Step 3 of 3 — One last thing
+            </p>
+            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.2)",padding:"48px 40px",textAlign:"center"}}>
+              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:20,color:"#F0DCA8",lineHeight:1.35,marginBottom:14}}>
                 Your passage is being composed.
-              </h2>
-              <p style={{ fontStyle:"italic", fontSize:16, color:"rgba(240,220,168,.55)", lineHeight:1.7, margin:"0 0 28px" }}>
+              </p>
+              <div className="cm-rule" style={{marginBottom:24}} />
+              <p style={{fontStyle:"italic",fontSize:17,color:"rgba(240,220,168,.52)",lineHeight:1.75,marginBottom:28}}>
                 Drop your email and we&apos;ll send you the full version — plus an exclusive offer on your real memoir.
               </p>
-
               <input
                 className="cm-input"
                 type="email"
@@ -414,116 +458,96 @@ export default function ClassicMePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                style={{ marginBottom:14, textAlign:"center" }}
+                style={{marginBottom:12,textAlign:"center"}}
               />
-
-              <button className="cm-gold" style={{ width:"100%", marginBottom:10 }} onClick={handleGenerate}>
+              <button className="cm-btn-gold" style={{width:"100%",marginBottom:10}} onClick={handleGenerate}>
                 Send Me My Passage →
               </button>
-              <button
-                className="cm-ghost"
-                style={{ width:"100%", fontSize:10 }}
-                onClick={() => { setEmail(""); handleGenerate(); }}
-              >
+              <button className="cm-btn-ghost" style={{width:"100%",fontSize:10}} onClick={() => { setEmail(""); handleGenerate(); }}>
                 Skip — just show me
               </button>
             </div>
-
-            <p style={{ fontStyle:"italic", fontSize:12, color:"rgba(191,160,90,.25)", textAlign:"center", marginTop:16 }}>
-              No spam. Just your roast and one offer.
-            </p>
+            <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.22)",textAlign:"center",marginTop:14}}>No spam. Just your roast and one offer.</p>
           </div>
         )}
 
-        {/* ── STEP: GENERATING ── */}
+        {/* ── GENERATING ── */}
         {step === "generating" && (
-          <div className="cm-in" style={{ textAlign:"center", padding:"80px 24px" }}>
-            <div className="cm-spin" style={{ fontSize:38, marginBottom:24 }}>✦</div>
-            <p className="cm-caps" style={{ fontSize:9, color:"#BFA05A", marginBottom:10 }}>Consulting the canon</p>
-            <p style={{ fontStyle:"italic", color:"rgba(240,220,168,.4)", fontSize:17 }}>
-              Your literary portrait is being composed by {selected?.author ?? "the ages"}...
+          <div className="cm-fade" style={{textAlign:"center",padding:"88px 24px"}}>
+            <div className="cm-spin" style={{fontSize:36,marginBottom:24,color:"#D4B86A"}}>✦</div>
+            <p className="cm-caps" style={{fontSize:9,color:"#BFA05A",marginBottom:10}}>Consulting the canon</p>
+            <p style={{fontStyle:"italic",color:"rgba(240,220,168,.38)",fontSize:17}}>
+              {selected?.author ?? "The ages"} is composing your portrait...
             </p>
           </div>
         )}
 
-        {/* ── STEP: RESULT ── */}
+        {/* ── RESULT ── */}
         {step === "result" && selected && (
-          <div className="cm-in" style={{ maxWidth:720, margin:"0 auto", padding:"0 24px 80px" }}>
-            {/* Result header */}
-            <div style={{ textAlign:"center", marginBottom:32 }}>
-              <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.45)", marginBottom:14 }}>Your ClassicMe Passage</p>
-              <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:14 }}>
-                {photoUrl && <img src={photoUrl} alt="You" style={{ width:52, height:52, borderRadius:"50%", objectFit:"cover", border:"2px solid rgba(212,184,106,.4)" }} />}
-                <div style={{ textAlign:"left" }}>
-                  <p style={{ fontFamily:"'Cinzel',serif", fontWeight:600, fontSize:16, color:"#F0DCA8", margin:0 }}>{name}</p>
-                  <p style={{ fontStyle:"italic", fontSize:13, color:"rgba(191,160,90,.5)", margin:"3px 0 0" }}>as seen through {selected.title}</p>
+          <div className="cm-fade" style={{maxWidth:720,margin:"0 auto",padding:"0 24px 96px"}}>
+            <div style={{textAlign:"center",marginBottom:36}}>
+              <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.42)",marginBottom:14}}>Your ClassicMe Passage</p>
+              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14}}>
+                {photoUrl && <img src={photoUrl} alt="You" style={{width:52,height:52,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(212,184,106,.38)"}} />}
+                <div style={{textAlign:"left"}}>
+                  <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:17,color:"#F0DCA8"}}>{name}</p>
+                  <p style={{fontStyle:"italic",fontSize:13,color:"rgba(191,160,90,.48)",marginTop:2}}>as seen through {selected.title}</p>
                 </div>
               </div>
-              <div className="cm-rule" style={{ maxWidth:260, margin:"22px auto 0" }} />
+              <div className="cm-rule" style={{maxWidth:240,margin:"24px auto 0"}} />
             </div>
 
-            {/* Passage card */}
-            <div style={{ background:"#141B24", border:"1px solid rgba(191,160,90,.18)", padding:"38px 44px", marginBottom:28 }}>
-              <p className="cm-caps" style={{ fontSize:8, color:"#BFA05A", marginBottom:22 }}>
-                {selected.emoji} &nbsp; {selected.title}
-              </p>
+            {/* Passage */}
+            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.18)",borderTop:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:24}}>
+                <span style={{fontFamily:"'Cinzel',serif",fontSize:11,color:"rgba(191,160,90,.3)",fontWeight:600}}>{selected.roman}</span>
+                <span className="cm-caps" style={{fontSize:8,color:"#BFA05A"}}>{selected.title}</span>
+              </div>
 
-              {/* First paragraph — fully visible */}
               <p className="cm-passage">{firstPara}</p>
 
-              {/* Rest — blurred cliff-hanger */}
               {restParas && (
-                <div style={{ position:"relative", marginTop:20 }}>
-                  <p className="cm-passage" style={{ filter:"blur(5px)", userSelect:"none", opacity:.7, margin:0 }}>
-                    {restParas}
-                  </p>
-                  <div style={{ position:"absolute", inset:0, background:"linear-gradient(to bottom,transparent 0%,#141B24 55%)", display:"flex", alignItems:"flex-end", justifyContent:"center", paddingBottom:0 }}>
-                    <Link href={ctaHref} style={{ display:"inline-block", textDecoration:"none" }} className="cm-gold">
-                      Continue Your Story →
-                    </Link>
+                <div style={{position:"relative",marginTop:20}}>
+                  <p className="cm-passage" style={{filter:"blur(5px)",userSelect:"none",opacity:.65}}>{restParas}</p>
+                  <div style={{position:"absolute",inset:0,background:`linear-gradient(to bottom,transparent 0%,#141B24 52%)`,display:"flex",alignItems:"flex-end",justifyContent:"center",paddingBottom:4}}>
+                    <Link href={ctaHref} className="cm-btn-gold">Continue Your Story →</Link>
                   </div>
                 </div>
               )}
 
-              <div className="cm-rule" style={{ marginTop: restParas ? 80 : 28, marginBottom:16 }} />
-              <p style={{ fontStyle:"italic", fontSize:13, color:"rgba(191,160,90,.3)", textAlign:"right", margin:0 }}>— {selected.author}</p>
+              <div className="cm-rule" style={{marginTop:restParas ? 72 : 28,marginBottom:14}} />
+              <p style={{fontStyle:"italic",fontSize:13,color:"rgba(191,160,90,.28)",textAlign:"right"}}>— {selected.author}</p>
             </div>
 
-            {/* Upsell block */}
-            <div style={{ background:"rgba(212,184,106,.03)", border:"1px solid rgba(191,160,90,.2)", padding:"30px 34px", textAlign:"center", marginBottom:20 }}>
-              <p className="cm-caps" style={{ fontSize:9, color:"#BFA05A", marginBottom:10 }}>Want the full story?</p>
-              <p style={{ fontStyle:"italic", fontSize:18, color:"#F0DCA8", lineHeight:1.65, marginBottom:6 }}>
-                Turn your real life into a <span style={{ color:"#D4B86A" }}>full literary memoir</span> — 10,000 words, a bespoke portrait, and a hardcover book.
+            {/* Upsell */}
+            <div style={{background:"rgba(212,184,106,.03)",border:"1px solid rgba(191,160,90,.18)",padding:"32px 36px",textAlign:"center",marginBottom:20}}>
+              <p className="cm-caps" style={{fontSize:9,color:"#BFA05A",marginBottom:12}}>Want the full story?</p>
+              <p style={{fontStyle:"italic",fontSize:19,color:"#F0DCA8",lineHeight:1.65,marginBottom:8}}>
+                Turn your real life into a <span style={{color:"#D4B86A"}}>full literary memoir</span> — 10,000 words, a bespoke portrait, and a hardcover book.
               </p>
-              <p style={{ fontStyle:"italic", fontSize:14, color:"rgba(240,220,168,.35)", marginBottom:24 }}>
-                Chronicled interviews you and writes your life in the voice of the classics.
+              <p style={{fontStyle:"italic",fontSize:14,color:"rgba(240,220,168,.33)",marginBottom:26}}>
+                Chronicled interviews you and writes your life in the voice of {selected.title}.
               </p>
-              <Link href={ctaHref} style={{ display:"inline-block", textDecoration:"none" }} className="cm-gold">
-                Begin Your Chronicle — $14.99 →
-              </Link>
+              <Link href={ctaHref} className="cm-btn-gold">Begin Your Chronicle — $14.99 →</Link>
             </div>
 
-            {/* Action row */}
-            <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-              <button className="cm-ghost" onClick={handleShare}>
-                {shareMsg || "Share"}
+            {/* Actions */}
+            <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
+              <button className="cm-btn-ghost" onClick={handleShare}>{shareMsg || "Share"}</button>
+              <button className="cm-btn-ghost" onClick={() => drawShareCard(name, selected.roman, selected.title, selected.author, roastText, selected.color)}>
+                Download Card
               </button>
-              <button className="cm-ghost" onClick={handleDownloadCard} title="Download a shareable image card">
-                Download Card 🖼️
-              </button>
-              <button className="cm-ghost" onClick={handleReset}>
-                Try Another Classic
-              </button>
+              <button className="cm-btn-ghost" onClick={handleReset}>Try Another</button>
             </div>
           </div>
         )}
 
-        {/* Footer */}
-        <footer style={{ borderTop:"1px solid rgba(191,160,90,.1)", padding:"28px 24px", textAlign:"center" }}>
-          <p className="cm-caps" style={{ fontSize:9, color:"rgba(191,160,90,.25)", marginBottom:8 }}>Chronicled — ClassicMe</p>
-          <p style={{ fontStyle:"italic", fontSize:13, color:"rgba(240,220,168,.18)" }}>
+        {/* ── FOOTER ── */}
+        <footer style={{borderTop:"1px solid rgba(191,160,90,.1)",padding:"28px 24px",textAlign:"center"}}>
+          <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.22)",marginBottom:8}}>Chronicled — ClassicMe</p>
+          <p style={{fontStyle:"italic",fontSize:13,color:"rgba(240,220,168,.18)"}}>
             A playful taste of your literary life.{" "}
-            <Link href="/" style={{ color:"rgba(191,160,90,.35)", textDecoration:"none" }}>Explore the full experience →</Link>
+            <Link href="/" style={{color:"rgba(191,160,90,.32)",textDecoration:"none"}}>Explore the full experience →</Link>
           </p>
         </footer>
       </div>
