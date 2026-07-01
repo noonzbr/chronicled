@@ -390,7 +390,7 @@ export default function ClassicMePage() {
             </p>
 
             {/* Selected book pill */}
-            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",borderLeft:`4px solid ${selected.color}`,border:`1px solid rgba(191,160,90,.15)`,borderLeft:`4px solid ${selected.color}`,padding:"16px 20px",marginBottom:32}}>
+            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",border:`1px solid rgba(191,160,90,.15)`,borderLeft:`4px solid ${selected.color}`,padding:"16px 20px",marginBottom:32}}>
               <div>
                 <p className="cm-caps" style={{fontSize:8,color:"#BFA05A",marginBottom:4}}>{selected.roman} · {selected.theme}</p>
                 <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:15,color:"#F0DCA8"}}>{selected.title}</p>
