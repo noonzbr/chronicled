@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
     const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // Step 1: GPT-4o Vision — describe the person's physical features
+    // Step 1: GPT-4o Vision — describe the person's core facial features ONLY, ignoring their modern hair/makeup/clothes
     const mimeType = imageBase64.match(/^data:([^;]+);/)?.[1] || "image/jpeg";
 
     const visionRes = await openai.chat.completions.create({
@@ -39,14 +39,7 @@ export async function POST(req: NextRequest) {
             },
             {
               type: "text",
-              text: `Describe this person for a portrait artist with precise detail. Include:
-- Gender presentation and approximate age
-- Face shape, skin tone, and complexion
-- Eye color and shape
-- Hair color, length, texture, and style
-- Distinctive facial features (jaw, cheekbones, lips, etc.)
-- Overall expression and bearing
-Be specific and vivid. Do NOT mention clothing. Reply with only the physical description, 3–4 sentences.`,
+              text: `Identify and describe ONLY the core facial structures of this person (face shape, eyes, nose, mouth shape, skin tone, eyebrows). Do NOT describe their clothes, hair, or modern makeup. Reply with only these facial traits in 2 sentences.`,
             },
           ],
         },
@@ -56,12 +49,18 @@ Be specific and vivid. Do NOT mention clothing. Reply with only the physical des
     const personDescription =
       visionRes.choices[0]?.message?.content?.trim() || "a distinguished individual";
 
-    // Step 2: DALL-E 3 — paint them in the book's era and style
-    const prompt = `A formal literary portrait painting. ${personDescription}
+    // Step 2: DALL-E 3 — perform a full theatrical transformation: hair, historical clothing, makeup, and setting
+    const prompt = `A highly stylized, fun, and dramatic theatrical character portrait painting. 
+Integrating a person with: ${personDescription} 
 
-Art style: ${book.portraitStyle}
-
-The portrait should be composed like a classic painted artwork — centered, dignified composition with rich attention to light and shadow. The subject gazes slightly off-center with quiet confidence. Museum quality. No text, no watermarks, no borders.`;
+Fully transformed into a character from the novel "${book.title}" in the art style of "${book.portraitStyle}".
+Completely replace their modern style with:
+- Dramatic period-accurate costume, historical outfits, elaborate high-collared dress, or aristocratic coat.
+- Historical period-accurate hairstyle, wigs, curls, or hats suited to the era of the book.
+- Theatrical, stylized period makeup (e.g. powder, rosy cheeks, or dramatic expressions).
+- Fun, playful, and expressive posture (gazing dramatically, holding a monocle, a letter, or a feather quill).
+- Set in a historical room, library, grand ballroom, or dramatic landscape matching the novel.
+Make it look like a gorgeous, funny caricature oil painting, blending the user's face structure into a historical character. Museum quality. No text, no watermarks, no borders.`;
 
     const imageRes = await openai.images.generate({
       model: "dall-e-3",
