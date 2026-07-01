@@ -58,8 +58,17 @@ export async function POST(req: NextRequest) {
       messages: [{ role: "user", content: prompt }],
     });
 
-    const text =
+    const raw =
       message.content[0].type === "text" ? message.content[0].text.trim() : "";
+
+    // Strip markdown formatting Claude sometimes adds
+    const text = raw
+      .replace(/^#{1,6}\s+/gm, "")
+      .replace(/\*\*(.*?)\*\*/gs, "$1")
+      .replace(/\*(.*?)\*/gs, "$1")
+      .replace(/__(.*?)__/gs, "$1")
+      .replace(/_(.*?)_/gs, "$1")
+      .trim();
 
     return NextResponse.json({ text });
   } catch (err) {

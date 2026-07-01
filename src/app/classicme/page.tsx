@@ -483,16 +483,55 @@ export default function ClassicMePage() {
         {/* ── RESULT ── */}
         {step === "result" && selected && (
           <div className="cm-fade" style={{maxWidth:720,margin:"0 auto",padding:"0 24px 96px"}}>
-            <div style={{textAlign:"center",marginBottom:36}}>
-              <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:16}}>Your ClassicMe Passage</p>
-              <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14}}>
-                {photoUrl && <img src={photoUrl} alt="You" style={{width:56,height:56,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(212,184,106,.5)"}} />}
-                <div style={{textAlign:"left"}}>
-                  <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:19,color:"#F0DCA8"}}>{name}</p>
-                  <p style={{fontStyle:"italic",fontSize:16,color:"rgba(191,160,90,.65)",marginTop:3}}>as seen through {selected.title}</p>
-                </div>
+
+            {/* Portrait + name header */}
+            <div style={{textAlign:"center",marginBottom:40}}>
+              <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:24}}>Your ClassicMe Portrait</p>
+
+              {/* Photo — large and central */}
+              <div style={{display:"inline-block",position:"relative",marginBottom:20}}>
+                {photoUrl ? (
+                  <>
+                    {/* Outer gold frame */}
+                    <div style={{
+                      width:180,height:220,
+                      border:"2px solid #D4B86A",
+                      padding:6,
+                      background:"#141B24",
+                      display:"inline-block",
+                    }}>
+                      <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden"}}>
+                        <img src={photoUrl} alt={name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
+                      </div>
+                    </div>
+                    {/* Book roman numeral badge */}
+                    <div style={{
+                      position:"absolute",bottom:-14,left:"50%",transform:"translateX(-50%)",
+                      background:"#D4B86A",color:"#0D1117",
+                      fontFamily:"'Cinzel',serif",fontWeight:700,fontSize:13,
+                      padding:"3px 14px",letterSpacing:".15em",
+                    }}>
+                      {selected.roman}
+                    </div>
+                  </>
+                ) : (
+                  /* No photo — show decorative initial */
+                  <div style={{
+                    width:180,height:220,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
+                  }}>
+                    <div style={{flex:1,border:"1px solid rgba(191,160,90,.3)",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8}}>
+                      <span style={{fontFamily:"'Cinzel Decorative',serif",fontSize:64,color:"rgba(191,160,90,.25)",lineHeight:1}}>
+                        {name.charAt(0).toUpperCase()}
+                      </span>
+                      <p className="cm-caps" style={{fontSize:10,color:"rgba(191,160,90,.4)"}}>No photo</p>
+                    </div>
+                  </div>
+                )}
               </div>
-              <div className="cm-rule" style={{maxWidth:240,margin:"24px auto 0"}} />
+
+              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:22,color:"#F0DCA8",marginBottom:6,marginTop:20}}>{name}</p>
+              <p style={{fontStyle:"italic",fontSize:16,color:"rgba(191,160,90,.7)"}}>as seen through {selected.title}</p>
+              <div className="cm-rule" style={{maxWidth:240,margin:"22px auto 0"}} />
             </div>
 
             <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.22)",borderTop:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
