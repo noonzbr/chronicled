@@ -286,6 +286,24 @@ export default function ClassicMePage() {
     setStep("customize");
   }
 
+  function resizeForUpload(dataUrl: string, maxDim = 1024): Promise<string> {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext("2d")?.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = () => resolve(dataUrl);
+      img.src = dataUrl;
+    });
+  }
+
   async function handleGenerate() {
     if (!selected || !name.trim()) return;
     if (email.trim()) {
@@ -300,11 +318,15 @@ export default function ClassicMePage() {
     if (photoUrl) {
       setPortraitLoading(true);
       setPortraitGenUrl(null);
-      fetch("/api/classicme/portrait", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ imageBase64: photoUrl, bookSlug: selected.slug }),
-      })
+      const slug = selected.slug;
+      resizeForUpload(photoUrl)
+        .then((resized) =>
+          fetch("/api/classicme/portrait", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ imageBase64: resized, bookSlug: slug }),
+          })
+        )
         .then((r) => r.json())
         .then((data) => {
           if (data.portraitUrl) setPortraitGenUrl(data.portraitUrl);
