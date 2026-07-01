@@ -10,6 +10,9 @@ const CLASSICS = [
     title: "Romeo & Juliet",
     author: "William Shakespeare",
     theme: "Tragic Love",
+    tone: "Fateful · Romantic · Bittersweet",
+    description:
+      "For the love that burned too bright. Your story told with the weight of fate, the beauty of sacrifice, and the ache of what could not be changed.",
     emoji: "🌹",
     slug: "romeo-and-juliet",
     color: "#7B2D3E",
@@ -22,6 +25,9 @@ const CLASSICS = [
     title: "Pride & Prejudice",
     author: "Jane Austen",
     theme: "Love That Endured",
+    tone: "Witty · Warm · Triumphant",
+    description:
+      "For the love that almost wasn't. Your story told with sharp wit, gentle irony, and the deep satisfaction of a heart that chose well.",
     emoji: "💌",
     slug: "pride-and-prejudice",
     color: "#3E6B5C",
@@ -34,6 +40,9 @@ const CLASSICS = [
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
     theme: "Ambition & Reinvention",
+    tone: "Glamorous · Cautionary · Sharp",
+    description:
+      "For the dreamer who reached across the water. Your story told with the shimmer of possibility and the weight of everything you built.",
     emoji: "🥂",
     slug: "the-great-gatsby",
     color: "#9A7B2F",
@@ -46,6 +55,9 @@ const CLASSICS = [
     title: "The Odyssey",
     author: "Homer",
     theme: "A Life of Adventure",
+    tone: "Epic · Wandering · Hard-Won",
+    description:
+      "For the one who went out into the world and didn't come back the same. Your story told as the journey it truly was.",
     emoji: "⚓",
     slug: "the-odyssey",
     color: "#4A6B8A",
@@ -58,6 +70,9 @@ const CLASSICS = [
     title: "A Christmas Carol",
     author: "Charles Dickens",
     theme: "Redemption",
+    tone: "Honest · Wry · Hopeful",
+    description:
+      "For the one who changed. Your story told with honesty about who you were, and generosity about who you became.",
     emoji: "🕯️",
     slug: "a-christmas-carol",
     color: "#5C4A7A",
@@ -70,6 +85,9 @@ const CLASSICS = [
     title: "The Count of Monte Cristo",
     author: "Alexandre Dumas",
     theme: "Betrayal & Triumph",
+    tone: "Bold · Dramatic · Satisfying",
+    description:
+      "For the one who was wronged and rose anyway. Your story told with the full drama it deserves and the ending it earned.",
     emoji: "⚔️",
     slug: "the-count-of-monte-cristo",
     color: "#7A4A2A",
@@ -82,6 +100,9 @@ const CLASSICS = [
     title: "Jane Eyre",
     author: "Charlotte Brontë",
     theme: "A Life on Her Own Terms",
+    tone: "Fierce · Intimate · Triumphant",
+    description:
+      "For the woman who refused to settle. Your story told with moral courage, quiet strength, and the dignity of someone who always knew her own worth.",
     emoji: "🕊️",
     slug: "jane-eyre",
     color: "#6B4A5A",
@@ -94,6 +115,9 @@ const CLASSICS = [
     title: "Little Women",
     author: "Louisa May Alcott",
     theme: "Family, Dreams & the People Who Made You",
+    tone: "Warm · Nostalgic · Life-Affirming",
+    description:
+      "For the family story — the sisters, the sacrifices, the love that shaped everything. Your story told with warmth, humor, and the full beauty of a life extraordinarily lived.",
     emoji: "📖",
     slug: "little-women",
     color: "#A07840",
@@ -106,6 +130,9 @@ const CLASSICS = [
     title: "Wuthering Heights",
     author: "Emily Brontë",
     theme: "The Love That Never Let Go",
+    tone: "Wild · Haunting · Unforgettable",
+    description:
+      "For the love that defied everything — time, circumstance, reason itself. Your story told with the raw intensity of a feeling that simply could not be contained.",
     emoji: "🌪️",
     slug: "wuthering-heights",
     color: "#3A4550",
@@ -252,6 +279,11 @@ export default function ClassicMePage() {
     reader.readAsDataURL(file);
   }
 
+  function selectBook(id: ClassicId) {
+    setSelectedId(id);
+    setStep("customize");
+  }
+
   async function handleGenerate() {
     if (!selected || !name.trim()) return;
     if (email.trim()) {
@@ -285,7 +317,7 @@ export default function ClassicMePage() {
 
   function handleShare() {
     if (!selected) return;
-    const text = `I just got roasted by ${selected.title} 📖\n\n"${roastText.slice(0, 200).trim()}..."\n\nTry it free → getchronicled.art/classicme`;
+    const text = `I just got written into ${selected.title} 📖\n\n"${roastText.slice(0, 200).trim()}..."\n\nTry it free → getchronicled.art/classicme`;
     if (navigator.share) { navigator.share({ text }).catch(() => {}); }
     else { navigator.clipboard.writeText(text).then(() => { setShareMsg("Copied!"); setTimeout(() => setShareMsg(""), 2200); }); }
   }
@@ -304,9 +336,88 @@ export default function ClassicMePage() {
         .cm-display{font-family:'Cinzel Decorative',serif;}
         .cm-caps{font-family:'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;}
         .cm-rule{height:1px;background:linear-gradient(to right,transparent,#BFA05A,transparent);}
-        .cm-card{background:#141B24;border:1px solid rgba(191,160,90,.2);cursor:pointer;text-align:left;transition:border-color .18s,transform .18s,box-shadow .18s;}
-        .cm-card:hover{border-color:rgba(212,184,106,.55);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
-        .cm-card.selected{border-color:#D4B86A;box-shadow:0 0 0 1px #D4B86A,0 8px 32px rgba(0,0,0,.5);}
+        .cm-book-card{
+          background:#141B24;
+          border:1px solid rgba(191,160,90,.18);
+          cursor:pointer;
+          text-align:left;
+          transition:border-color .2s,transform .2s,box-shadow .2s;
+          position:relative;
+          overflow:hidden;
+          padding:0;
+          width:100%;
+          display:block;
+        }
+        .cm-book-card:hover{
+          border-color:rgba(212,184,106,.5);
+          transform:translateY(-3px);
+          box-shadow:0 12px 40px rgba(0,0,0,.55);
+        }
+        .cm-book-card:hover .cm-card-cta{color:#F0DCA8;}
+        .cm-card-roman{
+          position:absolute;
+          right:-8px;
+          top:50%;
+          transform:translateY(-50%);
+          font-family:'Cinzel',serif;
+          font-weight:700;
+          font-size:130px;
+          line-height:1;
+          opacity:0.07;
+          pointer-events:none;
+          user-select:none;
+          letter-spacing:-4px;
+        }
+        .cm-card-inner{
+          padding:32px 32px 28px;
+          position:relative;
+          z-index:1;
+        }
+        .cm-card-theme{
+          font-family:'Cinzel',serif;
+          font-size:10px;
+          letter-spacing:.28em;
+          text-transform:uppercase;
+          color:#BFA05A;
+          margin-bottom:14px;
+        }
+        .cm-card-title{
+          font-family:'Cinzel',serif;
+          font-weight:600;
+          font-size:20px;
+          color:#F0DCA8;
+          line-height:1.2;
+          margin-bottom:10px;
+        }
+        .cm-card-tone{
+          font-style:italic;
+          font-size:14px;
+          color:rgba(191,160,90,.8);
+          margin-bottom:16px;
+          letter-spacing:.04em;
+        }
+        .cm-card-desc{
+          font-style:italic;
+          font-size:15px;
+          color:rgba(240,220,168,.6);
+          line-height:1.65;
+          margin-bottom:24px;
+        }
+        .cm-card-cta{
+          font-family:'Cinzel',serif;
+          font-size:11px;
+          letter-spacing:.22em;
+          text-transform:uppercase;
+          color:#D4B86A;
+          transition:color .15s;
+        }
+        .cm-books-grid{
+          display:grid;
+          grid-template-columns:repeat(3,1fr);
+          gap:20px;
+        }
+        @media(max-width:800px){.cm-books-grid{grid-template-columns:repeat(2,1fr);}}
+        @media(max-width:520px){.cm-books-grid{grid-template-columns:1fr;}}
         .cm-btn-gold{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:16px 44px;transition:opacity .15s;display:inline-block;text-decoration:none;text-align:center;}
         .cm-btn-gold:hover:not(:disabled){opacity:.88;}
         .cm-btn-gold:disabled{opacity:.32;cursor:not-allowed;}
@@ -322,6 +433,7 @@ export default function ClassicMePage() {
         .cm-fade{animation:cm-fade .4s ease both;}
         .cm-photo{width:100px;height:100px;border:2px dashed rgba(191,160,90,.4);background:#141B24;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;}
         .cm-photo:hover{border-color:#D4B86A;}
+        .cm-portrait-img{filter:sepia(0.35) contrast(1.08) brightness(0.97) saturate(0.82);}
       `}</style>
 
       <div className="cm">
@@ -344,39 +456,36 @@ export default function ClassicMePage() {
             <span style={{color:"#D4B86A"}}>Me</span>
           </h1>
           <p style={{fontStyle:"italic",fontSize:"clamp(18px,2.5vw,23px)",color:"rgba(240,220,168,.78)",marginTop:22,maxWidth:480,marginLeft:"auto",marginRight:"auto",lineHeight:1.7}}>
-            Upload your photo. Pick your novel.<br/>Get roasted by a literary legend.
+            Upload your photo. Pick your novel.<br/>Get written into a literary legend.
           </p>
           <div className="cm-rule" style={{maxWidth:200,margin:"36px auto 0"}} />
         </header>
 
         {/* ── SELECT ── */}
         {step === "select" && (
-          <div className="cm-fade" style={{maxWidth:1040,margin:"0 auto",padding:"0 24px 96px"}}>
-            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36,letterSpacing:".25em"}}>
-              Step 1 of 3 — Choose your classic
+          <div className="cm-fade" style={{maxWidth:1120,margin:"0 auto",padding:"0 24px 96px"}}>
+            <p className="cm-caps" style={{fontSize:11,color:"rgba(191,160,90,.6)",textAlign:"center",marginBottom:40,letterSpacing:".25em"}}>
+              Choose your classic — click to begin
             </p>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:14}}>
+            <div className="cm-books-grid">
               {CLASSICS.map((c) => (
                 <button
                   key={c.id}
-                  className={`cm-card${selectedId === c.id ? " selected" : ""}`}
-                  onClick={() => setSelectedId(c.id)}
-                  style={{padding:"0",border:"none"}}
+                  className="cm-book-card"
+                  onClick={() => selectBook(c.id)}
+                  style={{borderLeft:`3px solid ${c.color}`}}
                 >
-                  <div style={{height:4,background:c.color,width:"100%"}} />
-                  <div style={{padding:"22px 20px 26px"}}>
-                    <p style={{fontFamily:"'Cinzel',serif",fontSize:22,color:"rgba(191,160,90,.4)",fontWeight:700,marginBottom:10,lineHeight:1}}>{c.roman}</p>
-                    <p className="cm-caps" style={{fontSize:11,color:"#BFA05A",marginBottom:10,letterSpacing:".15em"}}>{c.theme}</p>
-                    <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:16,color:"#F0DCA8",lineHeight:1.25,marginBottom:6}}>{c.title}</p>
-                    <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.75)"}}>{c.author}</p>
+                  <div className="cm-card-roman" style={{color:c.color}}>{c.roman}</div>
+                  <div className="cm-card-inner">
+                    <p className="cm-card-theme">{c.theme}</p>
+                    <p className="cm-card-title">{c.title}</p>
+                    <p className="cm-card-tone">{c.tone}</p>
+                    <p className="cm-card-desc">{c.description}</p>
+                    <div className="cm-rule" style={{marginBottom:18}} />
+                    <p className="cm-card-cta">Choose This Story →</p>
                   </div>
                 </button>
               ))}
-            </div>
-            <div style={{textAlign:"center",marginTop:44}}>
-              <button className="cm-btn-gold" disabled={!selectedId} onClick={() => setStep("customize")}>
-                Continue →
-              </button>
             </div>
           </div>
         )}
@@ -390,7 +499,7 @@ export default function ClassicMePage() {
 
             <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",border:`1px solid rgba(191,160,90,.2)`,borderLeft:`4px solid ${selected.color}`,padding:"18px 22px",marginBottom:32}}>
               <div>
-                <p className="cm-caps" style={{fontSize:11,color:"#BFA05A",marginBottom:5}}>{selected.roman} · {selected.theme}</p>
+                <p className="cm-caps" style={{fontSize:10,color:"#BFA05A",marginBottom:5}}>{selected.roman} · {selected.theme}</p>
                 <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:17,color:"#F0DCA8"}}>{selected.title}</p>
                 <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.7)",marginTop:3}}>{selected.author}</p>
               </div>
@@ -430,7 +539,7 @@ export default function ClassicMePage() {
             <div className="cm-rule" style={{marginBottom:28}} />
             <div style={{display:"flex",gap:10,justifyContent:"center"}}>
               <button className="cm-btn-ghost" onClick={() => setStep("select")}>← Back</button>
-              <button className="cm-btn-gold" disabled={!name.trim()} onClick={() => setStep("email")}>Roast Me →</button>
+              <button className="cm-btn-gold" disabled={!name.trim()} onClick={() => setStep("email")}>Continue →</button>
             </div>
           </div>
         )}
@@ -465,7 +574,7 @@ export default function ClassicMePage() {
                 Skip — just show me
               </button>
             </div>
-            <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"center",marginTop:16}}>No spam. Just your roast and one offer.</p>
+            <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"center",marginTop:16}}>No spam. Just your passage and one offer.</p>
           </div>
         )}
 
@@ -488,23 +597,33 @@ export default function ClassicMePage() {
             <div style={{textAlign:"center",marginBottom:40}}>
               <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:24}}>Your ClassicMe Portrait</p>
 
-              {/* Photo — large and central */}
+              {/* Photo — large framed portrait with vintage filter */}
               <div style={{display:"inline-block",position:"relative",marginBottom:20}}>
                 {photoUrl ? (
                   <>
-                    {/* Outer gold frame */}
                     <div style={{
-                      width:180,height:220,
+                      width:190,height:230,
                       border:"2px solid #D4B86A",
                       padding:6,
                       background:"#141B24",
                       display:"inline-block",
+                      boxShadow:"0 0 40px rgba(212,184,106,.15)",
                     }}>
-                      <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden"}}>
-                        <img src={photoUrl} alt={name} style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}} />
+                      <div style={{width:"100%",height:"100%",border:"1px solid rgba(191,160,90,.3)",overflow:"hidden",position:"relative"}}>
+                        <img
+                          src={photoUrl}
+                          alt={name}
+                          className="cm-portrait-img"
+                          style={{width:"100%",height:"100%",objectFit:"cover",display:"block"}}
+                        />
+                        {/* Vignette overlay */}
+                        <div style={{
+                          position:"absolute",inset:0,
+                          background:"radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,0.55) 100%)",
+                          pointerEvents:"none",
+                        }} />
                       </div>
                     </div>
-                    {/* Book roman numeral badge */}
                     <div style={{
                       position:"absolute",bottom:-14,left:"50%",transform:"translateX(-50%)",
                       background:"#D4B86A",color:"#0D1117",
@@ -515,9 +634,9 @@ export default function ClassicMePage() {
                     </div>
                   </>
                 ) : (
-                  /* No photo — show decorative initial */
                   <div style={{
-                    width:180,height:220,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
+                    width:190,height:230,border:"2px solid #D4B86A",padding:6,background:"#141B24",display:"inline-flex",
+                    boxShadow:"0 0 40px rgba(212,184,106,.15)",
                   }}>
                     <div style={{flex:1,border:"1px solid rgba(191,160,90,.3)",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:8}}>
                       <span style={{fontFamily:"'Cinzel Decorative',serif",fontSize:64,color:"rgba(191,160,90,.25)",lineHeight:1}}>
@@ -529,12 +648,12 @@ export default function ClassicMePage() {
                 )}
               </div>
 
-              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:22,color:"#F0DCA8",marginBottom:6,marginTop:20}}>{name}</p>
+              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:22,color:"#F0DCA8",marginBottom:6,marginTop:24}}>{name}</p>
               <p style={{fontStyle:"italic",fontSize:16,color:"rgba(191,160,90,.7)"}}>as seen through {selected.title}</p>
               <div className="cm-rule" style={{maxWidth:240,margin:"22px auto 0"}} />
             </div>
 
-            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.22)",borderTop:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
+            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.22)",borderLeft:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
               <div style={{display:"flex",alignItems:"baseline",gap:12,marginBottom:24}}>
                 <span style={{fontFamily:"'Cinzel',serif",fontSize:14,color:"rgba(191,160,90,.55)",fontWeight:700}}>{selected.roman}</span>
                 <span className="cm-caps" style={{fontSize:12,color:"#BFA05A"}}>{selected.title}</span>
