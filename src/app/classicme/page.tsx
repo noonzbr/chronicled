@@ -302,48 +302,48 @@ export default function ClassicMePage() {
         *{box-sizing:border-box;margin:0;padding:0;}
         .cm{font-family:'EB Garamond',Georgia,serif;background:#0D1117;min-height:100vh;color:#F0DCA8;}
         .cm-display{font-family:'Cinzel Decorative',serif;}
-        .cm-caps{font-family:'Cinzel',serif;letter-spacing:.2em;text-transform:uppercase;}
+        .cm-caps{font-family:'Cinzel',serif;letter-spacing:.18em;text-transform:uppercase;}
         .cm-rule{height:1px;background:linear-gradient(to right,transparent,#BFA05A,transparent);}
-        .cm-card{background:#141B24;border:1px solid rgba(191,160,90,.15);cursor:pointer;text-align:left;transition:border-color .18s,transform .18s,box-shadow .18s;}
-        .cm-card:hover{border-color:rgba(212,184,106,.45);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
+        .cm-card{background:#141B24;border:1px solid rgba(191,160,90,.2);cursor:pointer;text-align:left;transition:border-color .18s,transform .18s,box-shadow .18s;}
+        .cm-card:hover{border-color:rgba(212,184,106,.55);transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,0,0,.5);}
         .cm-card.selected{border-color:#D4B86A;box-shadow:0 0 0 1px #D4B86A,0 8px 32px rgba(0,0,0,.5);}
-        .cm-btn-gold{font-family:'Cinzel',serif;font-size:11px;letter-spacing:.22em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:15px 40px;transition:opacity .15s;display:inline-block;text-decoration:none;text-align:center;}
+        .cm-btn-gold{font-family:'Cinzel',serif;font-size:13px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;background:#D4B86A;color:#0D1117;border:none;cursor:pointer;padding:16px 44px;transition:opacity .15s;display:inline-block;text-decoration:none;text-align:center;}
         .cm-btn-gold:hover:not(:disabled){opacity:.88;}
         .cm-btn-gold:disabled{opacity:.32;cursor:not-allowed;}
-        .cm-btn-ghost{font-family:'Cinzel',serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;background:transparent;color:#D4B86A;border:1px solid rgba(212,184,106,.35);cursor:pointer;padding:13px 28px;transition:border-color .15s,background .15s;display:inline-block;text-decoration:none;}
-        .cm-btn-ghost:hover{border-color:#D4B86A;background:rgba(212,184,106,.06);}
-        .cm-input{width:100%;background:#0D1117;border:1px solid rgba(191,160,90,.25);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:20px;padding:14px 18px;outline:none;transition:border-color .15s;}
-        .cm-input::placeholder{color:rgba(240,220,168,.25);}
+        .cm-btn-ghost{font-family:'Cinzel',serif;font-size:12px;letter-spacing:.15em;text-transform:uppercase;background:transparent;color:#D4B86A;border:1px solid rgba(212,184,106,.45);cursor:pointer;padding:14px 28px;transition:border-color .15s,background .15s;display:inline-block;text-decoration:none;}
+        .cm-btn-ghost:hover{border-color:#D4B86A;background:rgba(212,184,106,.07);}
+        .cm-input{width:100%;background:#0D1117;border:1px solid rgba(191,160,90,.3);color:#F0DCA8;font-family:'EB Garamond',serif;font-size:22px;padding:15px 20px;outline:none;transition:border-color .15s;}
+        .cm-input::placeholder{color:rgba(240,220,168,.38);}
         .cm-input:focus{border-color:#D4B86A;}
-        .cm-passage{font-family:'EB Garamond',serif;font-size:19px;line-height:1.95;color:#F0DCA8;white-space:pre-line;}
+        .cm-passage{font-family:'EB Garamond',serif;font-size:20px;line-height:2;color:#F0DCA8;white-space:pre-line;}
         @keyframes cm-spin{to{transform:rotate(360deg);}}
         .cm-spin{animation:cm-spin 1.5s linear infinite;display:inline-block;}
         @keyframes cm-fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
         .cm-fade{animation:cm-fade .4s ease both;}
-        .cm-photo{width:96px;height:96px;border:2px dashed rgba(191,160,90,.28);background:#141B24;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;}
+        .cm-photo{width:100px;height:100px;border:2px dashed rgba(191,160,90,.4);background:#141B24;cursor:pointer;display:flex;align-items:center;justify-content:center;overflow:hidden;transition:border-color .15s;flex-shrink:0;}
         .cm-photo:hover{border-color:#D4B86A;}
       `}</style>
 
       <div className="cm">
 
         {/* ── NAV ── */}
-        <nav style={{borderBottom:"1px solid rgba(191,160,90,.12)",padding:"20px 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <nav style={{borderBottom:"1px solid rgba(191,160,90,.15)",padding:"20px 40px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <Link href="/" style={{textDecoration:"none"}}>
-            <span className="cm-caps" style={{fontSize:13,color:"#D4B86A",letterSpacing:".35em"}}>Chronicled</span>
+            <span className="cm-caps" style={{fontSize:15,color:"#D4B86A",letterSpacing:".3em"}}>Chronicled</span>
           </Link>
-          <span className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.3)",letterSpacing:".2em"}}>ClassicMe</span>
+          <span className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.55)",letterSpacing:".18em"}}>ClassicMe</span>
         </nav>
 
         {/* ── HERO ── */}
         <header style={{textAlign:"center",padding:"72px 24px 52px"}}>
-          <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.45)",letterSpacing:".4em",marginBottom:18}}>
+          <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.7)",letterSpacing:".3em",marginBottom:18}}>
             The Elf Yourself of Literature
           </p>
           <h1 className="cm-display" style={{fontSize:"clamp(48px,10vw,92px)",fontWeight:700,lineHeight:1.02,marginBottom:0}}>
             <span style={{color:"#F0DCA8"}}>Classic</span>
             <span style={{color:"#D4B86A"}}>Me</span>
           </h1>
-          <p style={{fontStyle:"italic",fontSize:"clamp(17px,2.5vw,22px)",color:"rgba(240,220,168,.5)",marginTop:22,maxWidth:480,marginLeft:"auto",marginRight:"auto",lineHeight:1.7}}>
+          <p style={{fontStyle:"italic",fontSize:"clamp(18px,2.5vw,23px)",color:"rgba(240,220,168,.78)",marginTop:22,maxWidth:480,marginLeft:"auto",marginRight:"auto",lineHeight:1.7}}>
             Upload your photo. Pick your novel.<br/>Get roasted by a literary legend.
           </p>
           <div className="cm-rule" style={{maxWidth:200,margin:"36px auto 0"}} />
@@ -352,10 +352,10 @@ export default function ClassicMePage() {
         {/* ── SELECT ── */}
         {step === "select" && (
           <div className="cm-fade" style={{maxWidth:1040,margin:"0 auto",padding:"0 24px 96px"}}>
-            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36,letterSpacing:".3em"}}>
+            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36,letterSpacing:".25em"}}>
               Step 1 of 3 — Choose your classic
             </p>
-            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:12}}>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(210px,1fr))",gap:14}}>
               {CLASSICS.map((c) => (
                 <button
                   key={c.id}
@@ -363,13 +363,12 @@ export default function ClassicMePage() {
                   onClick={() => setSelectedId(c.id)}
                   style={{padding:"0",border:"none"}}
                 >
-                  {/* colour bar */}
                   <div style={{height:4,background:c.color,width:"100%"}} />
-                  <div style={{padding:"22px 20px 24px"}}>
-                    <p className="cm-caps" style={{fontSize:28,color:"rgba(191,160,90,.18)",fontFamily:"'Cinzel',serif",marginBottom:12,lineHeight:1}}>{c.roman}</p>
-                    <p className="cm-caps" style={{fontSize:8,color:"#BFA05A",marginBottom:8,letterSpacing:".22em"}}>{c.theme}</p>
-                    <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:14,color:"#F0DCA8",lineHeight:1.25,marginBottom:5}}>{c.title}</p>
-                    <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.45)"}}>{c.author}</p>
+                  <div style={{padding:"22px 20px 26px"}}>
+                    <p style={{fontFamily:"'Cinzel',serif",fontSize:22,color:"rgba(191,160,90,.4)",fontWeight:700,marginBottom:10,lineHeight:1}}>{c.roman}</p>
+                    <p className="cm-caps" style={{fontSize:11,color:"#BFA05A",marginBottom:10,letterSpacing:".15em"}}>{c.theme}</p>
+                    <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:16,color:"#F0DCA8",lineHeight:1.25,marginBottom:6}}>{c.title}</p>
+                    <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.75)"}}>{c.author}</p>
                   </div>
                 </button>
               ))}
@@ -385,18 +384,17 @@ export default function ClassicMePage() {
         {/* ── CUSTOMIZE ── */}
         {step === "customize" && selected && (
           <div className="cm-fade" style={{maxWidth:560,margin:"0 auto",padding:"0 24px 96px"}}>
-            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36}}>
+            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36}}>
               Step 2 of 3 — Make it yours
             </p>
 
-            {/* Selected book pill */}
-            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",border:`1px solid rgba(191,160,90,.15)`,borderLeft:`4px solid ${selected.color}`,padding:"16px 20px",marginBottom:32}}>
+            <div style={{display:"flex",alignItems:"center",gap:14,background:"#141B24",border:`1px solid rgba(191,160,90,.2)`,borderLeft:`4px solid ${selected.color}`,padding:"18px 22px",marginBottom:32}}>
               <div>
-                <p className="cm-caps" style={{fontSize:8,color:"#BFA05A",marginBottom:4}}>{selected.roman} · {selected.theme}</p>
-                <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:15,color:"#F0DCA8"}}>{selected.title}</p>
-                <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.45)",marginTop:2}}>{selected.author}</p>
+                <p className="cm-caps" style={{fontSize:11,color:"#BFA05A",marginBottom:5}}>{selected.roman} · {selected.theme}</p>
+                <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:17,color:"#F0DCA8"}}>{selected.title}</p>
+                <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.7)",marginTop:3}}>{selected.author}</p>
               </div>
-              <button onClick={() => setStep("select")} style={{marginLeft:"auto",background:"none",border:"none",color:"rgba(191,160,90,.38)",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:9,letterSpacing:".2em",textTransform:"uppercase"}}>
+              <button onClick={() => setStep("select")} style={{marginLeft:"auto",background:"none",border:"none",color:"rgba(191,160,90,.6)",cursor:"pointer",fontFamily:"'Cinzel',serif",fontSize:12,letterSpacing:".15em",textTransform:"uppercase"}}>
                 Change
               </button>
             </div>
@@ -407,15 +405,15 @@ export default function ClassicMePage() {
                   {photoUrl
                     ? <img src={photoUrl} alt="You" style={{width:"100%",height:"100%",objectFit:"cover"}} />
                     : <div style={{textAlign:"center"}}>
-                        <div style={{fontSize:20,marginBottom:4}}>📸</div>
-                        <p className="cm-caps" style={{fontSize:7,color:"rgba(191,160,90,.38)"}}>Photo</p>
+                        <div style={{fontSize:24,marginBottom:6}}>📸</div>
+                        <p className="cm-caps" style={{fontSize:11,color:"rgba(191,160,90,.6)"}}>Photo</p>
                       </div>
                   }
                 </button>
                 <input ref={fileRef} type="file" accept="image/*" style={{display:"none"}} onChange={handlePhoto} />
               </div>
               <div style={{flex:1}}>
-                <label className="cm-caps" style={{display:"block",fontSize:9,color:"rgba(191,160,90,.45)",marginBottom:10}}>Your name</label>
+                <label className="cm-caps" style={{display:"block",fontSize:12,color:"rgba(191,160,90,.7)",marginBottom:12}}>Your name</label>
                 <input
                   className="cm-input"
                   type="text"
@@ -425,7 +423,7 @@ export default function ClassicMePage() {
                   onKeyDown={(e) => e.key === "Enter" && name.trim() && setStep("email")}
                   maxLength={60}
                 />
-                <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.28)",marginTop:8}}>This name appears in your passage.</p>
+                <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",marginTop:10}}>This name appears in your passage.</p>
               </div>
             </div>
 
@@ -440,15 +438,15 @@ export default function ClassicMePage() {
         {/* ── EMAIL ── */}
         {step === "email" && selected && (
           <div className="cm-fade" style={{maxWidth:520,margin:"0 auto",padding:"0 24px 96px"}}>
-            <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.35)",textAlign:"center",marginBottom:36}}>
+            <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",textAlign:"center",marginBottom:36}}>
               Step 3 of 3 — One last thing
             </p>
-            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.2)",padding:"48px 40px",textAlign:"center"}}>
-              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:20,color:"#F0DCA8",lineHeight:1.35,marginBottom:14}}>
+            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.25)",padding:"48px 40px",textAlign:"center"}}>
+              <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:22,color:"#F0DCA8",lineHeight:1.35,marginBottom:16}}>
                 Your passage is being composed.
               </p>
               <div className="cm-rule" style={{marginBottom:24}} />
-              <p style={{fontStyle:"italic",fontSize:17,color:"rgba(240,220,168,.52)",lineHeight:1.75,marginBottom:28}}>
+              <p style={{fontStyle:"italic",fontSize:18,color:"rgba(240,220,168,.72)",lineHeight:1.75,marginBottom:28}}>
                 Drop your email and we&apos;ll send you the full version — plus an exclusive offer on your real memoir.
               </p>
               <input
@@ -458,16 +456,16 @@ export default function ClassicMePage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && handleGenerate()}
-                style={{marginBottom:12,textAlign:"center"}}
+                style={{marginBottom:14,textAlign:"center"}}
               />
-              <button className="cm-btn-gold" style={{width:"100%",marginBottom:10}} onClick={handleGenerate}>
+              <button className="cm-btn-gold" style={{width:"100%",marginBottom:12}} onClick={handleGenerate}>
                 Send Me My Passage →
               </button>
-              <button className="cm-btn-ghost" style={{width:"100%",fontSize:10}} onClick={() => { setEmail(""); handleGenerate(); }}>
+              <button className="cm-btn-ghost" style={{width:"100%"}} onClick={() => { setEmail(""); handleGenerate(); }}>
                 Skip — just show me
               </button>
             </div>
-            <p style={{fontStyle:"italic",fontSize:12,color:"rgba(191,160,90,.22)",textAlign:"center",marginTop:14}}>No spam. Just your roast and one offer.</p>
+            <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"center",marginTop:16}}>No spam. Just your roast and one offer.</p>
           </div>
         )}
 
@@ -475,8 +473,8 @@ export default function ClassicMePage() {
         {step === "generating" && (
           <div className="cm-fade" style={{textAlign:"center",padding:"88px 24px"}}>
             <div className="cm-spin" style={{fontSize:36,marginBottom:24,color:"#D4B86A"}}>✦</div>
-            <p className="cm-caps" style={{fontSize:9,color:"#BFA05A",marginBottom:10}}>Consulting the canon</p>
-            <p style={{fontStyle:"italic",color:"rgba(240,220,168,.38)",fontSize:17}}>
+            <p className="cm-caps" style={{fontSize:13,color:"#BFA05A",marginBottom:12}}>Consulting the canon</p>
+            <p style={{fontStyle:"italic",color:"rgba(240,220,168,.6)",fontSize:18}}>
               {selected?.author ?? "The ages"} is composing your portrait...
             </p>
           </div>
@@ -486,22 +484,21 @@ export default function ClassicMePage() {
         {step === "result" && selected && (
           <div className="cm-fade" style={{maxWidth:720,margin:"0 auto",padding:"0 24px 96px"}}>
             <div style={{textAlign:"center",marginBottom:36}}>
-              <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.42)",marginBottom:14}}>Your ClassicMe Passage</p>
+              <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.65)",marginBottom:16}}>Your ClassicMe Passage</p>
               <div style={{display:"flex",alignItems:"center",justifyContent:"center",gap:14}}>
-                {photoUrl && <img src={photoUrl} alt="You" style={{width:52,height:52,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(212,184,106,.38)"}} />}
+                {photoUrl && <img src={photoUrl} alt="You" style={{width:56,height:56,borderRadius:"50%",objectFit:"cover",border:"2px solid rgba(212,184,106,.5)"}} />}
                 <div style={{textAlign:"left"}}>
-                  <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:17,color:"#F0DCA8"}}>{name}</p>
-                  <p style={{fontStyle:"italic",fontSize:13,color:"rgba(191,160,90,.48)",marginTop:2}}>as seen through {selected.title}</p>
+                  <p style={{fontFamily:"'Cinzel',serif",fontWeight:600,fontSize:19,color:"#F0DCA8"}}>{name}</p>
+                  <p style={{fontStyle:"italic",fontSize:16,color:"rgba(191,160,90,.65)",marginTop:3}}>as seen through {selected.title}</p>
                 </div>
               </div>
               <div className="cm-rule" style={{maxWidth:240,margin:"24px auto 0"}} />
             </div>
 
-            {/* Passage */}
-            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.18)",borderTop:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
-              <div style={{display:"flex",alignItems:"baseline",gap:10,marginBottom:24}}>
-                <span style={{fontFamily:"'Cinzel',serif",fontSize:11,color:"rgba(191,160,90,.3)",fontWeight:600}}>{selected.roman}</span>
-                <span className="cm-caps" style={{fontSize:8,color:"#BFA05A"}}>{selected.title}</span>
+            <div style={{background:"#141B24",border:"1px solid rgba(191,160,90,.22)",borderTop:`3px solid ${selected.color}`,padding:"40px 44px",marginBottom:28}}>
+              <div style={{display:"flex",alignItems:"baseline",gap:12,marginBottom:24}}>
+                <span style={{fontFamily:"'Cinzel',serif",fontSize:14,color:"rgba(191,160,90,.55)",fontWeight:700}}>{selected.roman}</span>
+                <span className="cm-caps" style={{fontSize:12,color:"#BFA05A"}}>{selected.title}</span>
               </div>
 
               <p className="cm-passage">{firstPara}</p>
@@ -515,23 +512,21 @@ export default function ClassicMePage() {
                 </div>
               )}
 
-              <div className="cm-rule" style={{marginTop:restParas ? 72 : 28,marginBottom:14}} />
-              <p style={{fontStyle:"italic",fontSize:13,color:"rgba(191,160,90,.28)",textAlign:"right"}}>— {selected.author}</p>
+              <div className="cm-rule" style={{marginTop:restParas ? 72 : 28,marginBottom:16}} />
+              <p style={{fontStyle:"italic",fontSize:15,color:"rgba(191,160,90,.5)",textAlign:"right"}}>— {selected.author}</p>
             </div>
 
-            {/* Upsell */}
-            <div style={{background:"rgba(212,184,106,.03)",border:"1px solid rgba(191,160,90,.18)",padding:"32px 36px",textAlign:"center",marginBottom:20}}>
-              <p className="cm-caps" style={{fontSize:9,color:"#BFA05A",marginBottom:12}}>Want the full story?</p>
-              <p style={{fontStyle:"italic",fontSize:19,color:"#F0DCA8",lineHeight:1.65,marginBottom:8}}>
+            <div style={{background:"rgba(212,184,106,.03)",border:"1px solid rgba(191,160,90,.22)",padding:"34px 38px",textAlign:"center",marginBottom:20}}>
+              <p className="cm-caps" style={{fontSize:12,color:"#BFA05A",marginBottom:14}}>Want the full story?</p>
+              <p style={{fontStyle:"italic",fontSize:20,color:"#F0DCA8",lineHeight:1.65,marginBottom:10}}>
                 Turn your real life into a <span style={{color:"#D4B86A"}}>full literary memoir</span> — 10,000 words, a bespoke portrait, and a hardcover book.
               </p>
-              <p style={{fontStyle:"italic",fontSize:14,color:"rgba(240,220,168,.33)",marginBottom:26}}>
+              <p style={{fontStyle:"italic",fontSize:16,color:"rgba(240,220,168,.55)",marginBottom:28}}>
                 Chronicled interviews you and writes your life in the voice of {selected.title}.
               </p>
               <Link href={ctaHref} className="cm-btn-gold">Begin Your Chronicle — $14.99 →</Link>
             </div>
 
-            {/* Actions */}
             <div style={{display:"flex",gap:10,justifyContent:"center",flexWrap:"wrap"}}>
               <button className="cm-btn-ghost" onClick={handleShare}>{shareMsg || "Share"}</button>
               <button className="cm-btn-ghost" onClick={() => drawShareCard(name, selected.roman, selected.title, selected.author, roastText, selected.color)}>
@@ -543,11 +538,11 @@ export default function ClassicMePage() {
         )}
 
         {/* ── FOOTER ── */}
-        <footer style={{borderTop:"1px solid rgba(191,160,90,.1)",padding:"28px 24px",textAlign:"center"}}>
-          <p className="cm-caps" style={{fontSize:9,color:"rgba(191,160,90,.22)",marginBottom:8}}>Chronicled — ClassicMe</p>
-          <p style={{fontStyle:"italic",fontSize:13,color:"rgba(240,220,168,.18)"}}>
+        <footer style={{borderTop:"1px solid rgba(191,160,90,.12)",padding:"32px 24px",textAlign:"center"}}>
+          <p className="cm-caps" style={{fontSize:12,color:"rgba(191,160,90,.45)",marginBottom:10}}>Chronicled — ClassicMe</p>
+          <p style={{fontStyle:"italic",fontSize:15,color:"rgba(240,220,168,.4)"}}>
             A playful taste of your literary life.{" "}
-            <Link href="/" style={{color:"rgba(191,160,90,.32)",textDecoration:"none"}}>Explore the full experience →</Link>
+            <Link href="/" style={{color:"rgba(191,160,90,.6)",textDecoration:"none"}}>Explore the full experience →</Link>
           </p>
         </footer>
       </div>
