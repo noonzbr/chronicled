@@ -66,10 +66,10 @@ export async function POST(req: NextRequest) {
     // Strip markdown formatting Claude sometimes adds
     const text = raw
       .replace(/^#{1,6}\s+/gm, "")
-      .replace(/\*\*(.*?)\*\*/gs, "$1")
-      .replace(/\*(.*?)\*/gs, "$1")
-      .replace(/__(.*?)__/gs, "$1")
-      .replace(/_(.*?)_/gs, "$1")
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .replace(/\*(.*?)\*/g, "$1")
+      .replace(/__(.*?)__/g, "$1")
+      .replace(/_(.*?)_/g, "$1")
       .trim();
 
     return NextResponse.json({ text });
