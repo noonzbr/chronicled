@@ -28,9 +28,9 @@ export async function POST(req: NextRequest) {
     const mediaType = match ? match[1] : "image/jpeg";
     const base64Data = match ? match[2] : imageBase64;
 
-    // Step 1: Analyze user's features using Claude 3 Sonnet Vision
+    // Step 1: Analyze user's features using Claude 3 Haiku Vision
     const visionMessage = await anthropic.messages.create({
-      model: "claude-3-sonnet-20240229",
+      model: "claude-3-haiku-20240307",
       max_tokens: 300,
       messages: [
         {
@@ -56,10 +56,10 @@ export async function POST(req: NextRequest) {
     const userFaceDescription =
       visionMessage.content[0].type === "text" ? visionMessage.content[0].text : "classical features";
 
-    // Step 2: Use Claude 3 Sonnet to design a gorgeous, theatrical character SVG portrait card
+    // Step 2: Use Claude 3 Haiku to design a gorgeous, theatrical character SVG portrait card
     // representing the person fully transformed into the book's period with historical clothes/hair/expressions.
     const svgMessage = await anthropic.messages.create({
-      model: "claude-3-sonnet-20240229",
+      model: "claude-3-haiku-20240307",
       max_tokens: 1500,
       messages: [
         {
