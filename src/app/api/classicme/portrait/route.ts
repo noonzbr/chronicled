@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
 
     // Step 1: Analyze user's features using Claude 3.5 Sonnet Vision
     const visionMessage = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-3-5-sonnet-20240620",
       max_tokens: 300,
       messages: [
         {
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
     // Step 2: Use Claude 3.5 Sonnet to design a gorgeous, theatrical character SVG portrait card
     // representing the person fully transformed into the book's period with historical clothes/hair/expressions.
     const svgMessage = await anthropic.messages.create({
-      model: "claude-3-5-sonnet-20241022",
+      model: "claude-3-5-sonnet-20240620",
       max_tokens: 1500,
       messages: [
         {
