@@ -24,37 +24,61 @@ export async function POST(req: NextRequest) {
     const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
     // Extract raw base64 data and mime type
-    const match = imageBase64.match(/^data:([^;]+);base64,(.+)$/);
-    const mediaType = match ? match[1] : "image/jpeg";
-    const base64Data = match ? match[2] : imageBase64;
+    let mediaType = "image/jpeg";
+    let base64Data = imageBase64;
 
-    // Step 1: Analyze user's features using Sonnet Vision
-    const visionMessage = await anthropic.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 300,
-      messages: [
-        {
-          role: "user",
-          content: [
-            {
-              type: "image",
-              source: {
-                type: "base64",
-                media_type: mediaType as any,
-                data: base64Data,
+    if (imageBase64.includes(";base64,")) {
+      const match = imageBase64.match(/^data:([^;]+);base64,(.+)$/);
+      if (match) {
+        mediaType = match[1];
+        base64Data = match[2];
+      }
+    } else if (imageBase64.includes("data:")) {
+      const match = imageBase64.match(/^data:([^;]+),(.*)$/);
+      if (match) {
+        mediaType = match[1];
+        base64Data = Buffer.from(decodeURIComponent(match[2])).toString("base64");
+      }
+    }
+
+    // Standardize invalid mime types for Anthropic
+    if (!["image/jpeg", "image/png", "image/gif", "image/webp"].includes(mediaType)) {
+      mediaType = "image/jpeg";
+    }
+
+    let userFaceDescription = "classical distinguished features";
+
+    try {
+      // Step 1: Analyze user's features using Sonnet Vision
+      const visionMessage = await anthropic.messages.create({
+        model: "claude-sonnet-4-6",
+        max_tokens: 300,
+        messages: [
+          {
+            role: "user",
+            content: [
+              {
+                type: "image",
+                source: {
+                  type: "base64",
+                  media_type: mediaType as any,
+                  data: base64Data,
+                },
               },
-            },
-            {
-              type: "text",
-              text: "Analyze the uploaded photo. Describe ONLY the facial structure: eye shape/color, face shape, lips, nose, skin tone, eyebrows, and key identifiers. Do NOT describe modern hair, makeup, or modern clothing. Keep description to 2 concise sentences.",
-            },
-          ],
-        },
-      ],
-    });
-
-    const userFaceDescription =
-      visionMessage.content[0].type === "text" ? visionMessage.content[0].text : "classical features";
+              {
+                type: "text",
+                text: "Analyze the uploaded photo. Describe ONLY the facial structure: eye shape/color, face shape, lips, nose, skin tone, eyebrows, and key identifiers. Do NOT describe modern hair, makeup, or modern clothing. Keep description to 2 concise sentences.",
+              },
+            ],
+          },
+        ],
+      });
+      if (visionMessage.content[0].type === "text") {
+        userFaceDescription = visionMessage.content[0].text;
+      }
+    } catch (visionErr) {
+      console.warn("[ClassicMe] Vision feature analysis failed, falling back to default:", visionErr);
+    }
 
     // Step 2: Use Claude to design a gorgeous, theatrical character SVG portrait card
     // representing the person fully transformed into the book's period with historical clothes/hair/expressions.
