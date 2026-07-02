@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import OpenAI from "openai";
+import Anthropic from "@anthropic-ai/sdk";
 import { getBook } from "@/lib/books";
 
 export const maxDuration = 60;
@@ -17,68 +17,86 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid book" }, { status: 400 });
     }
 
-    if (!process.env.OPENAI_API_KEY) {
+    if (!process.env.ANTHROPIC_API_KEY) {
       return NextResponse.json({ portraitUrl: null });
     }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
-    // Step 1: GPT-4o Vision — describe the person's core facial features ONLY, ignoring their modern hair/makeup/clothes
-    const mimeType = imageBase64.match(/^data:([^;]+);/)?.[1] || "image/jpeg";
+    // Extract raw base64 data and mime type
+    const match = imageBase64.match(/^data:([^;]+);base64,(.+)$/);
+    const mediaType = match ? match[1] : "image/jpeg";
+    const base64Data = match ? match[2] : imageBase64;
 
-    const visionRes = await openai.chat.completions.create({
-      model: "gpt-4o",
+    // Step 1: Analyze user's features using Claude 3.5 Sonnet Vision
+    const visionMessage = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
       max_tokens: 300,
       messages: [
         {
           role: "user",
           content: [
             {
-              type: "image_url",
-              image_url: { url: imageBase64, detail: "high" },
+              type: "image",
+              source: {
+                type: "base64",
+                media_type: mediaType as any,
+                data: base64Data,
+              },
             },
             {
               type: "text",
-              text: `Identify and describe ONLY the core facial structures of this person (face shape, eyes, nose, mouth shape, skin tone, eyebrows). Do NOT describe their clothes, hair, or modern makeup. Reply with only these facial traits in 2 sentences.`,
+              text: "Analyze the uploaded photo. Describe ONLY the facial structure: eye shape/color, face shape, lips, nose, skin tone, eyebrows, and key identifiers. Do NOT describe modern hair, makeup, or modern clothing. Keep description to 2 concise sentences.",
             },
           ],
         },
       ],
     });
 
-    const personDescription =
-      visionRes.choices[0]?.message?.content?.trim() || "a distinguished individual";
+    const userFaceDescription =
+      visionMessage.content[0].type === "text" ? visionMessage.content[0].text : "classical features";
 
-    // Step 2: DALL-E 3 — perform a full theatrical transformation: hair, historical clothing, makeup, and setting
-    const prompt = `A highly stylized, fun, and dramatic theatrical character portrait painting. 
-Integrating a person with: ${personDescription} 
-
-Fully transformed into a character from the novel "${book.title}" in the art style of "${book.portraitStyle}".
-Completely replace their modern style with:
-- Dramatic period-accurate costume, historical outfits, elaborate high-collared dress, or aristocratic coat.
-- Historical period-accurate hairstyle, wigs, curls, or hats suited to the era of the book.
-- Theatrical, stylized period makeup (e.g. powder, rosy cheeks, or dramatic expressions).
-- Fun, playful, and expressive posture (gazing dramatically, holding a monocle, a letter, or a feather quill).
-- Set in a historical room, library, grand ballroom, or dramatic landscape matching the novel.
-Make it look like a gorgeous, funny caricature oil painting, blending the user's face structure into a historical character. Museum quality. No text, no watermarks, no borders.`;
-
-    const imageRes = await openai.images.generate({
-      model: "dall-e-3",
-      prompt,
-      n: 1,
-      size: "1024x1792",
-      quality: "hd",
-      style: "vivid",
+    // Step 2: Use Claude 3.5 Sonnet to design a gorgeous, theatrical character SVG portrait card
+    // representing the person fully transformed into the book's period with historical clothes/hair/expressions.
+    const svgMessage = await anthropic.messages.create({
+      model: "claude-3-5-sonnet-20241022",
+      max_tokens: 1500,
+      messages: [
+        {
+          role: "user",
+          content: `Write raw XML code for a premium, stylized character SVG illustration representing a person with these facial structures: ${userFaceDescription}
+          
+          Fully dressed-up and transformed into a theatrical character from the classic novel: "${book.title}".
+          
+          Guidelines:
+          - Art Style: Playful, premium vector portrait illustration matching the book's themes. Use a rich, vintage color palette.
+          - Costume: Fully replace their modern style with historical clothing (e.g., high-collared Regency dresses, ruffled cravats, ornate coats, jewelry).
+          - Hair: Period-accurate hair, elaborate curls, hats, or feathers matching "${book.title}"'s era.
+          - Make it feel like an interactive, funny character card (like Elf Yourself) with custom props (like a quill, a scroll, roses, or a fancy letter).
+          - Use beautiful gradients, textures, shadows, and paths. Keep it highly detailed.
+          - The SVG must be responsive (viewBox="0 0 400 550").
+          - Output ONLY valid SVG code. No markdown wrapper, no explanation, no backticks. Start directly with '<svg' and end with '</svg>'.`,
+        },
+      ],
     });
 
-    const portraitUrl = imageRes.data?.[0]?.url;
-    if (!portraitUrl) {
-      return NextResponse.json({ error: "Image generation failed" }, { status: 500 });
+    let rawSvg = svgMessage.content[0].type === "text" ? svgMessage.content[0].text.trim() : "";
+    
+    // Strip markdown wrappers if Claude returned them despite instructions
+    if (rawSvg.startsWith("```")) {
+      rawSvg = rawSvg.replace(/^```[a-zA-Z]*\n/, "").replace(/\n```$/, "");
     }
+
+    // Convert SVG to data URI format so it fits in the same portraitUrl field
+    const encodedSvg = encodeURIComponent(rawSvg)
+      .replace(/'/g, "%27")
+      .replace(/"/g, "%22");
+    const portraitUrl = `data:image/svg+xml;utf8,${encodedSvg}`;
 
     return NextResponse.json({ portraitUrl });
   } catch (err) {
-    console.error("[ClassicMe] Portrait error:", err);
+    console.error("[ClassicMe] Claude Portrait error:", err);
     return NextResponse.json({ error: "Portrait generation failed" }, { status: 500 });
   }
 }
+
